@@ -1,7 +1,8 @@
-package com.ajcm.kidstube
+package com.ajcm.kidstube.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.ajcm.kidstube.R
 
 class MainActivity : AppCompatActivity() {
 

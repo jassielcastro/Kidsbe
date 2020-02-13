@@ -10,7 +10,6 @@ interface YoutubeService {
     @GET("search?part=id,snippet")
     fun listVideosAsync(
         @Query("api_key") apiKey: String,
-        @Query("region") region: String,
         @Query("relatedToVideoId") relatedToVideoId: String,
         @Query("maxResults") maxResults: Int = 25,
         @Query("safeSearch") safeSearch: String = "strict",
@@ -21,7 +20,6 @@ interface YoutubeService {
     @GET("search?part=id,snippet")
     fun searchVideosAsync(
         @Query("api_key") apiKey: String,
-        @Query("region") region: String,
         @Query("q") byText: String,
         @Query("maxResults") maxResults: Int = 25,
         @Query("safeSearch") safeSearch: String = "strict",
