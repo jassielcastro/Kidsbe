@@ -20,8 +20,6 @@ class DashboardViewModel(
             return _model
         }
 
-    var userToken: String? = null
-
     sealed class UiModel {
         object Loading : UiModel()
         data class Content(val videos: List<Video>) : UiModel()
@@ -34,8 +32,7 @@ class DashboardViewModel(
 
     private fun refresh() = launch {
         _model.value = UiModel.Loading
-        println("SplashFragment.updateUi --> $userToken")
-        _model.value = UiModel.Content(getPopularVideos.invoke("KH_VRLMGHO4", userToken ?: ""))
+        //_model.value = UiModel.Content(getPopularVideos.invoke("KH_VRLMGHO4"))
     }
 
     fun onMovieClicked(video: Video) {

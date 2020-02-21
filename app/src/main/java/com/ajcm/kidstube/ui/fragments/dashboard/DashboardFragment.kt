@@ -17,7 +17,6 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.userToken = arguments?.getString("user_token")
         viewModel.model.observe(this, Observer(::updateUi))
     }
 

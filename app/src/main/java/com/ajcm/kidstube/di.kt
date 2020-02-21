@@ -1,7 +1,6 @@
 package com.ajcm.kidstube
 
 import android.app.Application
-import androidx.fragment.app.Fragment
 import com.ajcm.data.api.YoutubeApi
 import com.ajcm.data.api.YoutubeDataSource
 import com.ajcm.data.repository.VideoRepository
@@ -43,7 +42,7 @@ val dataModule = module {
 
 private val scopesModule = module {
     scope(named<SplashFragment>()) {
-        viewModel { (fragment: Fragment) -> SplashViewModel(fragment, get()) }
+        viewModel { SplashViewModel( get()) }
     }
     scope(named<DashboardFragment>()) {
         viewModel { DashboardViewModel(get(), get()) }

@@ -10,7 +10,6 @@ interface YoutubeService {
 
     @GET("search?part=id,snippet")
     fun listVideosAsync(
-        @Header("Authorization") token: String,
         @Query("api_key") apiKey: String,
         @Query("relatedToVideoId") relatedToVideoId: String,
         @Query("maxResults") maxResults: Int = 25,
@@ -21,7 +20,6 @@ interface YoutubeService {
 
     @GET("search?part=id,snippet")
     fun searchVideosAsync(
-        @Header("Authorization") token: String,
         @Query("api_key") apiKey: String,
         @Query("q") byText: String,
         @Query("maxResults") maxResults: Int = 25,

@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class YoutubeApi(baseUrl: String) {
 
-    val okHttpClient = HttpLoggingInterceptor().run {
+    private val okHttpClient = HttpLoggingInterceptor().run {
         level = HttpLoggingInterceptor.Level.BODY
         OkHttpClient.Builder().addInterceptor(this).build()
     }
