@@ -1,12 +1,16 @@
 package com.ajcm.kidstube.ui.fragments.splash
 
+import android.accounts.AccountManager
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.ajcm.data.auth.Constants
 import com.ajcm.kidstube.R
+import com.ajcm.kidstube.common.GoogleCredential
 import com.ajcm.kidstube.ui.fragments.splash.SplashViewModel.UiModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.koin.android.ext.android.inject
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -17,7 +21,8 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
         parametersOf(this)
     }
 
-    @ExperimentalCoroutinesApi
+    private val credential: GoogleCredential by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,8 +34,28 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
             is UiModel.Loading -> {
 
             }
+            is UiModel.LoadingError -> {
+
+            }
+            is UiModel.RequestAccount -> {
+                startActivityForResult(credential.credential.newChooseAccountIntent(), Constants.REQUEST_ACCOUNT_PICKER)
+            }
             is UiModel.Navigate -> {
                 findNavController().navigate(R.id.action_splashFragment_to_dashboardFragment)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            Constants.REQUEST_ACCOUNT_PICKER -> {
+                val accountName = data?.extras?.getString(AccountManager.KEY_ACCOUNT_NAME)
+                if (accountName != null) {
+                    viewModel.saveAccountName(accountName)
+                } else {
+                    viewModel.loadError()
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.3.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -38,9 +39,16 @@ allprojects {
         ]
 
         google = [
-                auth           : 'com.google.android.gms:play-services-auth:17.0.0',
-                api_client     : 'com.google.api-client:google-api-client:1.22.0',
-                client_android : 'com.google.api-client:google-api-client-android:1.22.0'
+                google: 'com.google.android.gms:play-services-plus:17.0.0',
+                google_auth: 'com.google.android.gms:play-services-auth:17.0.0',
+                google_api_client : 'com.google.api-client:google-api-client-android:1.30.8'
+        ]
+
+        youtube = [
+                youtube           : 'com.google.apis:google-api-services-youtube:v3-rev20200109-1.30.8',
+                http_client       : 'com.google.http-client:google-http-client-android:+',
+                client_gson       : 'com.google.api-client:google-api-client-gson:+',
+                gson              : 'com.google.code.gson:gson:2.2.4'
         ]
 
         androidKaptLibs = [
@@ -50,7 +58,7 @@ allprojects {
 
         kotlinLibs = [
                 stdlib    : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
-                coroutines: 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.2'
+                coroutines: 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
         ]
 
         injection = [

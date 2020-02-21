@@ -24,10 +24,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-}
 
-androidExtensions {
-    experimental = true
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
 }
 
 dependencies {
@@ -39,7 +39,6 @@ dependencies {
     implementation project(":usecases")
 
     implementation androidLibs.values()
-    implementation google.values()
     implementation kotlinLibs.values()
     implementation injection.values()
     kapt androidKaptLibs.values()

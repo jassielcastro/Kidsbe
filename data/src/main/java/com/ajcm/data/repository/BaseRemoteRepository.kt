@@ -1,11 +1,11 @@
 package com.ajcm.data.repository
 
-import com.ajcm.domain.Video
+import com.ajcm.data.models.Result
 
 abstract class BaseRemoteRepository {
 
-    abstract suspend fun search(byText: String): List<Video>
+    abstract suspend fun search(byText: String): Result
 
-    abstract suspend fun getList(relatedTo: String): List<Video>
+    abstract suspend fun getList(relatedTo: String): Result
 
 }

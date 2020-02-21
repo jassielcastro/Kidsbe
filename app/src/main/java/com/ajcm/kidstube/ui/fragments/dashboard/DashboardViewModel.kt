@@ -2,14 +2,16 @@ package com.ajcm.kidstube.ui.fragments.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.ajcm.data.database.LocalDB
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.common.ScopedViewModel
-import com.ajcm.usecases.GetPopularVideos
+import com.ajcm.usecases.GetYoutubeVideos
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(
-    private val getPopularVideos: GetPopularVideos,
+    private val getYoutubeVideos: GetYoutubeVideos,
+    private val localDB: LocalDB,
     uiDispatcher: CoroutineDispatcher
 ): ScopedViewModel(uiDispatcher) {
 
@@ -22,17 +24,34 @@ class DashboardViewModel(
 
     sealed class UiModel {
         object Loading : UiModel()
+        object LoadingError : UiModel()
+        data class RequestPermissions(val exception: Exception?) : UiModel()
         data class Content(val videos: List<Video>) : UiModel()
         data class Navigate(val videos: Video) : UiModel()
     }
 
     init {
         initScope()
+        getYoutubeVideos.startYoutubeWith(localDB.accountName)
     }
 
-    private fun refresh() = launch {
+    fun refresh() = launch {
         _model.value = UiModel.Loading
-        //_model.value = UiModel.Content(getPopularVideos.invoke("KH_VRLMGHO4"))
+        val result = getYoutubeVideos.invoke("KH_VRLMGHO4")
+        if (result.videos.isNotEmpty()) {
+            _model.value = UiModel.Content(result.videos)
+        } else {
+            _model.value = UiModel.RequestPermissions(result.exception)
+        }
+    }
+
+    fun saveAccountName(accountName: String) {
+        localDB.accountName = accountName
+        refresh()
+    }
+
+    fun loadError() {
+        _model.value = UiModel.LoadingError
     }
 
     fun onMovieClicked(video: Video) {

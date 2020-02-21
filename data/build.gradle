@@ -29,6 +29,8 @@ android {
 dependencies {
     implementation project(":domain")
 
+    api google.values()
+    implementation youtube.values()
     implementation kotlinLibs.values()
     implementation network.values()
     testImplementation testLibs.values()
