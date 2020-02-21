@@ -31,6 +31,9 @@ androidExtensions {
 }
 
 dependencies {
+
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+
     implementation project(":data")
     implementation project(":domain")
     implementation project(":usecases")
