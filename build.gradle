@@ -37,6 +37,12 @@ allprojects {
                 navigation_ui       : 'androidx.navigation:navigation-ui-ktx:2.2.0-alpha03'
         ]
 
+        google = [
+                auth           : 'com.google.android.gms:play-services-auth:17.0.0',
+                api_client     : 'com.google.api-client:google-api-client:1.22.0',
+                client_android : 'com.google.api-client:google-api-client-android:1.22.0'
+        ]
+
         androidKaptLibs = [
                 roomCompiler : 'androidx.room:room-compiler:2.2.1',
                 glideCompiler: 'com.github.bumptech.glide:compiler:4.9.0'

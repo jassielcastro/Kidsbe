@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ajcm.kidstube">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".KidsTubeApp"
         android:allowBackup="true"

@@ -8,11 +8,11 @@ class VideoRepository(
     private val apiKey: String
 ): BaseRemoteRepository() {
 
-    override suspend fun search(byText: String): List<Video> {
-        return remoteDataSource.searchVideos(apiKey, byText)
+    override suspend fun search(byText: String, token: String): List<Video> {
+        return remoteDataSource.searchVideos(apiKey, byText, token)
     }
 
-    override suspend fun getList(relatedTo: String): List<Video> {
-        return remoteDataSource.getPopularVideos(apiKey, relatedTo)
+    override suspend fun getList(relatedTo: String, token: String): List<Video> {
+        return remoteDataSource.getPopularVideos(apiKey, relatedTo, token)
     }
 }

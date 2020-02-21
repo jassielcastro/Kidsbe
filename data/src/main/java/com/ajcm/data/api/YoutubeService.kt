@@ -3,12 +3,14 @@ package com.ajcm.data.api
 import com.ajcm.data.api.result.VideosResult
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface YoutubeService {
 
     @GET("search?part=id,snippet")
     fun listVideosAsync(
+        @Header("Authorization") token: String,
         @Query("api_key") apiKey: String,
         @Query("relatedToVideoId") relatedToVideoId: String,
         @Query("maxResults") maxResults: Int = 25,
@@ -19,6 +21,7 @@ interface YoutubeService {
 
     @GET("search?part=id,snippet")
     fun searchVideosAsync(
+        @Header("Authorization") token: String,
         @Query("api_key") apiKey: String,
         @Query("q") byText: String,
         @Query("maxResults") maxResults: Int = 25,

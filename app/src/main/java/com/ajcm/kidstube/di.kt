@@ -1,15 +1,22 @@
 package com.ajcm.kidstube
 
 import android.app.Application
+import androidx.fragment.app.Fragment
 import com.ajcm.data.api.YoutubeApi
 import com.ajcm.data.api.YoutubeDataSource
 import com.ajcm.data.repository.VideoRepository
 import com.ajcm.data.source.RemoteDataSource
+import com.ajcm.kidstube.ui.fragments.dashboard.DashboardFragment
+import com.ajcm.kidstube.ui.fragments.dashboard.DashboardViewModel
+import com.ajcm.kidstube.ui.fragments.splash.SplashFragment
+import com.ajcm.kidstube.ui.fragments.splash.SplashViewModel
+import com.ajcm.usecases.GetPopularVideos
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -18,7 +25,7 @@ fun Application.initDI() {
     startKoin {
         androidLogger()
         androidContext(this@initDI)
-        modules(listOf(appModule, dataModule))
+        modules(listOf(appModule, dataModule, scopesModule))
     }
 }
 
@@ -32,4 +39,14 @@ private val appModule = module {
 
 val dataModule = module {
     factory { VideoRepository(get(), get(named("apiKey"))) }
+}
+
+private val scopesModule = module {
+    scope(named<SplashFragment>()) {
+        viewModel { (fragment: Fragment) -> SplashViewModel(fragment, get()) }
+    }
+    scope(named<DashboardFragment>()) {
+        viewModel { DashboardViewModel(get(), get()) }
+        scoped { GetPopularVideos(get()) }
+    }
 }
