@@ -1,4 +1,4 @@
-package com.ajcm.kidstube.ui.fragments.splash
+package com.ajcm.kidstube.ui.splash
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,7 +32,7 @@ class SplashViewModel(private val localDB: LocalDB, uiDispatcher: CoroutineDispa
 
     private fun playSplash() = launch {
         _model.value = UiModel.Loading
-        delay(5500)
+        delay(5150)
         _model.value = UiModel.Navigate
     }
 

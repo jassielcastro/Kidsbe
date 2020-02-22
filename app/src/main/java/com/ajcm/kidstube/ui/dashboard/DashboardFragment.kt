@@ -1,4 +1,4 @@
-package com.ajcm.kidstube.ui.fragments.dashboard
+package com.ajcm.kidstube.ui.dashboard
 
 import android.accounts.AccountManager
 import android.app.Activity
@@ -10,7 +10,9 @@ import androidx.lifecycle.Observer
 import com.ajcm.data.auth.Constants
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.common.GoogleCredential
-import com.ajcm.kidstube.ui.fragments.dashboard.DashboardViewModel.UiModel
+import com.ajcm.kidstube.extensions.*
+import com.ajcm.kidstube.ui.adapters.VideoAdapter
+import com.ajcm.kidstube.ui.dashboard.DashboardViewModel.UiModel
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GooglePlayServicesUtil
@@ -27,22 +29,32 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
 
     private val credential: GoogleCredential by inject()
 
+    private lateinit var adapter: VideoAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel.model.observe(this, Observer(::updateUi))
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        adapter = VideoAdapter(viewModel::onVideoClicked)
+        results.setUpLayoutManager()
+        results.adapter = adapter
+
+        imgProfile.loadRes(R.drawable.bck_avatar_kids_mia)
+    }
+
     private fun updateUi(model: UiModel) {
-
-        progress.visibility = if (model is UiModel.Loading) View.VISIBLE else View.GONE
-
+        stopLoadingAnim()
         when (model) {
             is UiModel.Loading -> {
-
+                hideActionViews()
+                startLoadingAnim()
             }
             is UiModel.LoadingError -> {
-                println("DashboardFragment.updateUi --> Error")
+
             }
             is UiModel.RequestPermissions -> {
                 when(model.exception) {
@@ -53,20 +65,40 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
                         showGooglePlayServicesAvailabilityErrorDialog(model.exception.connectionStatusCode)
                     }
                     else -> {
-                        println("DashboardFragment.updateUi --> ${model.exception}")
+                        viewModel.loadError()
                     }
                 }
             }
             is UiModel.Content -> {
-                results.text = "Videos encontrados: ${model.videos.size}"
-                model.videos.map {
-                    println("DashboardFragment.updateUi --> ${it.toString()}")
-                }
+                showActionViews()
+                adapter.videos = model.videos
             }
             is UiModel.Navigate -> {
 
             }
         }
+    }
+
+    private fun hideActionViews() {
+        imgProfile.hide()
+        imgSettings.hide()
+        contentSearch.hide()
+    }
+
+    private fun showActionViews() {
+        imgProfile.show()
+        imgSettings.show()
+        contentSearch.show()
+    }
+
+    private fun startLoadingAnim() {
+        progress.show()
+        progress.playAnimation()
+    }
+
+    private fun stopLoadingAnim() {
+        progress.hide()
+        progress.cancelAnimation()
     }
 
     private fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {

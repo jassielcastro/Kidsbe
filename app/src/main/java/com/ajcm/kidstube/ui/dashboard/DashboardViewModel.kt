@@ -1,4 +1,4 @@
-package com.ajcm.kidstube.ui.fragments.dashboard
+package com.ajcm.kidstube.ui.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -54,7 +54,7 @@ class DashboardViewModel(
         _model.value = UiModel.LoadingError
     }
 
-    fun onMovieClicked(video: Video) {
+    fun onVideoClicked(video: Video) {
         _model.value = UiModel.Navigate(video)
     }
 

@@ -23,7 +23,7 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
             .Search()
             .list("id,snippet")
             .setType("video")
-            .setMaxResults(25)
+            .setMaxResults(50)
             .setSafeSearch("strict")
             .setFields("items(id/kind,id/videoId,snippet/channelId,snippet/title,snippet/thumbnails/high/url,snippet/channelTitle)")
     }

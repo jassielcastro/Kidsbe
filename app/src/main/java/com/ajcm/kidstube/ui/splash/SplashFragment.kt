@@ -1,4 +1,4 @@
-package com.ajcm.kidstube.ui.fragments.splash
+package com.ajcm.kidstube.ui.splash
 
 import android.accounts.AccountManager
 import android.content.Intent
@@ -9,7 +9,7 @@ import com.ajcm.data.auth.Constants
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.common.GoogleCredential
 import com.ajcm.kidstube.extensions.navigateTo
-import com.ajcm.kidstube.ui.fragments.splash.SplashViewModel.UiModel
+import com.ajcm.kidstube.ui.splash.SplashViewModel.UiModel
 import kotlinx.android.synthetic.main.splash_fragment.*
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.currentScope

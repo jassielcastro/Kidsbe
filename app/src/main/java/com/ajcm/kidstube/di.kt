@@ -8,10 +8,10 @@ import com.ajcm.data.database.LocalDB
 import com.ajcm.data.repository.VideoRepository
 import com.ajcm.data.source.RemoteDataSource
 import com.ajcm.kidstube.common.GoogleCredential
-import com.ajcm.kidstube.ui.fragments.dashboard.DashboardFragment
-import com.ajcm.kidstube.ui.fragments.dashboard.DashboardViewModel
-import com.ajcm.kidstube.ui.fragments.splash.SplashFragment
-import com.ajcm.kidstube.ui.fragments.splash.SplashViewModel
+import com.ajcm.kidstube.ui.dashboard.DashboardFragment
+import com.ajcm.kidstube.ui.dashboard.DashboardViewModel
+import com.ajcm.kidstube.ui.splash.SplashFragment
+import com.ajcm.kidstube.ui.splash.SplashViewModel
 import com.ajcm.usecases.GetYoutubeVideos
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

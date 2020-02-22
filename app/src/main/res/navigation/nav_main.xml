@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.ajcm.kidstube.ui.fragments.splash.SplashFragment"
+        android:name="com.ajcm.kidstube.ui.splash.SplashFragment"
         android:label="splash"
         tools:layout="@layout/splash_fragment">
         <action
@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.ajcm.kidstube.ui.fragments.dashboard.DashboardFragment"
+        android:name="com.ajcm.kidstube.ui.dashboard.DashboardFragment"
         android:label="dashboard"
         tools:layout="@layout/dashboard_fragment"/>
 

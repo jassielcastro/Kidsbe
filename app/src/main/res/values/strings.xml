@@ -4,4 +4,5 @@
 
     <string name="client_id">369375138052-ktm4k7uqjhv6n6o9j40n61avkosp0huc.apps.googleusercontent.com</string>
     <string name="client_secret">UKm0ng_qxjAiXk1hnyrMArfY</string>
+    <string name="search_on">Buscar en Kidstube</string>
 </resources>
