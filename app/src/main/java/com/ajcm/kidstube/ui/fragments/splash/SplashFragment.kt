@@ -5,11 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.ajcm.data.auth.Constants
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.common.GoogleCredential
+import com.ajcm.kidstube.extensions.navigateTo
 import com.ajcm.kidstube.ui.fragments.splash.SplashViewModel.UiModel
+import kotlinx.android.synthetic.main.splash_fragment.*
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -30,9 +31,10 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
     }
 
     private fun updateUi(model: UiModel) {
+        stopAnimation()
         when (model) {
             is UiModel.Loading -> {
-
+                startAnimation()
             }
             is UiModel.LoadingError -> {
 
@@ -41,9 +43,19 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
                 startActivityForResult(credential.credential.newChooseAccountIntent(), Constants.REQUEST_ACCOUNT_PICKER)
             }
             is UiModel.Navigate -> {
-                findNavController().navigate(R.id.action_splashFragment_to_dashboardFragment)
+                navigateTo(R.id.action_splashFragment_to_dashboardFragment)
             }
         }
+    }
+
+    private fun startAnimation() {
+        animationWaves.playAnimation()
+        animationSplash.playAnimation()
+    }
+
+    private fun stopAnimation() {
+        animationWaves.cancelAnimation()
+        animationSplash.cancelAnimation()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

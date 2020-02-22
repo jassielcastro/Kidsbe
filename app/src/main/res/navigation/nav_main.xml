@@ -14,7 +14,10 @@
             android:id="@+id/action_splashFragment_to_dashboardFragment"
             app:destination="@id/dashboardFragment"
             app:launchSingleTop="false"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             app:popUpTo="@+id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>

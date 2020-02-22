@@ -35,7 +35,8 @@ allprojects {
                 glide               : 'com.github.bumptech.glide:glide:4.9.0',
                 dexter              : 'com.karumi:dexter:5.0.0',
                 navigation_fragment : 'androidx.navigation:navigation-fragment-ktx:2.2.0-alpha03',
-                navigation_ui       : 'androidx.navigation:navigation-ui-ktx:2.2.0-alpha03'
+                navigation_ui       : 'androidx.navigation:navigation-ui-ktx:2.2.0-alpha03',
+                lottie              : 'com.airbnb.android:lottie:3.3.1'
         ]
 
         google = [

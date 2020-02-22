@@ -32,7 +32,7 @@ class SplashViewModel(private val localDB: LocalDB, uiDispatcher: CoroutineDispa
 
     private fun playSplash() = launch {
         _model.value = UiModel.Loading
-        delay(1200)
+        delay(5500)
         _model.value = UiModel.Navigate
     }
 
