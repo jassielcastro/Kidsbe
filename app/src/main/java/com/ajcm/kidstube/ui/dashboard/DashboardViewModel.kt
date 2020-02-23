@@ -1,9 +1,8 @@
 package com.ajcm.kidstube.ui.dashboard
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.ajcm.data.database.LocalDB
-import com.ajcm.domain.Video
+import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.common.ScopedViewModel
 import com.ajcm.usecases.GetYoutubeVideos
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,49 +12,51 @@ class DashboardViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
     private val localDB: LocalDB,
     uiDispatcher: CoroutineDispatcher
-): ScopedViewModel(uiDispatcher) {
+) : ScopedViewModel<UiDashboard>(uiDispatcher) {
 
-    private val _model = MutableLiveData<UiModel>()
-    val model: LiveData<UiModel>
+    override val model: LiveData<UiDashboard>
         get() {
-            if (_model.value == null) refresh()
+            if (_model.value == null) dispatch(ActionDashboard.Refresh)
             return _model
         }
 
-    sealed class UiModel {
-        object Loading : UiModel()
-        object LoadingError : UiModel()
-        data class RequestPermissions(val exception: Exception?) : UiModel()
-        data class Content(val videos: List<Video>) : UiModel()
-        data class Navigate(val videos: Video) : UiModel()
-    }
-
     init {
         initScope()
-        getYoutubeVideos.startYoutubeWith(localDB.accountName)
+        dispatch(ActionDashboard.StartYoutube)
     }
 
-    fun refresh() = launch {
-        _model.value = UiModel.Loading
-        val result = getYoutubeVideos.invoke("KH_VRLMGHO4")
-        if (result.videos.isNotEmpty()) {
-            _model.value = UiModel.Content(result.videos)
-        } else {
-            _model.value = UiModel.RequestPermissions(result.exception)
+    override fun dispatch(actionState: ActionState) {
+        when (actionState) {
+            ActionDashboard.StartYoutube -> {
+                getYoutubeVideos.startYoutubeWith(localDB.accountName)
+            }
+            ActionDashboard.Refresh -> {
+                refresh()
+            }
+            is ActionDashboard.SaveAccount -> {
+                localDB.accountName = actionState.accountName
+                refresh()
+            }
+            ActionDashboard.LoadError -> {
+                _model.value = UiDashboard.LoadingError
+            }
+            is ActionDashboard.VideoSelected -> {
+                _model.value = UiDashboard.NavigateTo(DashNav.VIDEO, actionState.video)
+            }
+            is ActionDashboard.ChangeRoot -> {
+                _model.value = UiDashboard.NavigateTo(actionState.root, null)
+            }
         }
     }
 
-    fun saveAccountName(accountName: String) {
-        localDB.accountName = accountName
-        refresh()
-    }
-
-    fun loadError() {
-        _model.value = UiModel.LoadingError
-    }
-
-    fun onVideoClicked(video: Video) {
-        _model.value = UiModel.Navigate(video)
+    private fun refresh() = launch {
+        _model.value = UiDashboard.Loading
+        val result = getYoutubeVideos.invoke(localDB.lastVideoId)
+        if (result.videos.isNotEmpty()) {
+            _model.value = UiDashboard.Content(result.videos)
+        } else {
+            _model.value = UiDashboard.RequestPermissions(result.exception)
+        }
     }
 
 }

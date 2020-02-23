@@ -5,76 +5,109 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import com.ajcm.data.auth.Constants
 import com.ajcm.kidstube.R
-import com.ajcm.kidstube.common.GoogleCredential
+import com.ajcm.kidstube.arch.KidsFragment
+import com.ajcm.kidstube.arch.UiState
+import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.extensions.*
 import com.ajcm.kidstube.ui.adapters.VideoAdapter
-import com.ajcm.kidstube.ui.dashboard.DashboardViewModel.UiModel
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import kotlinx.android.synthetic.main.dashboard_fragment.*
-import org.koin.android.ext.android.inject
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
+class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout.dashboard_fragment),
+    View.OnClickListener {
 
-    private val viewModel: DashboardViewModel by currentScope.viewModel(this)
-
-    private val credential: GoogleCredential by inject()
+    override val viewModel: DashboardViewModel by currentScope.viewModel(this)
 
     private lateinit var adapter: VideoAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel.model.observe(this, Observer(::updateUi))
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = VideoAdapter(viewModel::onVideoClicked)
+
+        setUpViews()
+        addListeners()
+
+        if (viewModel.model.value != null) {
+            viewModel.dispatch(ActionDashboard.Refresh)
+        }
+    }
+
+    private fun setUpViews() {
+        adapter = VideoAdapter {
+            viewModel.dispatch(ActionDashboard.VideoSelected(it))
+        }
+
         results.setUpLayoutManager()
         results.adapter = adapter
 
         imgProfile.loadRes(R.drawable.bck_avatar_kids_mia)
     }
 
-    private fun updateUi(model: UiModel) {
+    private fun addListeners() {
+        imgProfile.setOnClickListener(this)
+        imgSettings.setOnClickListener(this)
+        contentSearch.setOnClickListener(this)
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.imgProfile -> {
+                viewModel.dispatch(ActionDashboard.ChangeRoot(DashNav.PROFILE))
+            }
+            R.id.imgSettings -> {
+                viewModel.dispatch(ActionDashboard.ChangeRoot(DashNav.SETTINGS))
+            }
+            R.id.contentSearch -> {
+                viewModel.dispatch(ActionDashboard.ChangeRoot(DashNav.SEARCH))
+            }
+        }
+    }
+
+    override fun updateUi(state: UiState) {
         stopLoadingAnim()
-        when (model) {
-            is UiModel.Loading -> {
+        when (state) {
+            is UiDashboard.Loading -> {
                 hideActionViews()
                 startLoadingAnim()
             }
-            is UiModel.LoadingError -> {
+            is UiDashboard.LoadingError -> {
 
             }
-            is UiModel.RequestPermissions -> {
-                when(model.exception) {
+            is UiDashboard.RequestPermissions -> {
+                when (state.exception) {
                     is UserRecoverableAuthIOException -> {
-                        startActivityForResult(model.exception.intent, Constants.AUTH_CODE_REQUEST_CODE)
+                        startActivityForResult(
+                            state.exception.intent,
+                            Constants.AUTH_CODE_REQUEST_CODE
+                        )
                     }
                     is GooglePlayServicesAvailabilityIOException -> {
-                        showGooglePlayServicesAvailabilityErrorDialog(model.exception.connectionStatusCode)
+                        showGooglePlayServicesAvailabilityErrorDialog(state.exception.connectionStatusCode)
                     }
                     else -> {
-                        viewModel.loadError()
+                        println("DashboardFragment.updateUi --> Error: ${state.exception}")
+                        viewModel.dispatch(ActionDashboard.LoadError)
                     }
                 }
             }
-            is UiModel.Content -> {
+            is UiDashboard.Content -> {
                 showActionViews()
-                adapter.videos = model.videos
+                adapter.videos = state.videos
             }
-            is UiModel.Navigate -> {
-
+            is UiDashboard.NavigateTo -> {
+                if (state.video != null) {
+                    navigateTo(state.root.id, Bundle().apply {
+                        putString(Constants.KEY_VIDEO_ID, state.video.videoId)
+                    })
+                } else {
+                    navigateTo(state.root.id)
+                }
             }
         }
     }
@@ -113,9 +146,12 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
 
     private fun haveGooglePlayServices() {
         if (credential.credential.selectedAccountName == null) {
-            startActivityForResult(credential.credential.newChooseAccountIntent(), Constants.REQUEST_ACCOUNT_PICKER)
+            startActivityForResult(
+                credential.credential.newChooseAccountIntent(),
+                Constants.REQUEST_ACCOUNT_PICKER
+            )
         } else {
-            viewModel.loadError()
+            viewModel.dispatch(ActionDashboard.LoadError)
         }
     }
 
@@ -124,26 +160,26 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
         if (resultCode != ConnectionResult.SUCCESS) {
             showGooglePlayServicesAvailabilityErrorDialog(resultCode)
         } else {
-            viewModel.refresh()
+            viewModel.dispatch(ActionDashboard.Refresh)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
+        when (requestCode) {
             Constants.REQUEST_ACCOUNT_PICKER -> {
                 val accountName = data?.extras?.getString(AccountManager.KEY_ACCOUNT_NAME)
                 if (accountName != null) {
-                    viewModel.saveAccountName(accountName)
+                    viewModel.dispatch(ActionDashboard.SaveAccount(accountName))
                 } else {
-                    viewModel.loadError()
+                    viewModel.dispatch(ActionDashboard.LoadError)
                 }
             }
             Constants.AUTH_CODE_REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    viewModel.refresh()
+                    viewModel.dispatch(ActionDashboard.Refresh)
                 } else {
-                    viewModel.loadError()
+                    viewModel.dispatch(ActionDashboard.LoadError)
                 }
             }
             Constants.REQUEST_GOOGLE_PLAY_SERVICES -> {

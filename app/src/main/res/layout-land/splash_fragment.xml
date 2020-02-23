@@ -35,8 +35,7 @@
         app:lottie_autoPlay="false"
         app:lottie_loop="true"
         app:lottie_scale="4"
-        app:lottie_rawRes="@raw/waves"
-        app:lottie_repeatMode="restart" />
+        app:lottie_rawRes="@raw/waves" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationSplash"

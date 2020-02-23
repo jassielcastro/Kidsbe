@@ -32,13 +32,12 @@ android {
 
 dependencies {
 
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
-
     implementation project(":data")
     implementation project(":domain")
     implementation project(":usecases")
 
     implementation androidLibs.values()
+    implementation youtubePlayer.values()
     implementation kotlinLibs.values()
     implementation injection.values()
     kapt androidKaptLibs.values()

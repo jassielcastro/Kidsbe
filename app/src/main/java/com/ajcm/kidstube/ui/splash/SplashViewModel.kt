@@ -3,17 +3,17 @@ package com.ajcm.kidstube.ui.splash
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ajcm.data.database.LocalDB
+import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.common.ScopedViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SplashViewModel(private val localDB: LocalDB, uiDispatcher: CoroutineDispatcher) : ScopedViewModel(uiDispatcher) {
+class SplashViewModel(private val localDB: LocalDB, uiDispatcher: CoroutineDispatcher) : ScopedViewModel<UiSplash>(uiDispatcher) {
 
-    private val _model = MutableLiveData<UiModel>()
-    val model: LiveData<UiModel>
+    override val model: LiveData<UiSplash>
         get() {
-            if (_model.value == null) checkAccountName()
+            if (_model.value == null) dispatch(ActionSplash.ValidateAccount)
             return _model
         }
 
@@ -21,35 +21,37 @@ class SplashViewModel(private val localDB: LocalDB, uiDispatcher: CoroutineDispa
         initScope()
     }
 
+    override fun dispatch(actionState: ActionState) {
+        when(actionState) {
+            ActionSplash.ValidateAccount -> { checkAccountName() }
+            ActionSplash.StartSplash -> { playSplash() }
+            is ActionSplash.SaveAccount -> { saveAccountName(actionState.account) }
+            ActionSplash.LoadError -> { loadError() }
+        }
+    }
+
     private fun checkAccountName() {
-        _model.value = UiModel.Loading
+        _model.value = UiSplash.Loading
         if (localDB.accountName.isEmpty()) {
-            _model.value = UiModel.RequestAccount
+            _model.value = UiSplash.RequestAccount
         } else {
             playSplash()
         }
     }
 
     private fun playSplash() = launch {
-        _model.value = UiModel.Loading
+        _model.value = UiSplash.Loading
         delay(5150)
-        _model.value = UiModel.Navigate
+        _model.value = UiSplash.Navigate
     }
 
-    fun saveAccountName(accountName: String) {
+    private fun saveAccountName(accountName: String) {
         localDB.accountName = accountName
         checkAccountName()
     }
 
-    fun loadError() {
-        _model.value = UiModel.LoadingError
-    }
-
-    sealed class UiModel {
-        object Loading : UiModel()
-        object LoadingError : UiModel()
-        object RequestAccount : UiModel()
-        object Navigate : UiModel()
+    private fun loadError() {
+        _model.value = UiSplash.LoadingError
     }
 
 }

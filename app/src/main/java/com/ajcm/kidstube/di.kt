@@ -10,6 +10,14 @@ import com.ajcm.data.source.RemoteDataSource
 import com.ajcm.kidstube.common.GoogleCredential
 import com.ajcm.kidstube.ui.dashboard.DashboardFragment
 import com.ajcm.kidstube.ui.dashboard.DashboardViewModel
+import com.ajcm.kidstube.ui.playvideo.PlayVideoFragment
+import com.ajcm.kidstube.ui.playvideo.PlayVideoViewModel
+import com.ajcm.kidstube.ui.profile.ProfileFragment
+import com.ajcm.kidstube.ui.profile.ProfileViewModel
+import com.ajcm.kidstube.ui.search.SearchFragment
+import com.ajcm.kidstube.ui.search.SearchViewModel
+import com.ajcm.kidstube.ui.settings.SettingsFragment
+import com.ajcm.kidstube.ui.settings.SettingsViewModel
 import com.ajcm.kidstube.ui.splash.SplashFragment
 import com.ajcm.kidstube.ui.splash.SplashViewModel
 import com.ajcm.usecases.GetYoutubeVideos
@@ -53,5 +61,18 @@ private val scopesModule = module {
     scope(named<DashboardFragment>()) {
         viewModel { DashboardViewModel(get(), get(), get()) }
         scoped { GetYoutubeVideos(get()) }
+    }
+    scope(named<PlayVideoFragment>()) {
+        viewModel { PlayVideoViewModel( get(), get(), get()) }
+        scoped { GetYoutubeVideos(get()) }
+    }
+    scope(named<ProfileFragment>()) {
+        viewModel { ProfileViewModel( get()) }
+    }
+    scope(named<SearchFragment>()) {
+        viewModel { SearchViewModel( get()) }
+    }
+    scope(named<SettingsFragment>()) {
+        viewModel { SettingsViewModel( get()) }
     }
 }

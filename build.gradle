@@ -52,6 +52,10 @@ allprojects {
                 gson              : 'com.google.code.gson:gson:2.2.4'
         ]
 
+        youtubePlayer = [
+                player_view : 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
+        ]
+
         androidKaptLibs = [
                 roomCompiler : 'androidx.room:room-compiler:2.2.1',
                 glideCompiler: 'com.github.bumptech.glide:compiler:4.9.0'
