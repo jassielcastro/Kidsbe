@@ -2,10 +2,13 @@ package com.ajcm.kidstube.ui.playvideo
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.extensions.hide
+import com.ajcm.kidstube.extensions.setUpLayoutManager
+import com.ajcm.kidstube.ui.adapters.RelatedVideosAdapter
 import com.ajcm.kidstube.ui.playvideo.customview.CustomPlayerUiController
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -13,23 +16,32 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrC
 import kotlinx.android.synthetic.main.play_video_fragment.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.transition.TransitionManager
 
 class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout.play_video_fragment) {
 
     override val viewModel: PlayVideoViewModel by currentScope.viewModel(this)
     private lateinit var youtubePlayer: YouTubePlayer
 
-    private val customPlayerUi : View by lazy {
-        youtube_player_view.inflateCustomPlayerUi(R.layout.custom_player_ui)
-    }
+    private lateinit var customPlayerUi : ViewGroup
+    private lateinit var adapter: RelatedVideosAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.dispatch(ActionPlayVideo.ObtainVideo(arguments))
         setUpViews()
     }
 
     private fun setUpViews() {
+        relatedRecycler.setUpLayoutManager()
+        adapter = RelatedVideosAdapter {
+            viewModel.dispatch(ActionPlayVideo.VideoSelected(it))
+        }
+        relatedRecycler.adapter = adapter
+
+        customPlayerUi = youtube_player_view.inflateCustomPlayerUi(R.layout.custom_player_ui) as ViewGroup
         lifecycle.addObserver(youtube_player_view)
         youtube_player_view.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -41,6 +53,9 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
 
     override fun updateUi(state: UiState) {
         when (state) {
+            is UiPlayVideo.StartSharedVideo -> {
+                imgVideoToPlay.transitionName = state.videoId
+            }
             UiPlayVideo.Loading -> {
 
             }
@@ -49,23 +64,35 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
             }
             is UiPlayVideo.RenderYoutubePlayer -> {
                 youtubePlayer = state.youTubePlayer
-                viewModel.dispatch(ActionPlayVideo.Start(arguments))
-
-                val customPlayer = CustomPlayerUiController(customPlayerUi, youtubePlayer)
+                val customPlayer = CustomPlayerUiController(customPlayerUi, youtubePlayer, { panelState ->
+                    toggleVideoView(panelState)
+                }, {
+                    viewModel.dispatch(ActionPlayVideo.PlayNextVideo)
+                })
+                customPlayer.onReady(youtubePlayer)
                 youtubePlayer.addListener(customPlayer)
 
-                viewModel.dispatch(ActionPlayVideo.Refresh)
+                viewModel.dispatch(ActionPlayVideo.Start)
             }
             is UiPlayVideo.Content -> {
-
+                adapter.videos = state.videos
             }
             is UiPlayVideo.PlayVideo -> {
-                viewFrame.hide()
+                imgVideoToPlay.hide()
                 progressLoader.hide()
                 viewModel.dispatch(ActionPlayVideo.SaveLastVideoId(state.videoId))
                 youtubePlayer.loadOrCueVideo(lifecycle, state.videoId, 0f)
+                viewModel.dispatch(ActionPlayVideo.Refresh)
             }
         }
+    }
+
+    private fun toggleVideoView(state: CustomPlayerUiController.PanelState) {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(contentPlayVideo)
+        constraintSet.setGuidelinePercent(R.id.videoBottomGuideline, if (state == CustomPlayerUiController.PanelState.COLLAPSED) 0.7f else 1f)
+        TransitionManager.beginDelayedTransition(contentPlayVideo)
+        constraintSet.applyTo(contentPlayVideo)
     }
 
 }

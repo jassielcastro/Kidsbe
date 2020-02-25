@@ -36,27 +36,30 @@
         android:layout_centerInParent="true" />
 
     <RelativeLayout
+        android:id="@+id/containerCustomAction"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:layout_margin="24dp"
+        android:layout_margin="16dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/play_pause_button"
             android:layout_width="40dp"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
+            android:padding="8dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_play"
+            android:src="@drawable/ic_pause"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/video_current_time"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_centerVertical="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_toEndOf="@id/play_pause_button"
             android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/white"
@@ -77,10 +80,10 @@
 
         <TextView
             android:id="@+id/video_duration"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="24dp"
             android:layout_alignParentEnd="true"
             android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/white"

@@ -7,6 +7,7 @@ import com.ajcm.kidstube.arch.UiState
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 
 sealed class UiPlayVideo : UiState {
+    data class StartSharedVideo(val videoId: String) : UiPlayVideo()
     object Loading : UiPlayVideo()
     object LoadingError : UiPlayVideo()
     data class RenderYoutubePlayer(val youTubePlayer: YouTubePlayer) : UiPlayVideo()
@@ -16,11 +17,13 @@ sealed class UiPlayVideo : UiState {
 }
 
 sealed class ActionPlayVideo : ActionState {
+    data class ObtainVideo(val bundle: Bundle?) : ActionPlayVideo()
     object StartYoutube : ActionPlayVideo()
-    data class Start(val bundle: Bundle?) : ActionPlayVideo()
+    object Start : ActionPlayVideo()
     data class PlayerViewReady(val youTubePlayer: YouTubePlayer) : ActionPlayVideo()
     object Refresh : ActionPlayVideo()
     data class SaveLastVideoId(val lastVideoId: String) : ActionPlayVideo()
     object LoadError : ActionPlayVideo()
     data class VideoSelected(val video: Video) : ActionPlayVideo()
+    object PlayNextVideo : ActionPlayVideo()
 }

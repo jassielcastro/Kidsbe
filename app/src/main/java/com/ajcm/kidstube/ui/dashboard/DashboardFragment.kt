@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
@@ -39,8 +40,8 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
     }
 
     private fun setUpViews() {
-        adapter = VideoAdapter {
-            viewModel.dispatch(ActionDashboard.VideoSelected(it))
+        adapter = VideoAdapter { video, view ->
+            viewModel.dispatch(ActionDashboard.VideoSelected(video, view))
         }
 
         results.setUpLayoutManager()
@@ -101,10 +102,11 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
                 adapter.videos = state.videos
             }
             is UiDashboard.NavigateTo -> {
-                if (state.video != null) {
+                if (state.video != null && state.view != null) {
+                    val extras = FragmentNavigatorExtras(Pair(state.view, state.video.videoId))
                     navigateTo(state.root.id, Bundle().apply {
                         putString(Constants.KEY_VIDEO_ID, state.video.videoId)
-                    })
+                    }, extras = extras)
                 } else {
                     navigateTo(state.root.id)
                 }

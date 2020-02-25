@@ -1,5 +1,6 @@
 package com.ajcm.kidstube.ui.dashboard
 
+import android.view.View
 import androidx.annotation.IdRes
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.R
@@ -18,7 +19,7 @@ sealed class UiDashboard : UiState {
     object LoadingError : UiDashboard()
     data class RequestPermissions(val exception: Exception?) : UiDashboard()
     data class Content(val videos: List<Video>) : UiDashboard()
-    data class NavigateTo(val root: DashNav, val video: Video?) : UiDashboard()
+    data class NavigateTo(val root: DashNav, val video: Video?, val view: View?) : UiDashboard()
 }
 
 sealed class ActionDashboard : ActionState {
@@ -26,6 +27,6 @@ sealed class ActionDashboard : ActionState {
     object Refresh : ActionDashboard()
     data class SaveAccount(val accountName: String) : ActionDashboard()
     object LoadError : ActionDashboard()
-    data class VideoSelected(val video: Video) : ActionDashboard()
+    data class VideoSelected(val video: Video, val view: View) : ActionDashboard()
     data class ChangeRoot(val root: DashNav) : ActionDashboard()
 }

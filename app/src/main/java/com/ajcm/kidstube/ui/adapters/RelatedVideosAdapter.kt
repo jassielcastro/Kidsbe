@@ -1,6 +1,5 @@
 package com.ajcm.kidstube.ui.adapters
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ajcm.domain.Video
@@ -8,9 +7,9 @@ import com.ajcm.kidstube.R
 import com.ajcm.kidstube.extensions.basicDiffUtil
 import com.ajcm.kidstube.extensions.inflate
 import com.ajcm.kidstube.extensions.loadUrl
-import kotlinx.android.synthetic.main.item_video.view.*
+import kotlinx.android.synthetic.main.item_related_video.view.*
 
-class VideoAdapter(private val listener: (Video, View) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
+class RelatedVideosAdapter(private val listener: (Video) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
 
     var videos: List<Video> by basicDiffUtil(
         emptyList(),
@@ -18,7 +17,7 @@ class VideoAdapter(private val listener: (Video, View) -> Unit) : RecyclerView.A
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = parent.inflate(R.layout.item_video)
+        val view = parent.inflate(R.layout.item_related_video)
         return ViewHolder(view)
     }
 
@@ -26,15 +25,8 @@ class VideoAdapter(private val listener: (Video, View) -> Unit) : RecyclerView.A
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val video = videos[position]
-        bind(video, holder)
-        holder.itemView.setOnClickListener { listener(video, holder.itemView.imgVideo) }
-    }
-
-    private fun bind(video: Video, holder: ViewHolder) {
         holder.itemView.imgVideo.loadUrl(video.thumbnail)
-        holder.itemView.imgVideo.transitionName = video.videoId
-        holder.itemView.txtTitle.text = video.title
-        holder.itemView.imgOption.setOnClickListener {  }
+        holder.itemView.setOnClickListener { listener(video) }
     }
 
 }

@@ -5,8 +5,6 @@ import com.ajcm.data.auth.Session
 import com.ajcm.data.mappers.mapToList
 import com.ajcm.data.models.Result
 import com.ajcm.data.source.RemoteDataSource
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.services.youtube.YouTube
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -25,6 +23,7 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
             .setType("video")
             .setMaxResults(50)
             .setSafeSearch("strict")
+            .setVideoDuration("medium")
             .setFields("items(id/kind,id/videoId,snippet/channelId,snippet/title,snippet/thumbnails/high/url,snippet/channelTitle)")
     }
 
@@ -41,10 +40,6 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
             }
             val r = request.await()
             Result(r.items.mapToList(), null)
-        } catch (e: UserRecoverableAuthIOException) {
-            Result(arrayListOf(), e)
-        } catch (e: GooglePlayServicesAvailabilityIOException) {
-            Result(arrayListOf(), e)
         } catch (e: IOException) {
             Result(arrayListOf(), e)
         }
@@ -63,10 +58,6 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
             }
             val r = request.await()
             Result(r.items.mapToList(), null)
-        } catch (e: UserRecoverableAuthIOException) {
-            Result(arrayListOf(), e)
-        } catch (e: GooglePlayServicesAvailabilityIOException) {
-            Result(arrayListOf(), e)
         } catch (e: IOException) {
             Result(arrayListOf(), e)
         }
