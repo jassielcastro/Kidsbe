@@ -41,11 +41,11 @@ fun Application.initDI() {
 
 private val appModule = module {
     single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
-    single(named("baseUrl")) { "https://www.googleapis.com/youtube/v3/" }
-    single { YoutubeApi(get(named("baseUrl"))) }
+    //single(named("baseUrl")) { "https://www.googleapis.com/youtube/v3/" }
+    //single { YoutubeApi(get(named("baseUrl"))) }
     single { LocalDB(get()) }
     single { GoogleCredential(get()) }
-    factory<RemoteDataSource>(named("retrofit")) { YoutubeDataSource(get()) }
+    //factory<RemoteDataSource>(named("retrofit")) { YoutubeDataSource(get()) }
     factory<RemoteDataSource>(named("google")) { YoutubeRemoteSource(get()) }
     single<CoroutineDispatcher> { Dispatchers.Main }
 }

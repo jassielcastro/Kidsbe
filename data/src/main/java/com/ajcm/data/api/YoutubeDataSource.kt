@@ -3,8 +3,6 @@ package com.ajcm.data.api
 import com.ajcm.data.mappers.mapToVideo
 import com.ajcm.data.models.Result
 import com.ajcm.data.source.RemoteDataSource
-import com.ajcm.domain.Video
-import java.lang.Exception
 
 class YoutubeDataSource(private val api: YoutubeApi): RemoteDataSource {
 

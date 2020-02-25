@@ -80,6 +80,9 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
             is UiDashboard.LoadingError -> {
 
             }
+            UiDashboard.YoutubeStarted -> {
+                viewModel.dispatch(ActionDashboard.Refresh)
+            }
             is UiDashboard.RequestPermissions -> {
                 when (state.exception) {
                     is UserRecoverableAuthIOException -> {

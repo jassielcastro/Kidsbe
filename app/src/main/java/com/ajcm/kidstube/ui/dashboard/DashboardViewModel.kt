@@ -16,19 +16,19 @@ class DashboardViewModel(
 
     override val model: LiveData<UiDashboard>
         get() {
-            if (_model.value == null) dispatch(ActionDashboard.Refresh)
+            if (_model.value == null) dispatch(ActionDashboard.StartYoutube)
             return _model
         }
 
     init {
         initScope()
-        dispatch(ActionDashboard.StartYoutube)
     }
 
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             ActionDashboard.StartYoutube -> {
                 getYoutubeVideos.startYoutubeWith(localDB.accountName)
+                _model.value = UiDashboard.YoutubeStarted
             }
             ActionDashboard.Refresh -> {
                 refresh()

@@ -17,6 +17,7 @@ enum class DashNav(@IdRes val id: Int) {
 sealed class UiDashboard : UiState {
     object Loading : UiDashboard()
     object LoadingError : UiDashboard()
+    object YoutubeStarted : UiDashboard()
     data class RequestPermissions(val exception: Exception?) : UiDashboard()
     data class Content(val videos: List<Video>) : UiDashboard()
     data class NavigateTo(val root: DashNav, val video: Video?, val view: View?) : UiDashboard()
