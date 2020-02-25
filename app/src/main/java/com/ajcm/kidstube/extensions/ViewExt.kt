@@ -1,11 +1,13 @@
 package com.ajcm.kidstube.extensions
 
+import android.animation.Animator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,21 +15,45 @@ import com.bumptech.glide.Glide
 import kotlin.properties.Delegates
 
 fun View.show() {
-    apply {
-        val shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
+    if (!this.isVisible) {
+        apply {
+            val shortAnimationDuration =
+                resources.getInteger(android.R.integer.config_shortAnimTime)
 
-        alpha = 0f
-        visibility = View.VISIBLE
+            alpha = 0f
+            visibility = View.VISIBLE
 
-        animate()
-            .alpha(1f)
-            .setDuration(shortAnimationDuration.toLong())
-            .setListener(null)
+            animate()
+                .alpha(1f)
+                .setDuration(shortAnimationDuration.toLong())
+                .setListener(null)
+        }
     }
 }
 
 fun View.hide() {
-    this.visibility = View.GONE
+    if (this.isVisible) {
+        apply {
+            val shortAnimationDuration =
+                resources.getInteger(android.R.integer.config_shortAnimTime)
+            alpha = 1f
+            animate()
+                .alpha(0f)
+                .setDuration(shortAnimationDuration.toLong())
+                .setListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(p0: Animator?) {}
+
+                    override fun onAnimationEnd(p0: Animator?) {
+                        this@apply.visibility = View.GONE
+                    }
+
+                    override fun onAnimationCancel(p0: Animator?) {}
+
+                    override fun onAnimationStart(p0: Animator?) {}
+
+                })
+        }
+    }
 }
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View =
@@ -37,8 +63,12 @@ fun ImageView.loadUrl(url: String) {
     Glide.with(context).load(url).into(this)
 }
 
-fun ImageView.loadRes(@DrawableRes drawable: Int) {
-    Glide.with(context).load(drawable).circleCrop().into(this)
+fun ImageView.loadRes(@DrawableRes drawable: Int, circleCrop: Boolean = true) {
+    if (circleCrop) {
+        Glide.with(context).load(drawable).circleCrop().into(this)
+    } else {
+        Glide.with(context).load(drawable).into(this)
+    }
 }
 
 inline fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffUtil(

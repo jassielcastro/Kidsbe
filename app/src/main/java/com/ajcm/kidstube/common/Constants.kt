@@ -7,4 +7,6 @@ object Constants {
     const val AUTH_CODE_REQUEST_CODE = 1802
     const val REQUEST_GOOGLE_PLAY_SERVICES = 1109
 
+    const val DEFAULT_TOGGLE_DELAY = 3000L
+
 }
