@@ -34,7 +34,7 @@
                 android:layout_margin="8dp"
                 android:layout_toStartOf="@+id/imgOption"
                 android:gravity="center_vertical"
-                android:theme="@style/TitleVideo" />
+                android:theme="@style/TitleText" />
 
             <ImageView
                 android:id="@+id/imgOption"

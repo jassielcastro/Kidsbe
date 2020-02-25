@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TitleText"
+        android:textSize="18sp"
+        android:text="@string/oh_nooo"
+        android:padding="12dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/txtErrorTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ErrorText"
+        tools:text="Generic error"
+        android:padding="12dp"
+        android:gravity="center"/>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="16dp">
+
+        <Button
+            android:id="@+id/btnErrorAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ErrorButton"
+            android:text="@string/re_try"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp" />
+
+    </FrameLayout>
+
+</LinearLayout>

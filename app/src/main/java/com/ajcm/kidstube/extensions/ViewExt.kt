@@ -17,15 +17,12 @@ import kotlin.properties.Delegates
 fun View.show() {
     if (!this.isVisible) {
         apply {
-            val shortAnimationDuration =
-                resources.getInteger(android.R.integer.config_shortAnimTime)
-
             alpha = 0f
             visibility = View.VISIBLE
 
             animate()
                 .alpha(1f)
-                .setDuration(shortAnimationDuration.toLong())
+                .setDuration(320L)
                 .setListener(null)
         }
     }
@@ -34,12 +31,10 @@ fun View.show() {
 fun View.hide() {
     if (this.isVisible) {
         apply {
-            val shortAnimationDuration =
-                resources.getInteger(android.R.integer.config_shortAnimTime)
             alpha = 1f
             animate()
                 .alpha(0f)
-                .setDuration(shortAnimationDuration.toLong())
+                .setDuration(200L)
                 .setListener(object : Animator.AnimatorListener {
                     override fun onAnimationRepeat(p0: Animator?) {}
 
@@ -47,7 +42,9 @@ fun View.hide() {
                         this@apply.visibility = View.GONE
                     }
 
-                    override fun onAnimationCancel(p0: Animator?) {}
+                    override fun onAnimationCancel(p0: Animator?) {
+                        this@apply.visibility = View.GONE
+                    }
 
                     override fun onAnimationStart(p0: Animator?) {}
 

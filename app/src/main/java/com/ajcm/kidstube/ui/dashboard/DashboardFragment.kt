@@ -18,6 +18,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import kotlinx.android.synthetic.main.dashboard_fragment.*
+import kotlinx.android.synthetic.main.generic_error.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -34,7 +35,8 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
         setUpViews()
         addListeners()
 
-        if (viewModel.model.value != null) {
+        //when is returned by another fragment instance
+        if (viewModel.model.value is UiDashboard.NavigateTo) {
             viewModel.dispatch(ActionDashboard.Refresh)
         }
     }
@@ -54,6 +56,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
         imgProfile.setOnClickListener(this)
         imgSettings.setOnClickListener(this)
         contentSearch.setOnClickListener(this)
+        btnErrorAction.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
@@ -67,6 +70,9 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
             R.id.contentSearch -> {
                 viewModel.dispatch(ActionDashboard.ChangeRoot(DashNav.SEARCH))
             }
+            R.id.btnErrorAction -> {
+                viewModel.dispatch(ActionDashboard.StartYoutube)
+            }
         }
     }
 
@@ -74,11 +80,13 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
         stopLoadingAnim()
         when (state) {
             is UiDashboard.Loading -> {
+                contentError.hide()
                 hideActionViews()
                 startLoadingAnim()
             }
             is UiDashboard.LoadingError -> {
-
+                txtErrorTitle.text = state.msg
+                contentError.show()
             }
             UiDashboard.YoutubeStarted -> {
                 viewModel.dispatch(ActionDashboard.Refresh)
@@ -95,8 +103,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
                         showGooglePlayServicesAvailabilityErrorDialog(state.exception.connectionStatusCode)
                     }
                     else -> {
-                        println("DashboardFragment.updateUi --> Error: ${state.exception}")
-                        viewModel.dispatch(ActionDashboard.LoadError)
+                        viewModel.dispatch(ActionDashboard.ParseException(state.exception))
                     }
                 }
             }
@@ -155,8 +162,6 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
                 credential.credential.newChooseAccountIntent(),
                 Constants.REQUEST_ACCOUNT_PICKER
             )
-        } else {
-            viewModel.dispatch(ActionDashboard.LoadError)
         }
     }
 
@@ -177,14 +182,14 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
                 if (accountName != null) {
                     viewModel.dispatch(ActionDashboard.SaveAccount(accountName))
                 } else {
-                    viewModel.dispatch(ActionDashboard.LoadError)
+                    viewModel.dispatch(ActionDashboard.LoadError("No has seleccionado una cuenta para poder utilizar Kidstube!"))
                 }
             }
             Constants.AUTH_CODE_REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     viewModel.dispatch(ActionDashboard.Refresh)
                 } else {
-                    viewModel.dispatch(ActionDashboard.LoadError)
+                    viewModel.dispatch(ActionDashboard.LoadError("Vuelve a iniciar sesión para continuar con Kidstube!"))
                 }
             }
             Constants.REQUEST_GOOGLE_PLAY_SERVICES -> {

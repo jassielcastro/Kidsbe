@@ -5,6 +5,7 @@ import com.ajcm.data.database.LocalDB
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.common.ScopedViewModel
 import com.ajcm.usecases.GetYoutubeVideos
+import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
@@ -37,8 +38,12 @@ class DashboardViewModel(
                 localDB.accountName = actionState.accountName
                 refresh()
             }
-            ActionDashboard.LoadError -> {
-                _model.value = UiDashboard.LoadingError
+            is ActionDashboard.ParseException -> {
+                val msg = parseError(actionState.exception)
+                _model.value = UiDashboard.LoadingError(msg)
+            }
+            is ActionDashboard.LoadError -> {
+                _model.value = UiDashboard.LoadingError(actionState.msg)
             }
             is ActionDashboard.VideoSelected -> {
                 _model.value = UiDashboard.NavigateTo(DashNav.VIDEO, actionState.video, actionState.view)
@@ -46,6 +51,15 @@ class DashboardViewModel(
             is ActionDashboard.ChangeRoot -> {
                 _model.value = UiDashboard.NavigateTo(actionState.root, null, null)
             }
+        }
+    }
+
+    private fun parseError(exception: Exception?): String {
+        return when(exception) {
+            is GoogleJsonResponseException -> {
+                exception.details.message
+            }
+            else -> "Ocurrió un error al procesar la solicitud. Intenta de nuevo!"
         }
     }
 

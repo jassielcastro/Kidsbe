@@ -16,7 +16,7 @@ enum class DashNav(@IdRes val id: Int) {
 
 sealed class UiDashboard : UiState {
     object Loading : UiDashboard()
-    object LoadingError : UiDashboard()
+    data class LoadingError(val msg: String) : UiDashboard()
     object YoutubeStarted : UiDashboard()
     data class RequestPermissions(val exception: Exception?) : UiDashboard()
     data class Content(val videos: List<Video>) : UiDashboard()
@@ -27,7 +27,8 @@ sealed class ActionDashboard : ActionState {
     object StartYoutube : ActionDashboard()
     object Refresh : ActionDashboard()
     data class SaveAccount(val accountName: String) : ActionDashboard()
-    object LoadError : ActionDashboard()
+    data class ParseException(val exception: Exception?) : ActionDashboard()
+    data class LoadError(val msg: String) : ActionDashboard()
     data class VideoSelected(val video: Video, val view: View) : ActionDashboard()
     data class ChangeRoot(val root: DashNav) : ActionDashboard()
 }
