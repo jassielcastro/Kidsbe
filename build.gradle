@@ -56,6 +56,10 @@ allprojects {
                 player_view : 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
         ]
 
+        firestore = [
+                firestore : 'com.google.firebase:firebase-firestore:21.2.1'
+        ]
+
         androidKaptLibs = [
                 roomCompiler : 'androidx.room:room-compiler:2.2.1',
                 glideCompiler: 'com.github.bumptech.glide:compiler:4.9.0'

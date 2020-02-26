@@ -1,8 +1,8 @@
 package com.ajcm.kidstube
 
 import android.app.Application
-import com.ajcm.data.api.YoutubeApi
-import com.ajcm.data.api.YoutubeDataSource
+import com.ajcm.data.api.FirebaseApi
+import com.ajcm.data.api.FirebaseDataSource
 import com.ajcm.data.api.YoutubeRemoteSource
 import com.ajcm.data.database.LocalDB
 import com.ajcm.data.repository.VideoRepository
@@ -41,12 +41,12 @@ fun Application.initDI() {
 
 private val appModule = module {
     single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
-    //single(named("baseUrl")) { "https://www.googleapis.com/youtube/v3/" }
-    //single { YoutubeApi(get(named("baseUrl"))) }
+    single (named("kids")) { FirebaseApi.Videos.List }
     single { LocalDB(get()) }
     single { GoogleCredential(get()) }
     //factory<RemoteDataSource>(named("retrofit")) { YoutubeDataSource(get()) }
     factory<RemoteDataSource>(named("google")) { YoutubeRemoteSource(get()) }
+    factory<RemoteDataSource>(named("firestore")) { FirebaseDataSource(get(named("kids"))) }
     single<CoroutineDispatcher> { Dispatchers.Main }
 }
 

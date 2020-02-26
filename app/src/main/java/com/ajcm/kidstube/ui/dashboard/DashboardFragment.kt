@@ -36,8 +36,8 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
         addListeners()
 
         //when is returned by another fragment instance
-        if (viewModel.model.value is UiDashboard.NavigateTo) {
-            viewModel.dispatch(ActionDashboard.Refresh)
+        if (viewModel.videos.isNotEmpty()) {
+            updateUi(UiDashboard.Content(viewModel.videos))
         }
     }
 
@@ -78,9 +78,9 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
 
     override fun updateUi(state: UiState) {
         stopLoadingAnim()
+        contentError.hide()
         when (state) {
             is UiDashboard.Loading -> {
-                contentError.hide()
                 hideActionViews()
                 startLoadingAnim()
             }
@@ -156,7 +156,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
         )
     }
 
-    private fun haveGooglePlayServices() {
+    private fun haveSelectedAccountName() {
         if (credential.credential.selectedAccountName == null) {
             startActivityForResult(
                 credential.credential.newChooseAccountIntent(),
@@ -194,7 +194,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
             }
             Constants.REQUEST_GOOGLE_PLAY_SERVICES -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    haveGooglePlayServices()
+                    haveSelectedAccountName()
                 } else {
                     checkGooglePlayServicesAvailable()
                 }

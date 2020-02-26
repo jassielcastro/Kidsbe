@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "369375138052",
+    "firebase_url": "https://kidsbe.firebaseio.com",
+    "project_id": "kidsbe",
+    "storage_bucket": "kidsbe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369375138052:android:d669e602e26f3120b88051",
+        "android_client_info": {
+          "package_name": "com.ajcm.kidstube"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "369375138052-l5pukgibf0e0urk0ct56gd1147bk17go.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ajcm.kidstube",
+            "certificate_hash": "a22bf2848901500475f5419251464cbc182e1c60"
+          }
+        },
+        {
+          "client_id": "369375138052-qm2mnda8hbicn5uon9bhso4gkr0qf7u7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCswN8AFRU4aN9MDjoOhPLc3CVH42IdtUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "369375138052-qm2mnda8hbicn5uon9bhso4gkr0qf7u7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

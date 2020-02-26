@@ -31,6 +31,7 @@ dependencies {
 
     api google.values()
     implementation youtube.values()
+    implementation firestore.values()
     implementation kotlinLibs.values()
     implementation network.values()
     testImplementation testLibs.values()

@@ -1,7 +1,9 @@
 package com.ajcm.kidstube.ui.dashboard
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.ajcm.data.database.LocalDB
+import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.common.ScopedViewModel
 import com.ajcm.usecases.GetYoutubeVideos
@@ -20,6 +22,8 @@ class DashboardViewModel(
             if (_model.value == null) dispatch(ActionDashboard.StartYoutube)
             return _model
         }
+
+    var videos: List<Video> = emptyList()
 
     init {
         initScope()
@@ -55,6 +59,7 @@ class DashboardViewModel(
     }
 
     private fun parseError(exception: Exception?): String {
+        Log.e("DashboardViewModel", exception?.toString() ?: "Unspecific error")
         return when(exception) {
             is GoogleJsonResponseException -> {
                 exception.details.message
@@ -67,6 +72,7 @@ class DashboardViewModel(
         _model.value = UiDashboard.Loading
         val result = getYoutubeVideos.invoke(localDB.lastVideoId)
         if (result.videos.isNotEmpty()) {
+            videos = result.videos
             _model.value = UiDashboard.Content(result.videos)
         } else {
             _model.value = UiDashboard.RequestPermissions(result.exception)
