@@ -83,7 +83,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
                 progressLoader.hide()
                 viewModel.dispatch(ActionPlayVideo.SaveLastVideoId(state.videoId))
                 youtubePlayer.loadOrCueVideo(lifecycle, state.videoId, 0f)
-                //viewModel.dispatch(ActionPlayVideo.Refresh)
+                viewModel.dispatch(ActionPlayVideo.Refresh)
             }
         }
     }

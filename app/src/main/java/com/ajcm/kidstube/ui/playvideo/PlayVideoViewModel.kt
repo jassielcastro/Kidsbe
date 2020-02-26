@@ -6,6 +6,7 @@ import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.common.ScopedViewModel
+import com.ajcm.kidstube.model.VideoList
 import com.ajcm.usecases.GetYoutubeVideos
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -37,6 +38,11 @@ class PlayVideoViewModel(
                     sharedVideoId = it
                     _model.value = UiPlayVideo.StartSharedVideo(it)
                 }
+                actionState.bundle?.getSerializable(Constants.KEY_VIDEO_LIST)?.let {
+                    (it as? VideoList)?.let {  vl ->
+                        videoList = vl.list
+                    }
+                }
             }
             ActionPlayVideo.StartYoutube -> {
                 getYoutubeVideos.startYoutubeWith(localDB.accountName)
@@ -50,7 +56,11 @@ class PlayVideoViewModel(
                 _model.value = UiPlayVideo.RenderYoutubePlayer(actionState.youTubePlayer)
             }
             ActionPlayVideo.Refresh -> {
-                refresh()
+                if (videoList.isEmpty()) {
+                    refresh()
+                } else {
+                    _model.value = UiPlayVideo.Content(videoList.shuffled())
+                }
             }
             is ActionPlayVideo.SaveLastVideoId -> {
                 localDB.lastVideoId = actionState.lastVideoId

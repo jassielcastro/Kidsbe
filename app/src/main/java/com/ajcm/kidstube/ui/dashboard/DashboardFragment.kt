@@ -11,6 +11,7 @@ import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.extensions.*
+import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.adapters.VideoAdapter
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -109,13 +110,14 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
             }
             is UiDashboard.Content -> {
                 showActionViews()
-                adapter.videos = state.videos
+                adapter.videos = state.videos.shuffled()
             }
             is UiDashboard.NavigateTo -> {
                 if (state.video != null && state.view != null) {
                     val extras = FragmentNavigatorExtras(Pair(state.view, state.video.videoId))
                     navigateTo(state.root.id, Bundle().apply {
                         putString(Constants.KEY_VIDEO_ID, state.video.videoId)
+                        putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
                     }, extras = extras)
                 } else {
                     navigateTo(state.root.id)

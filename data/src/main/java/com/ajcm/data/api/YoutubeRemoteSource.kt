@@ -2,6 +2,7 @@ package com.ajcm.data.api
 
 import android.app.Application
 import com.ajcm.data.auth.Session
+import com.ajcm.data.common.Constants
 import com.ajcm.data.mappers.mapToList
 import com.ajcm.data.models.Result
 import com.ajcm.data.source.RemoteDataSource
@@ -21,7 +22,7 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
             .Search()
             .list("id,snippet")
             .setType("video")
-            .setMaxResults(50)
+            .setMaxResults(Constants.DEFAULT_VIDEO_COUNT)
             .setSafeSearch("strict")
             .setVideoDuration("medium")
             .setFields("items(id/kind,id/videoId,snippet/channelId,snippet/title,snippet/thumbnails/high/url,snippet/channelTitle)")
