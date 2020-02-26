@@ -53,6 +53,8 @@ fun View.hide() {
     }
 }
 
+
+
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 

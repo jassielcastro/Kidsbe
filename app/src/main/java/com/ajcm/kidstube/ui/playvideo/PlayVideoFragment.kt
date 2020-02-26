@@ -1,8 +1,11 @@
 package com.ajcm.kidstube.ui.playvideo
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
@@ -16,8 +19,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrC
 import kotlinx.android.synthetic.main.play_video_fragment.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.transition.TransitionManager
 
 class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout.play_video_fragment) {
 
@@ -41,7 +42,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
         }
         relatedRecycler.adapter = adapter
 
-        customPlayerUi = youtube_player_view.inflateCustomPlayerUi(R.layout.custom_player_ui) as ViewGroup
+        customPlayerUi = youtube_player_view.inflateCustomPlayerUi(com.ajcm.kidstube.R.layout.custom_player_ui) as ViewGroup
         lifecycle.addObserver(youtube_player_view)
         youtube_player_view.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -82,17 +83,29 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
                 progressLoader.hide()
                 viewModel.dispatch(ActionPlayVideo.SaveLastVideoId(state.videoId))
                 youtubePlayer.loadOrCueVideo(lifecycle, state.videoId, 0f)
-                viewModel.dispatch(ActionPlayVideo.Refresh)
+                //viewModel.dispatch(ActionPlayVideo.Refresh)
             }
         }
     }
 
     private fun toggleVideoView(state: CustomPlayerUiController.PanelState) {
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(contentPlayVideo)
-        constraintSet.setGuidelinePercent(R.id.videoBottomGuideline, if (state == CustomPlayerUiController.PanelState.COLLAPSED) 0.7f else 1f)
-        TransitionManager.beginDelayedTransition(contentPlayVideo)
-        constraintSet.applyTo(contentPlayVideo)
+        val guideLine = videoBottomGuideline
+        val params = guideLine.layoutParams as ConstraintLayout.LayoutParams
+
+        val start = if (state != CustomPlayerUiController.PanelState.COLLAPSED) 0.7f else 1f
+        val end = if (state == CustomPlayerUiController.PanelState.COLLAPSED) 0.7f else 1f
+
+        val valueAnimator = ValueAnimator.ofFloat(start, end)
+
+        valueAnimator.addUpdateListener {
+            params.guidePercent = it.animatedValue as Float
+            guideLine.layoutParams = params
+        }
+
+        valueAnimator.interpolator = LinearInterpolator()
+        valueAnimator.duration = 220
+
+        valueAnimator.start()
     }
 
 }
