@@ -43,8 +43,8 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
     }
 
     private fun setUpViews() {
-        adapter = VideoAdapter { video, view ->
-            viewModel.dispatch(ActionDashboard.VideoSelected(video, view))
+        adapter = VideoAdapter { video ->
+            viewModel.dispatch(ActionDashboard.VideoSelected(video))
         }
 
         results.setUpLayoutManager()
@@ -113,12 +113,11 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
                 adapter.videos = state.videos.shuffled()
             }
             is UiDashboard.NavigateTo -> {
-                if (state.video != null && state.view != null) {
-                    val extras = FragmentNavigatorExtras(Pair(state.view, state.video.videoId))
+                if (state.video != null) {
                     navigateTo(state.root.id, Bundle().apply {
                         putString(Constants.KEY_VIDEO_ID, state.video.videoId)
                         putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
-                    }, extras = extras)
+                    })
                 } else {
                     navigateTo(state.root.id)
                 }

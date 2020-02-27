@@ -1,59 +1,53 @@
 package com.ajcm.kidstube.extensions
 
-import android.animation.Animator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlin.properties.Delegates
 
-fun View.show() {
-    if (!this.isVisible) {
-        apply {
-            alpha = 0f
-            visibility = View.VISIBLE
+fun AppCompatActivity.fullScreen() {
+    window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    val decorView = window.decorView
+    val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+    decorView.systemUiVisibility = uiOptions
 
-            animate()
-                .alpha(1f)
-                .setDuration(320L)
-                .setListener(null)
-        }
+    window.setFlags(
+        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
+
+    this.window.decorView.accelerateCanvas()
+}
+
+fun View.accelerateCanvas() {
+    setLayerType(View.LAYER_TYPE_HARDWARE, null)
+}
+
+fun View.show() {
+    apply {
+        alpha = 0f
+        visibility = View.VISIBLE
+
+        animate()
+            .alpha(1f)
+            .setDuration(320L)
+            .setListener(null)
     }
 }
 
 fun View.hide() {
-    if (this.isVisible) {
-        apply {
-            alpha = 1f
-            animate()
-                .alpha(0f)
-                .setDuration(200L)
-                .setListener(object : Animator.AnimatorListener {
-                    override fun onAnimationRepeat(p0: Animator?) {}
-
-                    override fun onAnimationEnd(p0: Animator?) {
-                        this@apply.visibility = View.GONE
-                    }
-
-                    override fun onAnimationCancel(p0: Animator?) {
-                        this@apply.visibility = View.GONE
-                    }
-
-                    override fun onAnimationStart(p0: Animator?) {}
-
-                })
-        }
+    apply {
+        visibility = View.GONE
     }
 }
-
-
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)

@@ -2,10 +2,13 @@ package com.ajcm.kidstube.ui.splash
 
 import android.accounts.AccountManager
 import android.content.Intent
+import android.os.Bundle
+import android.view.View
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
+import com.ajcm.kidstube.extensions.accelerateCanvas
 import com.ajcm.kidstube.extensions.navigateTo
 import kotlinx.android.synthetic.main.splash_fragment.*
 import org.koin.android.scope.currentScope
@@ -16,6 +19,12 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
 
     override val viewModel: SplashViewModel by currentScope.viewModel(this) {
         parametersOf(this)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        animationWaves.accelerateCanvas()
+        animationSplash.accelerateCanvas()
     }
 
     override fun updateUi(state: UiState) {

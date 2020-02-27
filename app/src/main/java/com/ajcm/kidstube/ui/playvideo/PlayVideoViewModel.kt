@@ -36,7 +36,6 @@ class PlayVideoViewModel(
             is ActionPlayVideo.ObtainVideo -> {
                 actionState.bundle?.getString(Constants.KEY_VIDEO_ID)?.let {
                     sharedVideoId = it
-                    _model.value = UiPlayVideo.StartSharedVideo(it)
                 }
                 actionState.bundle?.getSerializable(Constants.KEY_VIDEO_LIST)?.let {
                     (it as? VideoList)?.let {  vl ->

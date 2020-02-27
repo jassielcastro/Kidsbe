@@ -1,6 +1,5 @@
 package com.ajcm.kidstube.ui.adapters
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ajcm.domain.Video
@@ -10,7 +9,7 @@ import com.ajcm.kidstube.extensions.inflate
 import com.ajcm.kidstube.extensions.loadUrl
 import kotlinx.android.synthetic.main.item_video.view.*
 
-class VideoAdapter(private val listener: (Video, View) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
+class VideoAdapter(private val listener: (Video) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
 
     var videos: List<Video> by basicDiffUtil(
         emptyList(),
@@ -27,12 +26,11 @@ class VideoAdapter(private val listener: (Video, View) -> Unit) : RecyclerView.A
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val video = videos[position]
         bind(video, holder)
-        holder.itemView.setOnClickListener { listener(video, holder.itemView.imgVideo) }
+        holder.itemView.setOnClickListener { listener(video) }
     }
 
     private fun bind(video: Video, holder: ViewHolder) {
         holder.itemView.imgVideo.loadUrl(video.thumbnail)
-        holder.itemView.imgVideo.transitionName = video.videoId
         holder.itemView.txtTitle.text = video.title
         holder.itemView.imgOption.setOnClickListener {  }
     }

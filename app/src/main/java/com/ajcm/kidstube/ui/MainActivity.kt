@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.ajcm.kidstube.R
+import com.ajcm.kidstube.extensions.fullScreen
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fullScreen()
         setContentView(R.layout.activity_main)
 
         navController = Navigation.findNavController(this, R.id.fragment)

@@ -42,7 +42,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
         }
         relatedRecycler.adapter = adapter
 
-        customPlayerUi = youtube_player_view.inflateCustomPlayerUi(com.ajcm.kidstube.R.layout.custom_player_ui) as ViewGroup
+        customPlayerUi = youtube_player_view.inflateCustomPlayerUi(R.layout.custom_player_ui) as ViewGroup
         lifecycle.addObserver(youtube_player_view)
         youtube_player_view.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -54,9 +54,6 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
 
     override fun updateUi(state: UiState) {
         when (state) {
-            is UiPlayVideo.StartSharedVideo -> {
-                imgVideoToPlay.transitionName = state.videoId
-            }
             UiPlayVideo.Loading -> {
 
             }
@@ -79,7 +76,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
                 adapter.videos = state.videos
             }
             is UiPlayVideo.PlayVideo -> {
-                imgVideoToPlay.hide()
+                viewPanelLoader.hide()
                 progressLoader.hide()
                 viewModel.dispatch(ActionPlayVideo.SaveLastVideoId(state.videoId))
                 youtubePlayer.loadOrCueVideo(lifecycle, state.videoId, 0f)

@@ -7,7 +7,6 @@ import com.ajcm.kidstube.arch.UiState
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 
 sealed class UiPlayVideo : UiState {
-    data class StartSharedVideo(val videoId: String) : UiPlayVideo()
     object Loading : UiPlayVideo()
     object LoadingError : UiPlayVideo()
     data class RenderYoutubePlayer(val youTubePlayer: YouTubePlayer) : UiPlayVideo()

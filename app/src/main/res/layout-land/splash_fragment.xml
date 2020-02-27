@@ -15,6 +15,27 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.7" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/topGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/startGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/endGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
+
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -31,7 +52,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:lottie_autoPlay="false"
         app:lottie_loop="true"
         app:lottie_scale="4"
@@ -39,12 +60,12 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationSplash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/centerGuideline"
+        app:layout_constraintLeft_toLeftOf="@id/startGuideline"
+        app:layout_constraintRight_toRightOf="@id/endGuideline"
+        app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:lottie_autoPlay="false"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/jellyfish_greeting_you"

@@ -16,9 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".ui.MainActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

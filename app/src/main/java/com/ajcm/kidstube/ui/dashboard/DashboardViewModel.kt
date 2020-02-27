@@ -50,10 +50,10 @@ class DashboardViewModel(
                 _model.value = UiDashboard.LoadingError(actionState.msg)
             }
             is ActionDashboard.VideoSelected -> {
-                _model.value = UiDashboard.NavigateTo(DashNav.VIDEO, actionState.video, actionState.view)
+                _model.value = UiDashboard.NavigateTo(DashNav.VIDEO, actionState.video)
             }
             is ActionDashboard.ChangeRoot -> {
-                _model.value = UiDashboard.NavigateTo(actionState.root, null, null)
+                _model.value = UiDashboard.NavigateTo(actionState.root, null)
             }
         }
     }

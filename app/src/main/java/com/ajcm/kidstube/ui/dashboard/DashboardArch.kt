@@ -20,7 +20,7 @@ sealed class UiDashboard : UiState {
     object YoutubeStarted : UiDashboard()
     data class RequestPermissions(val exception: Exception?) : UiDashboard()
     data class Content(val videos: List<Video>) : UiDashboard()
-    data class NavigateTo(val root: DashNav, val video: Video?, val view: View?) : UiDashboard()
+    data class NavigateTo(val root: DashNav, val video: Video?) : UiDashboard()
 }
 
 sealed class ActionDashboard : ActionState {
@@ -29,6 +29,6 @@ sealed class ActionDashboard : ActionState {
     data class SaveAccount(val accountName: String) : ActionDashboard()
     data class ParseException(val exception: Exception?) : ActionDashboard()
     data class LoadError(val msg: String) : ActionDashboard()
-    data class VideoSelected(val video: Video, val view: View) : ActionDashboard()
+    data class VideoSelected(val video: Video) : ActionDashboard()
     data class ChangeRoot(val root: DashNav) : ActionDashboard()
 }
