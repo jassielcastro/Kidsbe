@@ -1,10 +1,15 @@
 package com.ajcm.kidstube.ui.playvideo.customview
 
 import android.view.View
-import android.widget.*
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.SeekBar
+import android.widget.TextView
 import com.ajcm.kidstube.R
-import com.ajcm.kidstube.common.Constants
-import com.ajcm.kidstube.extensions.*
+import com.ajcm.kidstube.extensions.hide
+import com.ajcm.kidstube.extensions.loadRes
+import com.ajcm.kidstube.extensions.show
+import com.ajcm.kidstube.extensions.toTime
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -66,14 +71,10 @@ class CustomPlayerUiController constructor(
         panel.setOnClickListener {
             when (lastState) {
                 PanelState.EXPAND -> {
-                    lastState = PanelState.COLLAPSED
-                    onPanelClicked(PanelState.COLLAPSED)
-                    containerCustomAction.show()
+                    showViewsControllerPlay()
                 }
                 else -> {
-                    lastState = PanelState.EXPAND
-                    onPanelClicked(PanelState.EXPAND)
-                    containerCustomAction.hide()
+                    hideViewsControllerPlay()
                 }
             }
         }
@@ -81,26 +82,41 @@ class CustomPlayerUiController constructor(
 
     override fun onReady(youTubePlayer: YouTubePlayer) {
         super.onReady(youTubePlayer)
-        hideViewsAfterPlay()
+        panel.alpha = 0f
+        progressbar.hide()
+        hideViewsControllerPlay()
     }
 
     override fun onStateChange(youTubePlayer: YouTubePlayer, state: PlayerConstants.PlayerState) {
         super.onStateChange(youTubePlayer, state)
         when (state) {
-            PlayerConstants.PlayerState.ENDED -> onVideoEnded()
-            else -> hideViewsAfterPlay()
+            PlayerConstants.PlayerState.ENDED -> {
+                onVideoEnded()
+                showViewsControllerPlay()
+            }
+            PlayerConstants.PlayerState.PAUSED -> {
+                showViewsControllerPlay()
+            }
+            PlayerConstants.PlayerState.PLAYING -> {
+                hideViewsControllerPlay()
+            }
+            else -> { }
         }
     }
 
-    private fun hideViewsAfterPlay() {
-        panel.alpha = 0f
-        progressbar.hide()
+    private fun hideViewsControllerPlay() {
+        if (lastState == PanelState.COLLAPSED) {
+            lastState = PanelState.EXPAND
+            onPanelClicked(PanelState.EXPAND)
+            containerCustomAction.hide()
+        }
+    }
 
-        delay(Constants.DEFAULT_TOGGLE_DELAY) {
-            if (isPlaying() && lastState == PanelState.COLLAPSED) {
-                panel.performClick()
-                containerCustomAction.hide()
-            }
+    private fun showViewsControllerPlay() {
+        if (lastState == PanelState.EXPAND) {
+            lastState = PanelState.COLLAPSED
+            onPanelClicked(PanelState.COLLAPSED)
+            containerCustomAction.show()
         }
     }
 
@@ -115,7 +131,5 @@ class CustomPlayerUiController constructor(
         videoDuration = duration
         videoDurationTextView.text = duration.toTime()
     }
-
-    private fun isPlaying(): Boolean = playerTracker.state == PlayerConstants.PlayerState.PLAYING
 
 }

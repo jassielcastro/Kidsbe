@@ -11,6 +11,7 @@ import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.extensions.hide
 import com.ajcm.kidstube.extensions.setUpLayoutManager
+import com.ajcm.kidstube.extensions.show
 import com.ajcm.kidstube.ui.adapters.RelatedVideosAdapter
 import com.ajcm.kidstube.ui.playvideo.customview.CustomPlayerUiController
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -50,15 +51,17 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
                 viewModel.dispatch(ActionPlayVideo.PlayerViewReady(youTubePlayer))
             }
         })
+
+        btnBack.setOnClickListener { activity?.onBackPressed() }
     }
 
     override fun updateUi(state: UiState) {
         when (state) {
             UiPlayVideo.Loading -> {
-
+                btnBack.hide()
             }
             UiPlayVideo.LoadingError -> {
-
+                btnBack.show()
             }
             is UiPlayVideo.RenderYoutubePlayer -> {
                 youtubePlayer = state.youTubePlayer
@@ -88,6 +91,11 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
     private fun toggleVideoView(state: CustomPlayerUiController.PanelState) {
         val guideLine = videoBottomGuideline
         val params = guideLine.layoutParams as ConstraintLayout.LayoutParams
+
+        when (state) {
+            CustomPlayerUiController.PanelState.EXPAND -> btnBack.hide()
+            CustomPlayerUiController.PanelState.COLLAPSED -> btnBack.show()
+        }
 
         val start = if (state != CustomPlayerUiController.PanelState.COLLAPSED) 0.7f else 1f
         val end = if (state == CustomPlayerUiController.PanelState.COLLAPSED) 0.7f else 1f

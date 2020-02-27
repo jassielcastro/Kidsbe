@@ -34,6 +34,7 @@ class PlayVideoViewModel(
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             is ActionPlayVideo.ObtainVideo -> {
+                _model.value = UiPlayVideo.Loading
                 actionState.bundle?.getString(Constants.KEY_VIDEO_ID)?.let {
                     sharedVideoId = it
                 }
