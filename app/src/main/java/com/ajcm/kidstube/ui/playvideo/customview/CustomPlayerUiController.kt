@@ -6,10 +6,7 @@ import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
 import com.ajcm.kidstube.R
-import com.ajcm.kidstube.extensions.hide
-import com.ajcm.kidstube.extensions.loadRes
-import com.ajcm.kidstube.extensions.show
-import com.ajcm.kidstube.extensions.toTime
+import com.ajcm.kidstube.extensions.*
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -29,6 +26,7 @@ class CustomPlayerUiController constructor(
     private lateinit var seekBarTime: SeekBar
     private lateinit var videoCurrentTimeTextView: TextView
     private lateinit var videoDurationTextView: TextView
+    private lateinit var playPauseButton: ImageView
 
     private var videoDuration: Float = 0f
 
@@ -53,16 +51,14 @@ class CustomPlayerUiController constructor(
         seekBarTime = playerUi.findViewById(R.id.seekBarTime)
         videoCurrentTimeTextView = playerUi.findViewById(R.id.video_current_time)
         videoDurationTextView = playerUi.findViewById(R.id.video_duration)
-        val playPauseButton = playerUi.findViewById<ImageView>(R.id.play_pause_button)
+        playPauseButton = playerUi.findViewById(R.id.play_pause_button)
 
         playPauseButton.setOnClickListener {
             when (playerTracker.state) {
                 PlayerConstants.PlayerState.PLAYING -> {
-                    playPauseButton.loadRes(R.drawable.ic_play, false)
                     youTubePlayer.pause()
                 }
                 else -> {
-                    playPauseButton.loadRes(R.drawable.ic_pause, false)
                     youTubePlayer.play()
                 }
             }
@@ -95,9 +91,11 @@ class CustomPlayerUiController constructor(
                 showViewsControllerPlay()
             }
             PlayerConstants.PlayerState.PAUSED -> {
+                playPauseButton.loadRes(R.drawable.ic_play, false)
                 showViewsControllerPlay()
             }
             PlayerConstants.PlayerState.PLAYING -> {
+                playPauseButton.loadRes(R.drawable.ic_pause, false)
                 hideViewsControllerPlay()
             }
             else -> { }
@@ -105,10 +103,12 @@ class CustomPlayerUiController constructor(
     }
 
     private fun hideViewsControllerPlay() {
-        if (lastState == PanelState.COLLAPSED) {
-            lastState = PanelState.EXPAND
-            onPanelClicked(PanelState.EXPAND)
-            containerCustomAction.hide()
+        delay(1800) {
+            if (lastState == PanelState.COLLAPSED) {
+                lastState = PanelState.EXPAND
+                onPanelClicked(PanelState.EXPAND)
+                containerCustomAction.hide()
+            }
         }
     }
 
