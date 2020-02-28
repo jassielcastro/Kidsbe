@@ -23,6 +23,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout.play_video_fragment) {
 
     override val viewModel: PlayVideoViewModel by currentScope.viewModel(this)
+
     private lateinit var youtubePlayer: YouTubePlayer
 
     private lateinit var adapter: RelatedVideosAdapter

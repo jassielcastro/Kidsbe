@@ -1,6 +1,5 @@
 package com.ajcm.kidstube.ui.dashboard
 
-import android.view.View
 import androidx.annotation.IdRes
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.R

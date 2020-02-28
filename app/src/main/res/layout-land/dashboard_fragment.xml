@@ -36,6 +36,7 @@
         android:layout_margin="16dp"
         android:background="@drawable/background_circle"
         android:scaleType="fitCenter"
+        android:transitionName="profile"
         app:layout_constraintBottom_toTopOf="@id/results"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

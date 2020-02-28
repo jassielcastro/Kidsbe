@@ -7,6 +7,12 @@
     <color name="blue_light">#177FCF</color>
     <color name="blue_dark">#1A5F92</color>
 
+    <color name="green_light">#31B947</color>
+    <color name="green_dark">#267516</color>
+
+    <color name="purple_light">#8217CF</color>
+    <color name="purple_dark">#521A92</color>
+
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="gray">#F3F3F3</color>

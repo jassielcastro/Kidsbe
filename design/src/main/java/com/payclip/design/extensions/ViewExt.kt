@@ -8,6 +8,8 @@ import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -85,4 +87,9 @@ inline fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffU
 
 fun RecyclerView.setUpLayoutManager(orientation: Int = RecyclerView.HORIZONTAL, reversed: Boolean = false) {
     this.layoutManager = LinearLayoutManager(this.context, orientation, reversed)
+}
+
+fun Fragment.waitForTransition(targetView: View) {
+    postponeEnterTransition()
+    targetView.doOnPreDraw { startPostponedEnterTransition() }
 }

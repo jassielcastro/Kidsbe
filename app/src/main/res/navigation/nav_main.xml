@@ -35,7 +35,7 @@
             app:launchSingleTop="false"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out"
-            app:popUpTo="@+id/splashFragment" />
+            app:popUpTo="@+id/dashboardFragment" />
         <action
             android:id="@+id/action_dashboardFragment_to_profileFragment"
             app:destination="@id/profileFragment"
@@ -44,7 +44,7 @@
             app:launchSingleTop="false"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out"
-            app:popUpTo="@+id/splashFragment" />
+            app:popUpTo="@+id/dashboardFragment" />
         <action
             android:id="@+id/action_dashboardFragment_to_searchFragment"
             app:destination="@id/searchFragment"
@@ -53,7 +53,7 @@
             app:launchSingleTop="false"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out"
-            app:popUpTo="@+id/splashFragment" />
+            app:popUpTo="@+id/dashboardFragment" />
         <action
             android:id="@+id/action_dashboardFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
@@ -62,7 +62,7 @@
             app:launchSingleTop="false"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out"
-            app:popUpTo="@+id/splashFragment" />
+            app:popUpTo="@+id/dashboardFragment" />
     </fragment>
 
     <fragment

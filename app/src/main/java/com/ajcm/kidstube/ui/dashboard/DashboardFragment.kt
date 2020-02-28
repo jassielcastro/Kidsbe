@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
@@ -26,7 +28,8 @@ import kotlinx.android.synthetic.main.generic_error.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout.dashboard_fragment),
+class DashboardFragment :
+    KidsFragment<UiDashboard, DashboardViewModel>(R.layout.dashboard_fragment),
     View.OnClickListener {
 
     override val viewModel: DashboardViewModel by currentScope.viewModel(this)
@@ -39,7 +42,6 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
         setUpViews()
         addListeners()
 
-        //when is returned by another fragment instance
         if (viewModel.videos.isNotEmpty()) {
             updateUi(UiDashboard.Content(viewModel.videos))
         }
@@ -116,13 +118,24 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
                 adapter.videos = state.videos.shuffled()
             }
             is UiDashboard.NavigateTo -> {
-                if (state.video != null) {
-                    navigateTo(state.root.id, Bundle().apply {
-                        putString(Constants.KEY_VIDEO_ID, state.video.videoId)
-                        putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
-                    })
-                } else {
-                    navigateTo(state.root.id)
+                when (state.root) {
+                    DashNav.PROFILE -> {
+                        navigateTo(state.root.id)
+                    }
+                    DashNav.SETTINGS -> {
+                        val extras = FragmentNavigatorExtras(
+                            imgProfile to ViewCompat.getTransitionName(imgProfile)!!)
+                        navigateTo(state.root.id, extras = extras)
+                    }
+                    DashNav.SEARCH -> {
+                        navigateTo(state.root.id)
+                    }
+                    DashNav.VIDEO -> {
+                        navigateTo(state.root.id, Bundle().apply {
+                            putString(Constants.KEY_VIDEO_ID, state.video!!.videoId)
+                            putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
+                        })
+                    }
                 }
             }
         }

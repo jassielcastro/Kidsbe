@@ -13,6 +13,10 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -54,8 +58,6 @@ dependencies {
     implementation project(":usecases")
     implementation project(":design")
 
-    //implementation androidLibs.values()
-    //implementation youtubePlayer.values()
     implementation kotlinLibs.values()
     implementation injection.values()
     kapt androidKaptLibs.values()
