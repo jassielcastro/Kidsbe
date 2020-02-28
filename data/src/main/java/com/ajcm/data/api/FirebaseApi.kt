@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 sealed class FirebaseApi {
 
     companion object Collections {
-        const val MOST_POPULAR = "most_popular"
+        const val USER_INFO = "user"
     }
 
     val db: FirebaseFirestore
@@ -16,12 +16,12 @@ sealed class FirebaseApi {
     val url: String
         get() {
             return when (this) {
-                Videos.List -> MOST_POPULAR
+                User.Info -> USER_INFO
             }
         }
 
-    sealed class Videos: FirebaseApi() {
-        object List : Videos()
+    sealed class User: FirebaseApi() {
+        object Info : User()
     }
 
 }

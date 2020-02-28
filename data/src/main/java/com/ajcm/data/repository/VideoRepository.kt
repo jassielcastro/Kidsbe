@@ -6,13 +6,13 @@ import com.ajcm.data.source.RemoteDataSource
 class VideoRepository(
     val remoteDataSource: RemoteDataSource,
     private val apiKey: String
-): BaseRemoteRepository() {
+): BaseRemoteRepository<Result>() {
 
     override suspend fun search(byText: String): Result {
         return remoteDataSource.searchVideos(apiKey, byText)
     }
 
-    override suspend fun getList(relatedTo: String): Result {
+    suspend fun getList(relatedTo: String): Result {
         return remoteDataSource.getPopularVideos(apiKey, relatedTo)
     }
 }

@@ -1,6 +1,7 @@
 package com.ajcm.kidstube.ui.dashboard
 
 import androidx.annotation.IdRes
+import com.ajcm.domain.Avatar
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.ActionState
@@ -16,6 +17,7 @@ enum class DashNav(@IdRes val id: Int) {
 sealed class UiDashboard : UiState {
     object Loading : UiDashboard()
     data class LoadingError(val msg: String) : UiDashboard()
+    data class UpdateUserProfile(val avatar: Avatar) : UiDashboard()
     object YoutubeStarted : UiDashboard()
     data class RequestPermissions(val exception: Exception?) : UiDashboard()
     data class Content(val videos: List<Video>) : UiDashboard()
@@ -23,6 +25,7 @@ sealed class UiDashboard : UiState {
 }
 
 sealed class ActionDashboard : ActionState {
+    object Start : ActionDashboard()
     object StartYoutube : ActionDashboard()
     object Refresh : ActionDashboard()
     data class SaveAccount(val accountName: String) : ActionDashboard()

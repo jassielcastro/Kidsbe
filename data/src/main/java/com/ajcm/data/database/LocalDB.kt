@@ -29,6 +29,10 @@ class LocalDB(context: Context) {
         get() = getStringPrefs("accountName") ?: ""
         set(value) = setStringPrefs("accountName", value)
 
+    var userId: String
+        get() = getStringPrefs("userId") ?: ""
+        set(value) = setStringPrefs("userId", value)
+
     var lastVideoId: String
         get() = getStringPrefs("lastVideoId") ?: Constants.DEFAULT_LAST_VIDEO_ID
         set(value) = setStringPrefs("lastVideoId", value)

@@ -6,6 +6,7 @@ import com.ajcm.data.database.LocalDB
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.common.ScopedViewModel
+import com.ajcm.usecases.GetUserProfile
 import com.ajcm.usecases.GetYoutubeVideos
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
+    private val userProfile: GetUserProfile,
     private val localDB: LocalDB,
     uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel<UiDashboard>(uiDispatcher) {
@@ -31,6 +33,13 @@ class DashboardViewModel(
 
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
+            ActionDashboard.Start -> {
+                launch {
+                    userProfile.invoke(localDB.userId)?.let {
+                        _model.value = UiDashboard.UpdateUserProfile(it.userAvatar)
+                    }
+                }
+            }
             ActionDashboard.StartYoutube -> {
                 getYoutubeVideos.startYoutubeWith(localDB.accountName)
                 _model.value = UiDashboard.YoutubeStarted

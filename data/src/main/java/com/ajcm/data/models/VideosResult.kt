@@ -1,4 +1,4 @@
-package com.ajcm.data.api.result
+package com.ajcm.data.models
 
 import android.os.Parcelable
 import com.ajcm.data.models.VideoItem

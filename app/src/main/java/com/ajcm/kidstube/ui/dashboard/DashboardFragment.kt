@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import com.ajcm.domain.Avatar
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
@@ -41,6 +42,8 @@ class DashboardFragment :
 
         setUpViews()
         addListeners()
+
+        viewModel.dispatch(ActionDashboard.Start)
 
         if (viewModel.videos.isNotEmpty()) {
             updateUi(UiDashboard.Content(viewModel.videos))
@@ -94,6 +97,9 @@ class DashboardFragment :
                 txtErrorTitle.text = state.msg
                 contentError.show()
             }
+            is UiDashboard.UpdateUserProfile -> {
+                updateProfileAvatar(state.avatar)
+            }
             UiDashboard.YoutubeStarted -> {
                 viewModel.dispatch(ActionDashboard.Refresh)
             }
@@ -138,6 +144,18 @@ class DashboardFragment :
                     }
                 }
             }
+        }
+    }
+
+    private fun updateProfileAvatar(avatar: Avatar) {
+        when(avatar) {
+            Avatar.MIA -> imgProfile.loadRes(R.drawable.bck_avatar_kids_mia)
+            Avatar.CRUNCHY -> imgProfile.loadRes(R.drawable.bck_avatar_kids_crunchy)
+            Avatar.EMOHORSE -> imgProfile.loadRes(R.drawable.bck_avatar_kids_emohorse)
+            Avatar.FLASHMEO -> imgProfile.loadRes(R.drawable.bck_avatar_kids_flashmeow)
+            Avatar.GUMI -> imgProfile.loadRes(R.drawable.bck_avatar_kids_gumi)
+            Avatar.MR_MARSHMELLOW -> imgProfile.loadRes(R.drawable.bck_avatar_kids_mrmarshmellow)
+            Avatar.OPTIMIST_GIRAFFE -> imgProfile.loadRes(R.drawable.bck_avatar_kids_optimisticgiraffe)
         }
     }
 

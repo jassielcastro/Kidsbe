@@ -1,6 +1,6 @@
 package com.ajcm.usecases
 
-import com.ajcm.data.api.YoutubeRemoteSource
+import com.ajcm.data.source.YoutubeRemoteSource
 import com.ajcm.data.models.Result
 import com.ajcm.data.repository.VideoRepository
 
