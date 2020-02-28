@@ -3,20 +3,19 @@ package com.ajcm.kidstube.ui.playvideo
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
-import com.ajcm.kidstube.extensions.hide
-import com.ajcm.kidstube.extensions.setUpLayoutManager
-import com.ajcm.kidstube.extensions.show
 import com.ajcm.kidstube.ui.adapters.RelatedVideosAdapter
-import com.ajcm.kidstube.ui.playvideo.customview.CustomPlayerUiController
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
+import com.payclip.design.extensions.hide
+import com.payclip.design.extensions.setUpLayoutManager
+import com.payclip.design.extensions.show
+import com.payclip.design.youtubuplayer.player.YouTubePlayer
+import com.payclip.design.youtubuplayer.player.listeners.AbstractYouTubePlayerListener
+import com.payclip.design.youtubuplayer.player.options.PanelState
+import com.payclip.design.youtubuplayer.player.utils.loadOrCueVideo
 import kotlinx.android.synthetic.main.play_video_fragment.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -26,7 +25,6 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
     override val viewModel: PlayVideoViewModel by currentScope.viewModel(this)
     private lateinit var youtubePlayer: YouTubePlayer
 
-    private lateinit var customPlayerUi : ViewGroup
     private lateinit var adapter: RelatedVideosAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,6 +32,19 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
 
         viewModel.dispatch(ActionPlayVideo.ObtainVideo(arguments))
         setUpViews()
+        setUpListeners()
+    }
+
+    private fun setUpListeners() {
+        youtube_player_view.setOnPanelClicked { panelState ->
+            toggleVideoView(panelState)
+        }
+
+        youtube_player_view.setOnVideoFinishListener {
+            viewModel.dispatch(ActionPlayVideo.PlayNextVideo)
+        }
+
+        btnBack.setOnClickListener { activity?.onBackPressed() }
     }
 
     private fun setUpViews() {
@@ -43,7 +54,6 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
         }
         relatedRecycler.adapter = adapter
 
-        customPlayerUi = youtube_player_view.inflateCustomPlayerUi(R.layout.custom_player_ui) as ViewGroup
         lifecycle.addObserver(youtube_player_view)
         youtube_player_view.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -51,8 +61,6 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
                 viewModel.dispatch(ActionPlayVideo.PlayerViewReady(youTubePlayer))
             }
         })
-
-        btnBack.setOnClickListener { activity?.onBackPressed() }
     }
 
     override fun updateUi(state: UiState) {
@@ -65,14 +73,6 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
             }
             is UiPlayVideo.RenderYoutubePlayer -> {
                 youtubePlayer = state.youTubePlayer
-                val customPlayer = CustomPlayerUiController(customPlayerUi, youtubePlayer, { panelState ->
-                    toggleVideoView(panelState)
-                }, {
-                    viewModel.dispatch(ActionPlayVideo.PlayNextVideo)
-                })
-                customPlayer.onReady(youtubePlayer)
-                youtubePlayer.addListener(customPlayer)
-
                 viewModel.dispatch(ActionPlayVideo.Start)
             }
             is UiPlayVideo.Content -> {
@@ -88,17 +88,17 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
         }
     }
 
-    private fun toggleVideoView(state: CustomPlayerUiController.PanelState) {
+    private fun toggleVideoView(state: PanelState) {
         val guideLine = videoBottomGuideline
         val params = guideLine.layoutParams as ConstraintLayout.LayoutParams
 
         when (state) {
-            CustomPlayerUiController.PanelState.EXPAND -> btnBack.hide()
-            CustomPlayerUiController.PanelState.COLLAPSED -> btnBack.show()
+            PanelState.EXPAND -> btnBack.hide()
+            PanelState.COLLAPSED -> btnBack.show()
         }
 
-        val start = if (state != CustomPlayerUiController.PanelState.COLLAPSED) 0.7f else 1f
-        val end = if (state == CustomPlayerUiController.PanelState.COLLAPSED) 0.7f else 1f
+        val start = if (state != PanelState.COLLAPSED) 0.7f else 1f
+        val end = if (state == PanelState.COLLAPSED) 0.7f else 1f
 
         val valueAnimator = ValueAnimator.ofFloat(start, end)
 

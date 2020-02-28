@@ -1,4 +1,4 @@
-package com.ajcm.kidstube.extensions
+package com.payclip.design.extensions
 
 import java.math.BigDecimal
 import java.math.RoundingMode

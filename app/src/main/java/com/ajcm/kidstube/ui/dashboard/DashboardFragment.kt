@@ -5,12 +5,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
-import com.ajcm.kidstube.extensions.*
 import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.adapters.VideoAdapter
 import com.google.android.gms.common.ConnectionResult
@@ -18,6 +16,11 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
+import com.payclip.design.extensions.hide
+import com.payclip.design.extensions.loadRes
+import com.payclip.design.extensions.navigateTo
+import com.payclip.design.extensions.setUpLayoutManager
+import com.payclip.design.extensions.show
 import kotlinx.android.synthetic.main.dashboard_fragment.*
 import kotlinx.android.synthetic.main.generic_error.*
 import org.koin.android.scope.currentScope

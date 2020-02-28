@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.UiState
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.payclip.design.youtubuplayer.player.YouTubePlayer
 
 sealed class UiPlayVideo : UiState {
     object Loading : UiPlayVideo()

@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.ajcm.kidstube.R
-import com.ajcm.kidstube.extensions.fullScreen
+import com.payclip.design.extensions.fullScreen
 
 class MainActivity : AppCompatActivity() {
 

@@ -52,9 +52,10 @@ dependencies {
     implementation project(":data")
     implementation project(":domain")
     implementation project(":usecases")
+    implementation project(":design")
 
-    implementation androidLibs.values()
-    implementation youtubePlayer.values()
+    //implementation androidLibs.values()
+    //implementation youtubePlayer.values()
     implementation kotlinLibs.values()
     implementation injection.values()
     kapt androidKaptLibs.values()

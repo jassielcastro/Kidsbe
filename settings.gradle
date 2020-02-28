@@ -1,2 +1,2 @@
-include ':app', ':data', ':domain', ':usecases'
+include ':app', ':data', ':domain', ':usecases', ':design'
 rootProject.name='KidsTube'
