@@ -32,15 +32,15 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
      */
     var fadeOutDelay = DEFAULT_FADE_OUT_DELAY
 
-
     private var onPanelClicked: (PanelState) -> Unit = {}
+    private var panelYoutube: View? = null
 
     fun toggleVisibility() {
         fade(if (isVisible) 0f else 1f)
     }
 
     private fun fade(finalAlpha: Float) {
-        if (!canFade || isDisabled)
+        if (!canFade || isDisabled || !isPlaying)
             return
 
         isVisible = finalAlpha != 0f
@@ -60,6 +60,7 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
                     if (finalAlpha == 1f) {
                         targetView.visibility = View.VISIBLE
                         onPanelClicked(PanelState.COLLAPSED)
+                        panelYoutube?.visibility = View.VISIBLE
                     }
                 }
 
@@ -67,6 +68,7 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
                     if (finalAlpha == 0f) {
                         targetView.visibility = View.GONE
                         onPanelClicked(PanelState.EXPAND)
+                        panelYoutube?.visibility = View.GONE
                     }
                 }
 
@@ -105,8 +107,9 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
         }
     }
 
-    fun setOnPanelClicked(clickedListener: (PanelState) -> Unit) {
+    fun setOnPanelClicked(clickedListener: (PanelState) -> Unit, panelYoutube: View) {
         this.onPanelClicked = clickedListener
+        this.panelYoutube = panelYoutube
     }
 
     override fun onReady(youTubePlayer: YouTubePlayer) { }

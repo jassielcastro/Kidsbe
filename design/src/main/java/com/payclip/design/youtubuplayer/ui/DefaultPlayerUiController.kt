@@ -7,6 +7,8 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.payclip.design.R
+import com.payclip.design.extensions.hide
+import com.payclip.design.extensions.show
 import com.payclip.design.extensions.toTime
 import com.payclip.design.youtubuplayer.player.PlayerConstants
 import com.payclip.design.youtubuplayer.player.YouTubePlayer
@@ -26,6 +28,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
     private val panel: View
 
     private val controlsContainer: View
+    private val panelYoutubeControls: View
 
     private val videoTitle: TextView
     private val videoCurrentTime: TextView
@@ -55,6 +58,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
 
         panel = controlsView.findViewById(R.id.panel)
         controlsContainer = controlsView.findViewById(R.id.controls_container)
+        panelYoutubeControls = controlsView.findViewById(R.id.panelYoutubeControls)
 
         videoTitle = controlsView.findViewById(R.id.videoTitle)
         videoCurrentTime = controlsView.findViewById(R.id.video_current_time)
@@ -80,7 +84,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
     }
 
     fun setOnPanelClicked(clickedListener: (PanelState) -> Unit) {
-        fadeControlsContainer.setOnPanelClicked(clickedListener)
+        fadeControlsContainer.setOnPanelClicked(clickedListener, panelYoutubeControls)
     }
 
     fun setOnVideoFinishListener(finishListener: () -> Unit) {

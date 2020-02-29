@@ -90,28 +90,29 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
     }
 
     private fun toggleVideoView(state: PanelState) {
-        val guideLine = videoBottomGuideline
-        val params = guideLine.layoutParams as ConstraintLayout.LayoutParams
+        videoBottomGuideline?.let { guideLine ->
+            val params = guideLine.layoutParams as ConstraintLayout.LayoutParams
 
-        when (state) {
-            PanelState.EXPAND -> btnBack.hide()
-            PanelState.COLLAPSED -> btnBack.show()
+            when (state) {
+                PanelState.EXPAND -> btnBack.hide()
+                PanelState.COLLAPSED -> btnBack.show()
+            }
+
+            val start = if (state != PanelState.COLLAPSED) 0.7f else 1f
+            val end = if (state == PanelState.COLLAPSED) 0.7f else 1f
+
+            val valueAnimator = ValueAnimator.ofFloat(start, end)
+
+            valueAnimator.addUpdateListener {
+                params.guidePercent = it.animatedValue as Float
+                guideLine.layoutParams = params
+            }
+
+            valueAnimator.interpolator = LinearInterpolator()
+            valueAnimator.duration = 220
+
+            valueAnimator.start()
         }
-
-        val start = if (state != PanelState.COLLAPSED) 0.7f else 1f
-        val end = if (state == PanelState.COLLAPSED) 0.7f else 1f
-
-        val valueAnimator = ValueAnimator.ofFloat(start, end)
-
-        valueAnimator.addUpdateListener {
-            params.guidePercent = it.animatedValue as Float
-            guideLine.layoutParams = params
-        }
-
-        valueAnimator.interpolator = LinearInterpolator()
-        valueAnimator.duration = 220
-
-        valueAnimator.start()
     }
 
 }
