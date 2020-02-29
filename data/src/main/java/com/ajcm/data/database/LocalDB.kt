@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.ajcm.data.common.Constants
+import com.ajcm.domain.Avatar
 
 class LocalDB(context: Context) {
 
@@ -32,6 +33,13 @@ class LocalDB(context: Context) {
     var userId: String
         get() = getStringPrefs("userId") ?: ""
         set(value) = setStringPrefs("userId", value)
+
+    var userAvatar: Avatar
+        get() = when(val avatarName = getStringPrefs("userAvatar")) {
+            null -> Avatar.MIA
+            else -> Avatar.valueOf(avatarName)
+        }
+        set(value) = setStringPrefs("userAvatar", value.name)
 
     var lastVideoId: String
         get() = getStringPrefs("lastVideoId") ?: Constants.DEFAULT_LAST_VIDEO_ID

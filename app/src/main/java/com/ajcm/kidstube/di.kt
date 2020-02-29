@@ -26,6 +26,7 @@ import com.ajcm.kidstube.ui.splash.SplashViewModel
 import com.ajcm.usecases.GetUserProfile
 import com.ajcm.usecases.GetYoutubeVideos
 import com.ajcm.usecases.SaveUser
+import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
@@ -80,20 +81,21 @@ val dataModule = module {
 
 private val scopesModule = module {
     scope(named<SplashFragment>()) {
-        viewModel { SplashViewModel( get(), get(), get()) }
+        viewModel { SplashViewModel( get(), get(), get(), get()) }
         scoped { SaveUser(get()) }
+        scoped { GetUserProfile(get()) }
     }
     scope(named<DashboardFragment>()) {
-        viewModel { DashboardViewModel(get(), get(), get(), get()) }
+        viewModel { DashboardViewModel(get(), get(), get()) }
         scoped { GetYoutubeVideos(get()) }
-        scoped { GetUserProfile(get()) }
     }
     scope(named<PlayVideoFragment>()) {
         viewModel { PlayVideoViewModel( get(), get(), get()) }
         scoped { GetYoutubeVideos(get()) }
     }
     scope(named<ProfileFragment>()) {
-        viewModel { ProfileViewModel( get()) }
+        viewModel { ProfileViewModel( get(), get(), get()) }
+        scoped { UpdateUser(get()) }
     }
     scope(named<SearchFragment>()) {
         viewModel { SearchViewModel( get()) }

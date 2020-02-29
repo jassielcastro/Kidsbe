@@ -9,5 +9,11 @@ enum class Avatar: Serializable {
     GUMI,
     MIA,
     MR_MARSHMELLOW,
-    OPTIMIST_GIRAFFE
+    OPTIMIST_GIRAFFE,
+    BURNED_TOAST,
+    FAILNANA,
+    KEVIN,
+    NICE_CREAMS,
+    NINJA_MARBLE,
+    SHY_PANDA
 }

@@ -8,13 +8,14 @@ import kotlin.coroutines.resume
 
 class UserRemoteSource(private val api: FirebaseApi): FireBaseDataSource<User?> {
 
-    override suspend fun searchDocument(id: String): User? = suspendCancellableCoroutine { continuation ->
+    override suspend fun searchIn(document: String, byReference: String): User? = suspendCancellableCoroutine { continuation ->
         api.db
             .collection(api.url)
-            .document(id)
+            .whereEqualTo(document, byReference)
+            .limit(1)
             .get()
             .addOnSuccessListener {
-                continuation.resume(it.toUser())
+                continuation.resume(it.documents.first().toUser())
             }.addOnFailureListener {
                 continuation.resume(null)
             }

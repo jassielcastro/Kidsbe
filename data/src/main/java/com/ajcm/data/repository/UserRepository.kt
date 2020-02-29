@@ -6,8 +6,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 class UserRepository(private val remoteDataSource: UserRemoteSource) {
 
-    suspend fun search(id: String): User? {
-        return remoteDataSource.searchDocument(id)
+    suspend fun searchIn(document: String, byReference: String): User? {
+        return remoteDataSource.searchIn(document, byReference)
     }
 
     @InternalCoroutinesApi

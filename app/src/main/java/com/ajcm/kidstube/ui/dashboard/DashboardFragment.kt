@@ -7,11 +7,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import com.ajcm.domain.Avatar
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
+import com.ajcm.kidstube.extensions.getDrawable
 import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.adapters.VideoAdapter
 import com.google.android.gms.common.ConnectionResult
@@ -19,11 +19,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
-import com.payclip.design.extensions.hide
-import com.payclip.design.extensions.loadRes
-import com.payclip.design.extensions.navigateTo
-import com.payclip.design.extensions.setUpLayoutManager
-import com.payclip.design.extensions.show
+import com.payclip.design.extensions.*
 import kotlinx.android.synthetic.main.dashboard_fragment.*
 import kotlinx.android.synthetic.main.generic_error.*
 import org.koin.android.scope.currentScope
@@ -44,10 +40,6 @@ class DashboardFragment :
         addListeners()
 
         viewModel.dispatch(ActionDashboard.Start)
-
-        if (viewModel.videos.isNotEmpty()) {
-            updateUi(UiDashboard.Content(viewModel.videos))
-        }
     }
 
     private fun setUpViews() {
@@ -97,8 +89,9 @@ class DashboardFragment :
                 txtErrorTitle.text = state.msg
                 contentError.show()
             }
-            is UiDashboard.UpdateUserProfile -> {
-                updateProfileAvatar(state.avatar)
+            is UiDashboard.UpdateUserInfo -> {
+                imgProfile.loadRes(state.avatar.getDrawable())
+                viewModel.dispatch(ActionDashboard.StartYoutube)
             }
             UiDashboard.YoutubeStarted -> {
                 viewModel.dispatch(ActionDashboard.Refresh)
@@ -144,18 +137,6 @@ class DashboardFragment :
                     }
                 }
             }
-        }
-    }
-
-    private fun updateProfileAvatar(avatar: Avatar) {
-        when(avatar) {
-            Avatar.MIA -> imgProfile.loadRes(R.drawable.bck_avatar_kids_mia)
-            Avatar.CRUNCHY -> imgProfile.loadRes(R.drawable.bck_avatar_kids_crunchy)
-            Avatar.EMOHORSE -> imgProfile.loadRes(R.drawable.bck_avatar_kids_emohorse)
-            Avatar.FLASHMEO -> imgProfile.loadRes(R.drawable.bck_avatar_kids_flashmeow)
-            Avatar.GUMI -> imgProfile.loadRes(R.drawable.bck_avatar_kids_gumi)
-            Avatar.MR_MARSHMELLOW -> imgProfile.loadRes(R.drawable.bck_avatar_kids_mrmarshmellow)
-            Avatar.OPTIMIST_GIRAFFE -> imgProfile.loadRes(R.drawable.bck_avatar_kids_optimisticgiraffe)
         }
     }
 

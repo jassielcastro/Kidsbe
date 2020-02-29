@@ -5,9 +5,9 @@ import com.ajcm.data.auth.Session
 import com.ajcm.data.common.Constants
 import com.ajcm.data.mappers.mapToList
 import com.ajcm.data.models.Result
-import com.ajcm.data.source.RemoteDataSource
 import com.ajcm.domain.Video
 import com.google.api.services.youtube.YouTube
+import com.google.api.services.youtube.model.SearchListResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -48,35 +48,30 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
     }
 
     override suspend fun getPopularVideos(apiKey: String, relatedToVideoId: String): Result {
-        return getFakeVideoList()
-        /*return try {
-            val list = youtube
+        return try {
+            /*val list = youtube
                 .setKey(apiKey)
 
-            val request = withContext(Dispatchers.IO) {
-                async {
-                    list.relatedToVideoId = relatedToVideoId
-                    list.execute()
-                }
-            }
+            val resultList1 = getListOfVideosRelatedTo(relatedToVideoId, list).items
+            val resultList2 = getListOfVideosRelatedTo(resultList1[0].id.videoId, list).items
 
-            val resultList1 = request.await()
+            val completeList = (resultList1 + resultList2).distinctBy { it.id.videoId }
 
-            val request2 = withContext(Dispatchers.IO) {
-                async {
-                    list.relatedToVideoId = resultList1.items.first().id.videoId
-                    list.execute()
-                }
-            }
-
-            val resultList2 = request2.await()
-
-            val completeList = (resultList1.items + resultList2.items).distinctBy { it.id.videoId }
-
-            Result(completeList.mapToList(), null)
+            Result(completeList.mapToList(), null)*/
+            getFakeVideoList()
         } catch (e: IOException) {
             Result(arrayListOf(), e)
-        }*/
+        }
+    }
+
+    private suspend fun getListOfVideosRelatedTo(id: String, list: YouTube.Search.List): SearchListResponse {
+        val request = withContext(Dispatchers.IO) {
+            async {
+                list.relatedToVideoId = id
+                list.execute()
+            }
+        }
+        return request.await()
     }
 
     private fun getFakeVideoList() : Result {

@@ -38,6 +38,8 @@
         android:layout_height="120dp"
         android:src="@drawable/bck_avatar_kids_mia"
         android:transitionName="profile"
+        android:background="@drawable/circle_profile"
+        android:padding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/topGuideline"

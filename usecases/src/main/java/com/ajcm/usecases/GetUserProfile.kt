@@ -5,6 +5,6 @@ import com.ajcm.domain.User
 
 class GetUserProfile(private val userRepository: UserRepository) {
 
-    suspend fun invoke(userId: String): User? = userRepository.search(userId)
+    suspend fun invoke(document: String, byReference: String): User? = userRepository.searchIn(document, byReference)
 
 }

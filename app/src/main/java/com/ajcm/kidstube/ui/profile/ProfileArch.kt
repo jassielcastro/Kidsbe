@@ -1,12 +1,18 @@
 package com.ajcm.kidstube.ui.profile
 
+import com.ajcm.domain.Avatar
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.UiState
 
+typealias ItemAvatar = Pair<Avatar, Boolean>
+
 sealed class UiProfile : UiState {
-    object None: UiProfile()
+    data class UpdateUserInfo(val avatar: Avatar, val userName: String): UiProfile()
+    data class AvatarContent(val avatarList: List<ItemAvatar>): UiProfile()
 }
 
 sealed class ActionProfile : ActionState {
-    object None: ActionProfile()
+    object Start: ActionProfile()
+    object PrepareAvatarList: ActionProfile()
+    data class AvatarSelected(val avatar: Avatar): ActionProfile()
 }
