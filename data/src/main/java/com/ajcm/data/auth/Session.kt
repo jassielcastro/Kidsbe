@@ -19,7 +19,8 @@ class Session(application: Application, accountName: String) {
         credential = GoogleAccountCredential
             .usingOAuth2(application.applicationContext, Constants.SCOPES)
             .setBackOff(ExponentialBackOff())
-            .setSelectedAccountName(accountName)
+
+        credential?.selectedAccountName = accountName
     }
 
     fun getYoutubeSession(): YouTube {

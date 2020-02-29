@@ -1,6 +1,8 @@
 package com.ajcm.kidstube.ui.splash
 
+import android.Manifest
 import android.accounts.AccountManager
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -15,6 +17,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
 class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_fragment) {
 
@@ -28,9 +32,17 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
         animationSplash.accelerateCanvas()
     }
 
+    @InternalCoroutinesApi
     override fun updateUi(state: UiState) {
         stopAnimation()
         when (state) {
+            UiSplash.CheckPermissions -> {
+                if (permissionsGranted()) {
+                    viewModel.dispatch(ActionSplash.ValidateAccount)
+                } else {
+                    requestPermissions(arrayOf(Manifest.permission.GET_ACCOUNTS), Constants.AUTH_CODE_REQUEST_CODE)
+                }
+            }
             is UiSplash.Loading -> {
                 startAnimation()
             }
@@ -46,6 +58,12 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
         }
     }
 
+    private fun permissionsGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(), Manifest.permission.GET_ACCOUNTS
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
     private fun startAnimation() {
         animationWaves.playAnimation()
         animationSplash.playAnimation()
@@ -57,17 +75,33 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
     }
 
     @InternalCoroutinesApi
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            Constants.AUTH_CODE_REQUEST_CODE -> {
+                updateUi(UiSplash.CheckPermissions)
+            }
+        }
+    }
+
+    @InternalCoroutinesApi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             Constants.REQUEST_ACCOUNT_PICKER -> {
                 val accountName = data?.extras?.getString(AccountManager.KEY_ACCOUNT_NAME)
                 if (accountName != null) {
+                    credential.credential.selectedAccountName = accountName
                     viewModel.dispatch(ActionSplash.SaveAccount(accountName))
                 } else {
                     viewModel.dispatch(ActionSplash.LoadError)
                 }
             }
+
         }
     }
 

@@ -22,7 +22,7 @@ class SplashViewModel(
     @InternalCoroutinesApi
     override val model: LiveData<UiSplash>
         get() {
-            if (_model.value == null) dispatch(ActionSplash.ValidateAccount)
+            if (_model.value == null) _model.value = UiSplash.CheckPermissions
             return _model
         }
 

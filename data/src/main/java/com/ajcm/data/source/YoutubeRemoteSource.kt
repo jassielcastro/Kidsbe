@@ -1,6 +1,7 @@
 package com.ajcm.data.source
 
 import android.app.Application
+import android.util.Log
 import com.ajcm.data.auth.Session
 import com.ajcm.data.common.Constants
 import com.ajcm.data.mappers.mapToList
@@ -18,6 +19,7 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
     private lateinit var youtube: YouTube.Search.List
 
     fun startYoutubeSession(accountName: String) {
+        Log.i("YoutubeRemoteSource", "startYoutubeSession: $accountName")
         youtube = Session(application, accountName)
             .getYoutubeSession()
             .Search()
@@ -64,7 +66,8 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
         }
     }
 
-    private suspend fun getListOfVideosRelatedTo(id: String, list: YouTube.Search.List): SearchListResponse {
+    @Throws(IOException::class)
+    private suspend fun getListOfVideosRelatedTo(id: String, list: YouTube.Search.List) : SearchListResponse {
         val request = withContext(Dispatchers.IO) {
             async {
                 list.relatedToVideoId = id

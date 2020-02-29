@@ -7,6 +7,7 @@ sealed class UiSplash : UiState {
     object Loading : UiSplash()
     object LoadingError : UiSplash()
     object RequestAccount : UiSplash()
+    object CheckPermissions : UiSplash()
     object Navigate : UiSplash()
 }
 

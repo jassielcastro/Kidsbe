@@ -15,7 +15,7 @@ class UserRemoteSource(private val api: FirebaseApi): FireBaseDataSource<User?> 
             .limit(1)
             .get()
             .addOnSuccessListener {
-                continuation.resume(it.documents.first().toUser())
+                continuation.resume(it.documents.firstOrNull()?.toUser())
             }.addOnFailureListener {
                 continuation.resume(null)
             }

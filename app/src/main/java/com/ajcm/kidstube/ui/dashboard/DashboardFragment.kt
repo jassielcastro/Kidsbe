@@ -39,7 +39,9 @@ class DashboardFragment :
         setUpViews()
         addListeners()
 
-        viewModel.dispatch(ActionDashboard.Start)
+        if (viewModel.videos.isNotEmpty()) {
+            viewModel.dispatch(ActionDashboard.Start)
+        }
     }
 
     private fun setUpViews() {
@@ -78,7 +80,6 @@ class DashboardFragment :
     }
 
     override fun updateUi(state: UiState) {
-        stopLoadingAnim()
         contentError.hide()
         when (state) {
             is UiDashboard.Loading -> {
@@ -86,6 +87,7 @@ class DashboardFragment :
                 startLoadingAnim()
             }
             is UiDashboard.LoadingError -> {
+                stopLoadingAnim()
                 txtErrorTitle.text = state.msg
                 contentError.show()
             }
@@ -94,9 +96,10 @@ class DashboardFragment :
                 viewModel.dispatch(ActionDashboard.StartYoutube)
             }
             UiDashboard.YoutubeStarted -> {
-                viewModel.dispatch(ActionDashboard.Refresh)
+                checkGooglePlayServicesAvailable()
             }
             is UiDashboard.RequestPermissions -> {
+                stopLoadingAnim()
                 when (state.exception) {
                     is UserRecoverableAuthIOException -> {
                         startActivityForResult(
@@ -113,6 +116,7 @@ class DashboardFragment :
                 }
             }
             is UiDashboard.Content -> {
+                stopLoadingAnim()
                 showActionViews()
                 adapter.videos = state.videos.shuffled()
             }
@@ -196,6 +200,7 @@ class DashboardFragment :
             Constants.REQUEST_ACCOUNT_PICKER -> {
                 val accountName = data?.extras?.getString(AccountManager.KEY_ACCOUNT_NAME)
                 if (accountName != null) {
+                    credential.credential.selectedAccountName = accountName
                     viewModel.dispatch(ActionDashboard.SaveAccount(accountName))
                 } else {
                     viewModel.dispatch(ActionDashboard.LoadError("No has seleccionado una cuenta para poder utilizar Kidstube!"))

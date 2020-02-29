@@ -35,6 +35,7 @@ class DashboardViewModel(
                 _model.value = UiDashboard.UpdateUserInfo(localDB.userAvatar)
             }
             ActionDashboard.StartYoutube -> {
+                Log.i("DashboardViewModel", localDB.accountName)
                 getYoutubeVideos.startYoutubeWith(localDB.accountName)
                 _model.value = UiDashboard.YoutubeStarted
             }
