@@ -1,5 +1,6 @@
 package com.ajcm.data.source
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
 import com.ajcm.data.auth.Session
@@ -49,18 +50,31 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
         }
     }
 
+    @SuppressLint("DefaultLocale")
     override suspend fun getPopularVideos(apiKey: String, relatedToVideoId: String): Result {
         return try {
-           /* val list = youtube
+           val list = youtube
                 .setKey(apiKey)
 
             val resultList1 = getListOfVideosRelatedTo(relatedToVideoId, list).items
             val resultList2 = getListOfVideosRelatedTo(resultList1[0].id.videoId, list).items
 
-            val completeList = (resultList1 + resultList2).distinctBy { it.id.videoId }
+            val completeList = (resultList1 + resultList2)
+                .distinctBy { it.id.videoId }
+                .filter {
+                    !it.snippet.title.toLowerCase().contains("halloween") &&
+                            !it.snippet.title.toLowerCase().contains("peppa") &&
+                            !it.snippet.title.toLowerCase().contains("carcel") &&
+                            !it.snippet.title.toLowerCase().contains("bruja") &&
+                            !it.snippet.title.toLowerCase().contains("calavera") &&
+                            !it.snippet.title.toLowerCase().contains("muerto") &&
+                            !it.snippet.title.toLowerCase().contains("fantasma") &&
+                            !it.snippet.title.toLowerCase().contains("susto") &&
+                            !it.snippet.title.toLowerCase().contains("miedo")
+                }
 
-            Result(completeList.mapToList(), null)*/
-            getFakeVideoList()
+            Result(completeList.mapToList(), null)
+            //getFakeVideoList()
         } catch (e: IOException) {
             Result(arrayListOf(), e)
         }

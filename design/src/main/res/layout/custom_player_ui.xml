@@ -54,7 +54,6 @@
         android:id="@+id/controls_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@drawable/ayp_drop_shadow_bottom"
         app:layout_constraintStart_toStartOf="@id/startGuideline"
         app:layout_constraintEnd_toEndOf="@id/endGuideline">
 
