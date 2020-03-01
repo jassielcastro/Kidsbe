@@ -14,4 +14,8 @@ interface PlayerUiController {
     fun showSeekBar(show: Boolean): PlayerUiController
     fun showBufferingProgress(show: Boolean): PlayerUiController
 
+    fun enableLiveVideoUi(enable: Boolean): PlayerUiController
+    fun showFullscreenButton(show: Boolean): PlayerUiController
+    fun showMenuButton(show: Boolean): PlayerUiController
+    fun showYouTubeButton(show: Boolean): PlayerUiController
 }

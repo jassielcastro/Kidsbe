@@ -204,6 +204,22 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
         videoDurationView.text = duration.toTime()
     }
 
+    override fun enableLiveVideoUi(enable: Boolean): PlayerUiController {
+        return this
+    }
+
+    override fun showFullscreenButton(show: Boolean): PlayerUiController {
+        return this
+    }
+
+    override fun showMenuButton(show: Boolean): PlayerUiController {
+        return this
+    }
+
+    override fun showYouTubeButton(show: Boolean): PlayerUiController {
+        return this
+    }
+
     override fun onVideoId(youTubePlayer: YouTubePlayer, videoId: String) {}
     override fun onReady(youTubePlayer: YouTubePlayer) {}
     override fun onPlaybackQualityChange(youTubePlayer: YouTubePlayer, playbackQuality: PlayerConstants.PlaybackQuality) {}

@@ -39,11 +39,9 @@ class LegacyYouTubePlayerView(context: Context, attrs: AttributeSet? = null, def
     private var initialize = { }
     private val youTubePlayerCallbacks = HashSet<YouTubePlayerCallback>()
 
-    var canPlay = true
-        private set
+    private var canPlay = true
 
-    var isUsingCustomUi = true
-        private set
+    private var isUsingCustomUi = false
 
     init {
 

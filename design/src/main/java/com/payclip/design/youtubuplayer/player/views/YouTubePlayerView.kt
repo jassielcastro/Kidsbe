@@ -40,6 +40,15 @@ class YouTubePlayerView(context: Context, attrs: AttributeSet? = null, defStyleA
         val youTubePlayerListener = object : AbstractYouTubePlayerListener() {}
 
         legacyTubePlayerView.initialize(youTubePlayerListener, handleNetworkEvents)
+
+        legacyTubePlayerView.getPlayerUiController()
+            .enableLiveVideoUi(false)
+            .showYouTubeButton(false)
+            .showFullscreenButton(false)
+            .showMenuButton(false)
+            .showCurrentTime(true)
+            .showDuration(true)
+            .showSeekBar(true)
     }
 
     /**
