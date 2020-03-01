@@ -80,6 +80,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
                 adapter.videos = state.videos
             }
             is UiPlayVideo.PlayVideo -> {
+                btnBack.show()
                 viewPanelLoader.hide()
                 progressLoader.hide()
                 viewModel.dispatch(ActionPlayVideo.SaveLastVideoId(state.videoId))
