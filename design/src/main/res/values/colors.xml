@@ -4,6 +4,7 @@
     <color name="black">#000000</color>
 
     <color name="ayp_red">#F44336</color>
+    <color name="ayp_red_alpha">#E7635B</color>
     <color name="ayp_item_selected">#90FFFFFF</color>
     <color name="ayp_drop_shadow">#66000000</color>
 

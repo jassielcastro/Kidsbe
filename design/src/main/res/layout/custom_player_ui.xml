@@ -7,6 +7,13 @@
     tools:ignore="MissingDefaultResource">
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/startGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.19" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/endGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,11 +52,11 @@
 
     <RelativeLayout
         android:id="@+id/controls_container"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:orientation="horizontal">
+        android:background="@drawable/ayp_drop_shadow_bottom"
+        app:layout_constraintStart_toStartOf="@id/startGuideline"
+        app:layout_constraintEnd_toEndOf="@id/endGuideline">
 
         <TextView
             android:id="@+id/videoTitle"
@@ -65,13 +72,14 @@
             android:textStyle="bold"
             tools:text="custom Ui example" />
 
-        <ProgressBar
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/progressbar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:layout_centerInParent="true" />
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerInParent="true"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loader_jelly_spin" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -93,8 +101,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_toEndOf="@id/play_pause_button"
                 android:fontFamily="@font/montserrat_regular"
                 android:textColor="@color/white"
@@ -110,6 +118,9 @@
                 android:layout_toEndOf="@id/video_current_time"
                 android:layout_toStartOf="@id/video_duration"
                 android:layout_centerVertical="true"
+                android:progressDrawable="@drawable/seekbar_progressbar"
+                android:thumb="@drawable/thumb_seekbar"
+                android:splitTrack="false"
                 android:max="100"
                 android:progress="0"/>
 

@@ -2,13 +2,11 @@ package com.payclip.design.youtubuplayer.ui
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.airbnb.lottie.LottieAnimationView
 import com.payclip.design.R
-import com.payclip.design.extensions.hide
-import com.payclip.design.extensions.show
 import com.payclip.design.extensions.toTime
 import com.payclip.design.youtubuplayer.player.PlayerConstants
 import com.payclip.design.youtubuplayer.player.YouTubePlayer
@@ -34,7 +32,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
     private val videoCurrentTime: TextView
     private val videoDurationView: TextView
 
-    private val progressBar: ProgressBar
+    private val progressBar: LottieAnimationView
     private val playPauseButton: ImageView
 
     private val youtubePlayerSeekBar: SeekBar
@@ -174,7 +172,10 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
             panel.setBackgroundColor(ContextCompat.getColor(panel.context, android.R.color.transparent))
             progressBar.visibility = View.GONE
 
-            if (isPlayPauseButtonEnabled) playPauseButton.visibility = View.VISIBLE
+            if (isPlayPauseButtonEnabled) {
+                playPauseButton.visibility = View.VISIBLE
+                youtubePlayerSeekBar.visibility = View.VISIBLE
+            }
 
             updatePlayPauseButtonIcon(state === PlayerConstants.PlayerState.PLAYING)
 
@@ -184,12 +185,18 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
             if (state === PlayerConstants.PlayerState.BUFFERING) {
                 progressBar.visibility = View.VISIBLE
                 panel.setBackgroundColor(ContextCompat.getColor(panel.context, android.R.color.transparent))
-                if (isPlayPauseButtonEnabled) playPauseButton.visibility = View.INVISIBLE
+                if (isPlayPauseButtonEnabled) {
+                    playPauseButton.visibility = View.INVISIBLE
+                    youtubePlayerSeekBar.visibility = View.INVISIBLE
+                }
             }
 
             if (state === PlayerConstants.PlayerState.UNSTARTED) {
-                progressBar.visibility = View.GONE
-                if (isPlayPauseButtonEnabled) playPauseButton.visibility = View.VISIBLE
+                progressBar.visibility = View.VISIBLE
+                if (isPlayPauseButtonEnabled) {
+                    playPauseButton.visibility = View.INVISIBLE
+                    youtubePlayerSeekBar.visibility = View.INVISIBLE
+                }
             }
         }
     }

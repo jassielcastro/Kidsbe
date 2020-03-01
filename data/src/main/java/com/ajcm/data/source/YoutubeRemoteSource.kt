@@ -51,7 +51,7 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
 
     override suspend fun getPopularVideos(apiKey: String, relatedToVideoId: String): Result {
         return try {
-            val list = youtube
+           /* val list = youtube
                 .setKey(apiKey)
 
             val resultList1 = getListOfVideosRelatedTo(relatedToVideoId, list).items
@@ -59,8 +59,8 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
 
             val completeList = (resultList1 + resultList2).distinctBy { it.id.videoId }
 
-            Result(completeList.mapToList(), null)
-            //getFakeVideoList()
+            Result(completeList.mapToList(), null)*/
+            getFakeVideoList()
         } catch (e: IOException) {
             Result(arrayListOf(), e)
         }
