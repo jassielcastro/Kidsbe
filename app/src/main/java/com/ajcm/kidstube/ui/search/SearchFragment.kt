@@ -10,6 +10,9 @@ class SearchFragment : KidsFragment<UiSearch, SearchViewModel>(R.layout.search_f
 
     override val viewModel: SearchViewModel by currentScope.viewModel(this)
 
+    override val sound: Int
+        get() = R.raw.dashboard_ben_smile
+
     override fun updateUi(state: UiState) {
 
     }

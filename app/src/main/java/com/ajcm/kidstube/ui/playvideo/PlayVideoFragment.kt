@@ -24,6 +24,9 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
 
     override val viewModel: PlayVideoViewModel by currentScope.viewModel(this)
 
+    override val sound: Int
+        get() = NO_SOUND
+
     private lateinit var youtubePlayer: YouTubePlayer
 
     private lateinit var adapter: RelatedVideosAdapter

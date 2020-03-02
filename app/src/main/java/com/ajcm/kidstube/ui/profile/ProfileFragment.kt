@@ -19,6 +19,9 @@ class ProfileFragment : KidsFragment<UiProfile, ProfileViewModel>(R.layout.profi
 
     override val viewModel: ProfileViewModel by currentScope.viewModel(this)
 
+    override val sound: Int
+        get() = R.raw.dashboard_ben_smile
+
     private lateinit var adapter: AvatarAdapter
 
     @InternalCoroutinesApi

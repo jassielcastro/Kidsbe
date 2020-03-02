@@ -13,6 +13,9 @@ class SettingsFragment : KidsFragment<UiSettings, SettingsViewModel>(R.layout.se
 
     override val viewModel: SettingsViewModel by currentScope.viewModel(this)
 
+    override val sound: Int
+        get() = R.raw.dashboard_ben_smile
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

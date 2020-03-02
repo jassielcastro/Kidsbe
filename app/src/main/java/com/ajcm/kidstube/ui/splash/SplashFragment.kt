@@ -2,7 +2,6 @@ package com.ajcm.kidstube.ui.splash
 
 import android.Manifest
 import android.accounts.AccountManager
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -25,6 +24,9 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
     override val viewModel: SplashViewModel by currentScope.viewModel(this) {
         parametersOf(this)
     }
+
+    override val sound: Int
+        get() = R.raw.splash_komiku
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,5 +1,6 @@
 package com.ajcm.kidstube.arch
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
@@ -12,9 +13,21 @@ import org.koin.android.ext.android.inject
 
 abstract class KidsFragment<UI: UiState, VM: ScopedViewModel<UI>>(@LayoutRes layout: Int): Fragment(layout) {
 
+    companion object {
+        const val NO_SOUND: Int = -1
+    }
+
     abstract val viewModel: VM
 
+    abstract val sound: Int
+
+    private var isReadyToPlay = false
+
     val credential: GoogleCredential by inject()
+
+    private val mediaPlayer: MediaPlayer? by lazy {
+        if (sound != NO_SOUND) MediaPlayer.create(requireContext(), sound) else null
+    }
 
     abstract fun updateUi(state: UiState)
 
@@ -29,6 +42,28 @@ abstract class KidsFragment<UI: UiState, VM: ScopedViewModel<UI>>(@LayoutRes lay
             }
 
         viewModel.model.observe(this, Observer(::updateUi))
+
+        mediaPlayer?.setOnPreparedListener {
+            it.start()
+            isReadyToPlay = true
+        }
+
+        mediaPlayer?.setOnCompletionListener {
+            it.seekTo(0)
+            it.start()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (mediaPlayer?.isPlaying == false && isReadyToPlay) {
+            mediaPlayer?.start()
+        }
+    }
+
+    override fun onPause() {
+        mediaPlayer?.pause()
+        super.onPause()
     }
 
 }

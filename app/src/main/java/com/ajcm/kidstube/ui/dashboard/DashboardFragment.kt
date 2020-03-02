@@ -31,6 +31,9 @@ class DashboardFragment :
 
     override val viewModel: DashboardViewModel by currentScope.viewModel(this)
 
+    override val sound: Int
+        get() = R.raw.dashboard_ben_smile
+
     private lateinit var adapter: VideoAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
