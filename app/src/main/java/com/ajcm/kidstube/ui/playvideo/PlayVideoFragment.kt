@@ -28,6 +28,8 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
 
     private lateinit var adapter: RelatedVideosAdapter
 
+    private var lastPanelState: PanelState = PanelState.COLLAPSED
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -37,7 +39,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
     }
 
     private fun setUpListeners() {
-        youtube_player_view.setOnPanelClicked { panelState ->
+        youtube_player_view.setOnPanelListener { panelState ->
             toggleVideoView(panelState)
         }
 
@@ -62,6 +64,18 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
                 viewModel.dispatch(ActionPlayVideo.PlayerViewReady(youTubePlayer))
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (lastPanelState == PanelState.EXPAND) {
+            youtube_player_view.onResume()
+        }
+    }
+
+    override fun onStop() {
+        youtube_player_view.onStop()
+        super.onStop()
     }
 
     override fun updateUi(state: UiState) {
@@ -91,6 +105,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
     }
 
     private fun toggleVideoView(state: PanelState) {
+        lastPanelState = state
         videoBottomGuideline?.let { guideLine ->
             val params = guideLine.layoutParams as ConstraintLayout.LayoutParams
 

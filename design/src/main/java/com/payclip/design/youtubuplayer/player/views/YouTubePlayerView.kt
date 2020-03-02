@@ -4,20 +4,15 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.payclip.design.R
-import com.payclip.design.youtubuplayer.player.YouTubePlayer
 import com.payclip.design.youtubuplayer.player.listeners.AbstractYouTubePlayerListener
 import com.payclip.design.youtubuplayer.player.listeners.YouTubePlayerCallback
 import com.payclip.design.youtubuplayer.player.listeners.YouTubePlayerListener
 import com.payclip.design.youtubuplayer.player.options.IFramePlayerOptions
 import com.payclip.design.youtubuplayer.player.options.PanelState
-import com.payclip.design.youtubuplayer.player.utils.loadOrCueVideo
-import com.payclip.design.youtubuplayer.ui.DefaultPlayerUiController
 import com.payclip.design.youtubuplayer.ui.PlayerUiController
 
 class YouTubePlayerView(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
@@ -129,10 +124,10 @@ class YouTubePlayerView(context: Context, attrs: AttributeSet? = null, defStyleA
     fun release() = legacyTubePlayerView.release()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    private fun onResume() = legacyTubePlayerView.onResume()
+    fun onResume() = legacyTubePlayerView.onResume()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    private fun onStop() = legacyTubePlayerView.onStop()
+    fun onStop() = legacyTubePlayerView.onStop()
 
     fun addYouTubePlayerListener(youTubePlayerListener: YouTubePlayerListener) =
         legacyTubePlayerView.youTubePlayer.addListener(youTubePlayerListener)
@@ -140,8 +135,8 @@ class YouTubePlayerView(context: Context, attrs: AttributeSet? = null, defStyleA
     fun removeYouTubePlayerListener(youTubePlayerListener: YouTubePlayerListener) =
         legacyTubePlayerView.youTubePlayer.removeListener(youTubePlayerListener)
 
-    fun setOnPanelClicked(clickedListener: (PanelState) -> Unit) {
-        legacyTubePlayerView.setOnPanelClicked(clickedListener)
+    fun setOnPanelListener(listener: (PanelState) -> Unit) {
+        legacyTubePlayerView.setOnPanelListener(listener)
     }
 
     fun setOnVideoFinishListener(finishListener: () -> Unit) {

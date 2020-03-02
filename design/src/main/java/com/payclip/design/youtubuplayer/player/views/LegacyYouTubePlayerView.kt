@@ -181,6 +181,7 @@ class LegacyYouTubePlayerView(context: Context, attrs: AttributeSet? = null, def
     internal fun onResume() {
         playbackResumer.onLifecycleResume()
         canPlay = true
+        defaultPlayerUiController.onResume()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -213,8 +214,8 @@ class LegacyYouTubePlayerView(context: Context, attrs: AttributeSet? = null, def
         return defaultPlayerUiController
     }
 
-    fun setOnPanelClicked(clickedListener: (PanelState) -> Unit) {
-        defaultPlayerUiController.setOnPanelClicked(clickedListener)
+    fun setOnPanelListener(listener: (PanelState) -> Unit) {
+        defaultPlayerUiController.setOnPanelListener(listener)
     }
 
     fun setOnVideoFinishListener(finishListener: () -> Unit) {

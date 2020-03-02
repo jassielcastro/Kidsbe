@@ -25,18 +25,24 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
     /**
      * Duration of the fade animation in milliseconds.
      */
-    var animationDuration = DEFAULT_ANIMATION_DURATION
+    private var animationDuration = DEFAULT_ANIMATION_DURATION
 
     /**
      * Delay after which the view automatically fades out.
      */
-    var fadeOutDelay = DEFAULT_FADE_OUT_DELAY
+    private var fadeOutDelay = DEFAULT_FADE_OUT_DELAY
 
-    private var onPanelClicked: (PanelState) -> Unit = {}
+    private var listener: (PanelState) -> Unit = {}
     private var panelYoutube: View? = null
 
     fun toggleVisibility() {
         fade(if (isVisible) 0f else 1f)
+    }
+
+    fun onResume() {
+        isPlaying = true
+        toggleVisibility()
+        isPlaying = false
     }
 
     private fun fade(finalAlpha: Float) {
@@ -59,7 +65,7 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
                 override fun onAnimationStart(animator: Animator) {
                     if (finalAlpha == 1f) {
                         targetView.visibility = View.VISIBLE
-                        onPanelClicked(PanelState.COLLAPSED)
+                        listener(PanelState.COLLAPSED)
                         panelYoutube?.visibility = View.VISIBLE
                     }
                 }
@@ -67,7 +73,7 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
                 override fun onAnimationEnd(animator: Animator) {
                     if (finalAlpha == 0f) {
                         targetView.visibility = View.GONE
-                        onPanelClicked(PanelState.EXPAND)
+                        listener(PanelState.EXPAND)
                         panelYoutube?.visibility = View.GONE
                     }
                 }
@@ -107,8 +113,8 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
         }
     }
 
-    fun setOnPanelClicked(clickedListener: (PanelState) -> Unit, panelYoutube: View) {
-        this.onPanelClicked = clickedListener
+    fun setOnPanelListener(listener: (PanelState) -> Unit, panelYoutube: View) {
+        this.listener = listener
         this.panelYoutube = panelYoutube
     }
 

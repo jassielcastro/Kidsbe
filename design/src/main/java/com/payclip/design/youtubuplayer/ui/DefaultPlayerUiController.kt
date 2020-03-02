@@ -81,8 +81,14 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
         playPauseButton.setOnClickListener { onPlayButtonPressed() }
     }
 
-    fun setOnPanelClicked(clickedListener: (PanelState) -> Unit) {
-        fadeControlsContainer.setOnPanelClicked(clickedListener, panelYoutubeControls)
+    fun onResume() {
+        if (!isPlaying) {
+            fadeControlsContainer.onResume()
+        }
+    }
+
+    fun setOnPanelListener(listener: (PanelState) -> Unit) {
+        fadeControlsContainer.setOnPanelListener(listener, panelYoutubeControls)
     }
 
     fun setOnVideoFinishListener(finishListener: () -> Unit) {
