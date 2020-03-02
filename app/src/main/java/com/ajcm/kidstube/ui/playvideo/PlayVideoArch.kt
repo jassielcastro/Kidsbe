@@ -11,7 +11,7 @@ sealed class UiPlayVideo : UiState {
     object LoadingError : UiPlayVideo()
     data class RenderYoutubePlayer(val youTubePlayer: YouTubePlayer) : UiPlayVideo()
     data class Content(val videos: List<Video>) : UiPlayVideo()
-    data class PlayVideo(val videoId: String) : UiPlayVideo()
+    data class PlayVideo(val videoId: String, val thumbnail: String) : UiPlayVideo()
     data class RequestPermissions(val exception: Exception?) : UiPlayVideo()
 }
 

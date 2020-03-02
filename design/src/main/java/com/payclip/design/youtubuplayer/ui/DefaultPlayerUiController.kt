@@ -4,9 +4,9 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.airbnb.lottie.LottieAnimationView
 import com.payclip.design.R
+import com.payclip.design.extensions.loadUrl
 import com.payclip.design.extensions.toTime
 import com.payclip.design.youtubuplayer.player.PlayerConstants
 import com.payclip.design.youtubuplayer.player.YouTubePlayer
@@ -23,10 +23,12 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
      * View used for for intercepting clicks and for drawing a black background.
      * Could have used controlsContainer, but in this way I'm able to hide all the control at once by hiding controlsContainer
      */
-    private val panel: View
+    private val panel: ImageView
 
     private val controlsContainer: View
     private val panelYoutubeControls: View
+
+    private val drop_shadow_bottom: View
 
     private val videoTitle: TextView
     private val videoCurrentTime: TextView
@@ -46,6 +48,8 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
 
     private var onVideoEnded: () -> Unit = {}
 
+    private var listener: (Int) -> Unit = {}
+
     init {
 
         val controlsView = View.inflate(
@@ -57,6 +61,8 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
         panel = controlsView.findViewById(R.id.panel)
         controlsContainer = controlsView.findViewById(R.id.controls_container)
         panelYoutubeControls = controlsView.findViewById(R.id.panelYoutubeControls)
+
+        drop_shadow_bottom = controlsView.findViewById(R.id.drop_shadow_bottom)
 
         videoTitle = controlsView.findViewById(R.id.videoTitle)
         videoCurrentTime = controlsView.findViewById(R.id.video_current_time)
@@ -79,12 +85,34 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
             fadeControlsContainer.toggleVisibility()
         }
         playPauseButton.setOnClickListener { onPlayButtonPressed() }
+
+        youtubePlayerSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekcBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    listener(progress)
+                }
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+        })
     }
 
     fun onResume() {
         if (!isPlaying) {
             fadeControlsContainer.onResume()
         }
+    }
+
+    fun loadThumbnailImage(thumbnail: String) {
+        if (thumbnail.isNotEmpty()) {
+            panel.loadUrl(thumbnail)
+        }
+    }
+
+    fun addSeekBarListener(listener: (Int) -> Unit) {
+        this.listener = listener
     }
 
     fun setOnPanelListener(listener: (PanelState) -> Unit) {
@@ -152,9 +180,11 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
                 isPlaying = false
             }
             PlayerConstants.PlayerState.PAUSED -> {
+                panel.alpha = 1f
                 isPlaying = false
             }
             PlayerConstants.PlayerState.PLAYING -> {
+                panel.alpha = 0f
                 isPlaying = true
             }
 
@@ -175,12 +205,13 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
         updateState(state)
 
         if (state === PlayerConstants.PlayerState.PLAYING || state === PlayerConstants.PlayerState.PAUSED || state === PlayerConstants.PlayerState.VIDEO_CUED) {
-            panel.setBackgroundColor(ContextCompat.getColor(panel.context, android.R.color.transparent))
+            //panel.setBackgroundColor(ContextCompat.getColor(panel.context, android.R.color.transparent))
             progressBar.visibility = View.GONE
 
             if (isPlayPauseButtonEnabled) {
                 playPauseButton.visibility = View.VISIBLE
                 youtubePlayerSeekBar.visibility = View.VISIBLE
+                drop_shadow_bottom.visibility = View.VISIBLE
             }
 
             updatePlayPauseButtonIcon(state === PlayerConstants.PlayerState.PLAYING)
@@ -190,10 +221,11 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
 
             if (state === PlayerConstants.PlayerState.BUFFERING) {
                 progressBar.visibility = View.VISIBLE
-                panel.setBackgroundColor(ContextCompat.getColor(panel.context, android.R.color.transparent))
+                //panel.setBackgroundColor(ContextCompat.getColor(panel.context, android.R.color.transparent))
                 if (isPlayPauseButtonEnabled) {
                     playPauseButton.visibility = View.INVISIBLE
                     youtubePlayerSeekBar.visibility = View.INVISIBLE
+                    drop_shadow_bottom.visibility = View.INVISIBLE
                 }
             }
 
@@ -202,6 +234,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
                 if (isPlayPauseButtonEnabled) {
                     playPauseButton.visibility = View.INVISIBLE
                     youtubePlayerSeekBar.visibility = View.INVISIBLE
+                    drop_shadow_bottom.visibility = View.INVISIBLE
                 }
             }
         }

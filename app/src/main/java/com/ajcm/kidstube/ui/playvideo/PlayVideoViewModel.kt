@@ -24,8 +24,9 @@ class PlayVideoViewModel(
             return _model
         }
 
-    var videoList: List<Video> = arrayListOf()
+    private var videoList: List<Video> = arrayListOf()
     private var sharedVideoId: String? = null
+    private var videoThumbnail: String? = null
 
     init {
         initScope()
@@ -38,6 +39,9 @@ class PlayVideoViewModel(
                 actionState.bundle?.getString(Constants.KEY_VIDEO_ID)?.let {
                     sharedVideoId = it
                 }
+                actionState.bundle?.getString(Constants.KEY_VIDEO_THUMBNAIL)?.let {
+                    videoThumbnail = it
+                }
                 actionState.bundle?.getSerializable(Constants.KEY_VIDEO_LIST)?.let {
                     (it as? VideoList)?.let {  vl ->
                         videoList = vl.list
@@ -48,8 +52,8 @@ class PlayVideoViewModel(
                 getYoutubeVideos.startYoutubeWith(localDB.accountName)
             }
             is ActionPlayVideo.Start -> {
-                sharedVideoId?.let {
-                    _model.value = UiPlayVideo.PlayVideo(it)
+                if (sharedVideoId != null && videoThumbnail != null) {
+                    _model.value = UiPlayVideo.PlayVideo(sharedVideoId!!, videoThumbnail!!)
                 }
             }
             is ActionPlayVideo.PlayerViewReady -> {
@@ -69,11 +73,14 @@ class PlayVideoViewModel(
 
             }
             is ActionPlayVideo.VideoSelected -> {
-                _model.value = UiPlayVideo.PlayVideo(actionState.video.videoId)
+                videoThumbnail = actionState.video.thumbnail
+                _model.value = UiPlayVideo.PlayVideo(actionState.video.videoId, actionState.video.thumbnail)
             }
             ActionPlayVideo.PlayNextVideo -> {
                 if (videoList.isNotEmpty()) {
-                    _model.value = UiPlayVideo.PlayVideo(videoList[0].videoId)
+                    val video = videoList[0]
+                    videoThumbnail = video.thumbnail
+                    _model.value = UiPlayVideo.PlayVideo(video.videoId, video.thumbnail)
                 }
             }
         }

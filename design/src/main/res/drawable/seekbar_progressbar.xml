@@ -7,7 +7,7 @@
 
             <solid android:color="@color/white"/>
 
-            <stroke android:width="12dp"
+            <stroke android:width="14dp"
                 android:color="@android:color/transparent" />
         </shape>
     </item>
@@ -18,7 +18,7 @@
             <shape android:shape="rectangle">
                 <corners android:radius="20dp"/>
                 <solid android:color="@color/ayp_red_alpha" />
-                <stroke android:width="12dp"
+                <stroke android:width="14dp"
                     android:color="@android:color/transparent" />
             </shape>
         </clip>

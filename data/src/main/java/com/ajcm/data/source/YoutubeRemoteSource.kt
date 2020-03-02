@@ -53,7 +53,7 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
     @SuppressLint("DefaultLocale")
     override suspend fun getPopularVideos(apiKey: String, relatedToVideoId: String): Result {
         return try {
-           /*val list = youtube
+           val list = youtube
                 .setKey(apiKey)
 
             val resultList1 = getListOfVideosRelatedTo(relatedToVideoId, list).items
@@ -73,7 +73,7 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
                             !it.snippet.title.toLowerCase().contains("miedo")
                 }
 
-            Result(completeList.mapToList(), null)*/
+            Result(completeList.mapToList(), null)
             getFakeVideoList()
         } catch (e: IOException) {
             Result(arrayListOf(), e)
@@ -93,8 +93,8 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
 
     private fun getFakeVideoList() : Result {
         return Result(arrayListOf(
-            Video("4QOnCD34gZc", "", "", "https://i.ytimg.com/vi/4QOnCD34gZc/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLAKAcgpkwvdxABmu2J9c2stNIJTrA", ""),
-            Video("1enTGxhzQJI", "", "", "https://i.ytimg.com/vi/kEqWsBcKJ_A/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLAIVtsGX5Uav80eEyxv3L2AF2YLLQ", "")
+            Video("s5j3QKHCH-Y", "", "How To Make A Sugar Lego Heart Cake", "https://i.ytimg.com/vi/4QOnCD34gZc/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLAKAcgpkwvdxABmu2J9c2stNIJTrA", ""),
+            Video("2OVtnfOOGbo", "", "Rainbow Marble Surprise Inside Cake!\n", "https://i.ytimg.com/vi/kEqWsBcKJ_A/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLAIVtsGX5Uav80eEyxv3L2AF2YLLQ", "")
         ), null)
     }
 

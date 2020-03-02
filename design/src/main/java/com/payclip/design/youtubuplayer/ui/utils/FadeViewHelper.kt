@@ -46,7 +46,7 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
     }
 
     private fun fade(finalAlpha: Float) {
-        if (!canFade || isDisabled || !isPlaying)
+        if (!canFade || isDisabled)
             return
 
         isVisible = finalAlpha != 0f

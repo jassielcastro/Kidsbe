@@ -111,6 +111,9 @@ class WebViewYouTubePlayer constructor(context: Context, attrs: AttributeSet? = 
                 return result ?: Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565)
             }
         }
+
+        this.isClickable = false
+        this.isFocusable = false
     }
 
     override fun onWindowVisibilityChanged(visibility: Int) {

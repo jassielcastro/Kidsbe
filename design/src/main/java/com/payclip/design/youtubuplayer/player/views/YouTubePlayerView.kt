@@ -129,6 +129,10 @@ class YouTubePlayerView(context: Context, attrs: AttributeSet? = null, defStyleA
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onStop() = legacyTubePlayerView.onStop()
 
+    fun loadThumbnailImage(thumbnail: String) {
+        legacyTubePlayerView.loadThumbnailImage(thumbnail)
+    }
+
     fun addYouTubePlayerListener(youTubePlayerListener: YouTubePlayerListener) =
         legacyTubePlayerView.youTubePlayer.addListener(youTubePlayerListener)
 
