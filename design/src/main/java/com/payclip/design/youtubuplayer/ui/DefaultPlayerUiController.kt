@@ -6,7 +6,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import com.airbnb.lottie.LottieAnimationView
 import com.payclip.design.R
-import com.payclip.design.extensions.loadUrl
+import com.payclip.design.extensions.loadUrlWithAspectRatio
 import com.payclip.design.extensions.toTime
 import com.payclip.design.youtubuplayer.player.PlayerConstants
 import com.payclip.design.youtubuplayer.player.YouTubePlayer
@@ -107,7 +107,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
 
     fun loadThumbnailImage(thumbnail: String) {
         if (thumbnail.isNotEmpty()) {
-            panel.loadUrl(thumbnail)
+            panel.loadUrlWithAspectRatio(thumbnail)
         }
     }
 

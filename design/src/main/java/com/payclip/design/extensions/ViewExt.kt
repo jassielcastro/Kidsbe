@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import kotlin.properties.Delegates
 
 fun AppCompatActivity.fullScreen() {
@@ -58,6 +59,16 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
 
 fun ImageView.loadUrl(url: String) {
     Glide.with(context).load(url).into(this)
+}
+
+fun ImageView.loadUrlWithAspectRatio(url: String) {
+    this.post {
+        Glide.with(context)
+            .load(url)
+            .centerCrop()
+            .override(Target.SIZE_ORIGINAL, this.height)
+            .into(this)
+    }
 }
 
 fun ImageView.loadRes(@DrawableRes drawable: Int, circleCrop: Boolean = true) {
