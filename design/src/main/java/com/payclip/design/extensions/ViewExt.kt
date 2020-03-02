@@ -21,7 +21,9 @@ fun AppCompatActivity.fullScreen() {
     val decorView = window.decorView
     val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     decorView.systemUiVisibility = uiOptions
+}
 
+fun AppCompatActivity.accelerateViews() {
     window.setFlags(
         WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
         WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
