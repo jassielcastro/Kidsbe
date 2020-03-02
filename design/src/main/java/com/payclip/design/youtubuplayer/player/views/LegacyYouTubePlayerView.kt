@@ -48,6 +48,10 @@ class LegacyYouTubePlayerView(context: Context, attrs: AttributeSet? = null, def
         addView(youTubePlayer, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         defaultPlayerUiController = DefaultPlayerUiController(this, youTubePlayer)
 
+        defaultPlayerUiController.addSeekBarListener {
+            //youTubePlayer.seekTo(it.toFloat())
+        }
+
         youTubePlayer.addListener(defaultPlayerUiController)
         youTubePlayer.addListener(playbackResumer)
 
@@ -189,6 +193,10 @@ class LegacyYouTubePlayerView(context: Context, attrs: AttributeSet? = null, def
         youTubePlayer.pause()
         playbackResumer.onLifecycleStop()
         canPlay = false
+    }
+
+    fun loadThumbnailImage(thumbnail: String) {
+        defaultPlayerUiController.loadThumbnailImage(thumbnail)
     }
 
     /**

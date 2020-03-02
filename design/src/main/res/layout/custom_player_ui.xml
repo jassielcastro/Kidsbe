@@ -24,6 +24,7 @@
         android:id="@+id/panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:background="@color/black"
         android:clickable="true"
         android:focusable="true"
@@ -42,6 +43,7 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="@id/endGuideline"
         app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
         android:background="@color/black" />
 
     <RelativeLayout

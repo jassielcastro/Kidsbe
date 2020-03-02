@@ -66,15 +66,22 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
                             !it.snippet.title.toLowerCase().contains("peppa") &&
                             !it.snippet.title.toLowerCase().contains("carcel") &&
                             !it.snippet.title.toLowerCase().contains("bruja") &&
+                            !it.snippet.title.toLowerCase().contains("witch") &&
                             !it.snippet.title.toLowerCase().contains("calavera") &&
                             !it.snippet.title.toLowerCase().contains("muerto") &&
                             !it.snippet.title.toLowerCase().contains("fantasma") &&
+                            !it.snippet.title.toLowerCase().contains("ghost") &&
                             !it.snippet.title.toLowerCase().contains("susto") &&
+                            !it.snippet.title.toLowerCase().contains("scare") &&
+                            !it.snippet.title.toLowerCase().contains("mounstro") &&
+                            !it.snippet.title.toLowerCase().contains("monster") &&
+                            !it.snippet.title.toLowerCase().contains("zombie") &&
+                            !it.snippet.title.toLowerCase().contains("apocalypse") &&
                             !it.snippet.title.toLowerCase().contains("miedo")
                 }
 
             Result(completeList.mapToList(), null)
-            getFakeVideoList()
+            //getFakeVideoList()
         } catch (e: IOException) {
             Result(arrayListOf(), e)
         }

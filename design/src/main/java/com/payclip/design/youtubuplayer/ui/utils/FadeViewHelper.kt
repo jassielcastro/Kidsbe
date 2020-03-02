@@ -66,7 +66,7 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
                     if (finalAlpha == 1f) {
                         targetView.visibility = View.VISIBLE
                         listener(PanelState.COLLAPSED)
-                        panelYoutube?.visibility = View.VISIBLE
+                        //panelYoutube?.visibility = View.VISIBLE
                     }
                 }
 
@@ -74,7 +74,7 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
                     if (finalAlpha == 0f) {
                         targetView.visibility = View.GONE
                         listener(PanelState.EXPAND)
-                        panelYoutube?.visibility = View.GONE
+                        //panelYoutube?.visibility = View.GONE
                     }
                 }
 
