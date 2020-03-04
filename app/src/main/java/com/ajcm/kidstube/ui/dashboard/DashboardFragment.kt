@@ -25,16 +25,18 @@ import kotlinx.android.synthetic.main.generic_error.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class DashboardFragment :
-    KidsFragment<UiDashboard, DashboardViewModel>(R.layout.dashboard_fragment),
+class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout.dashboard_fragment),
     View.OnClickListener {
 
     override val viewModel: DashboardViewModel by currentScope.viewModel(this)
 
-    override val sound: Int
-        get() = R.raw.dashboard_ben_smile
-
     private lateinit var adapter: VideoAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        songTrackListener?.onPlaySong(R.raw.dashboard_ben_smile)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,6 +47,12 @@ class DashboardFragment :
         if (viewModel.videos.isNotEmpty()) {
             viewModel.dispatch(ActionDashboard.Start)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        songTrackListener?.enableSong(true)
+        songTrackListener?.onResumeSong()
     }
 
     private fun setUpViews() {

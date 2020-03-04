@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         android:hardwareAccelerated="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.MainActivity"
+        <activity android:name=".ui.main.MainActivity"
             android:screenOrientation="sensorLandscape"
             android:configChanges="orientation|screenSize">
             <intent-filter>

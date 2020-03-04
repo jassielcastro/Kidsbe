@@ -25,13 +25,19 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
         parametersOf(this)
     }
 
-    override val sound: Int
-        get() = R.raw.splash_komiku
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        songTrackListener?.onPlaySong(R.raw.splash_komiku)
+
         animationWaves.accelerateCanvas()
         animationSplash.accelerateCanvas()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        songTrackListener?.enableSong(true)
+        songTrackListener?.onResumeSong()
     }
 
     @InternalCoroutinesApi

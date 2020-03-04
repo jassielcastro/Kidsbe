@@ -53,7 +53,7 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
     @SuppressLint("DefaultLocale")
     override suspend fun getPopularVideos(apiKey: String, relatedToVideoId: String): Result {
         return try {
-           val list = youtube
+           /*val list = youtube
                 .setKey(apiKey)
 
             val resultList1 = getListOfVideosRelatedTo(relatedToVideoId, list).items
@@ -80,8 +80,8 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
                             !it.snippet.title.toLowerCase().contains("miedo")
                 }
 
-            Result(completeList.mapToList(), null)
-            //getFakeVideoList()
+            Result(completeList.mapToList(), null)*/
+            getFakeVideoList()
         } catch (e: IOException) {
             Result(arrayListOf(), e)
         }
