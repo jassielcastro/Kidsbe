@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.annotation.RawRes
+import com.payclip.design.extensions.delay
 
 class SongHelper {
 
@@ -68,11 +69,14 @@ class SongHelper {
             addUpdateListener {
                 val value = it.animatedValue as Float
                 mediaPlayer?.setVolume(value, value)
-                if (value <= end) {
-                    completion()
-                }
             }
+
             duration = DEFAULT_VOLUME_DURATION
+
+            delay(DEFAULT_VOLUME_DURATION) {
+                completion()
+            }
+
             start()
         }
     }
