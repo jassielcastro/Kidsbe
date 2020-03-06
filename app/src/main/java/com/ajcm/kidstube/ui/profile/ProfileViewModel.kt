@@ -1,7 +1,7 @@
 package com.ajcm.kidstube.ui.profile
 
 import androidx.lifecycle.LiveData
-import com.ajcm.data.database.LocalDB
+import com.ajcm.data.source.LocalDataSource
 import com.ajcm.domain.Avatar
 import com.ajcm.domain.User
 import com.ajcm.kidstube.arch.ActionState
@@ -10,8 +10,10 @@ import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
-class ProfileViewModel(private val localDB: LocalDB, private val updateUser: UpdateUser, uiDispatcher: CoroutineDispatcher) :
+class ProfileViewModel(private val localDB: LocalDataSource, private val updateUser: UpdateUser, uiDispatcher: CoroutineDispatcher) :
     ScopedViewModel<UiProfile>(uiDispatcher) {
 
     @InternalCoroutinesApi
@@ -29,14 +31,19 @@ class ProfileViewModel(private val localDB: LocalDB, private val updateUser: Upd
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             ActionProfile.Start -> {
-                consume(UiProfile.UpdateUserInfo(localDB.userAvatar, localDB.accountName))
+                launch {
+                    consume(UiProfile.UpdateUserInfo(localDB.getUser()))
+                }
             }
             ActionProfile.PrepareAvatarList -> {
-                consume(UiProfile.AvatarContent(
-                    Avatar.values().asList().map {
-                        ItemAvatar(it, localDB.userAvatar == it)
+                launch {
+                    getUser().let {
+                        val avatarList = Avatar.values().asList().map { avatar ->
+                            ItemAvatar(avatar, it.userAvatar == avatar)
+                        }
+                        consume(UiProfile.AvatarContent(avatarList))
                     }
-                ))
+                }
             }
             is ActionProfile.AvatarSelected -> {
                 updateAvatarProfile(actionState.avatar)
@@ -47,12 +54,19 @@ class ProfileViewModel(private val localDB: LocalDB, private val updateUser: Upd
     @InternalCoroutinesApi
     private fun updateAvatarProfile(avatar: Avatar) {
         launch {
-            updateUser.invoke(User(localDB.userId, localDB.accountName, avatar)).let {
+            val newUser = getUser().copy(userAvatar = avatar)
+            updateUser.invoke(newUser).let {
                 if (it) {
-                    localDB.userAvatar = avatar
+                    localDB.updateUser(newUser)
                     dispatch(ActionProfile.Start)
                 }
             }
+        }
+    }
+
+    private suspend fun getUser(): User = suspendCancellableCoroutine { continuation ->
+        launch {
+            continuation.resume(localDB.getUser())
         }
     }
 

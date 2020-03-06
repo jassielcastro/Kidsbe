@@ -1,23 +1,27 @@
 package com.ajcm.kidstube.ui.playvideo
 
 import androidx.lifecycle.LiveData
-import com.ajcm.data.database.LocalDB
+import com.ajcm.data.source.LocalDataSource
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
-import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.arch.ScopedViewModel
+import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.model.VideoList
 import com.ajcm.usecases.GetYoutubeVideos
+import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 class PlayVideoViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
-    private val localDB: LocalDB,
+    private val localDB: LocalDataSource,
+    private val updateUser: UpdateUser,
     uiDispatcher: CoroutineDispatcher
 ) :
     ScopedViewModel<UiPlayVideo>(uiDispatcher) {
 
+    @InternalCoroutinesApi
     override val model: LiveData<UiPlayVideo>
         get() {
             if (mModel.value == null) dispatch(ActionPlayVideo.StartYoutube)
@@ -32,6 +36,7 @@ class PlayVideoViewModel(
         initScope()
     }
 
+    @InternalCoroutinesApi
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             is ActionPlayVideo.ObtainVideo -> {
@@ -49,7 +54,9 @@ class PlayVideoViewModel(
                 }
             }
             ActionPlayVideo.StartYoutube -> {
-                getYoutubeVideos.startYoutubeWith(localDB.accountName)
+                launch {
+                    getYoutubeVideos.startYoutubeWith(localDB.getUser().userName)
+                }
             }
             is ActionPlayVideo.Start -> {
                 if (sharedVideoId != null && videoThumbnail != null) {
@@ -67,7 +74,11 @@ class PlayVideoViewModel(
                 }
             }
             is ActionPlayVideo.SaveLastVideoId -> {
-                localDB.lastVideoId = actionState.lastVideoId
+                launch {
+                    val newUser = localDB.getUser().copy(lastVideoWatched = actionState.lastVideoId)
+                    localDB.saveUser(newUser)
+                    updateUser.invoke(newUser)
+                }
             }
             ActionPlayVideo.LoadError -> {
 
@@ -88,7 +99,7 @@ class PlayVideoViewModel(
 
     private fun refresh() = launch {
         consume(UiPlayVideo.Loading)
-        val result = getYoutubeVideos.invoke(localDB.lastVideoId)
+        val result = getYoutubeVideos.invoke(localDB.getUser().lastVideoWatched)
         if (result.videos.isNotEmpty()) {
             videoList = result.videos
             consume(UiPlayVideo.Content(result.videos))

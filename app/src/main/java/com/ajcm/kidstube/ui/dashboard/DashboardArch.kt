@@ -28,7 +28,6 @@ sealed class ActionDashboard : ActionState {
     object Start : ActionDashboard()
     object StartYoutube : ActionDashboard()
     object Refresh : ActionDashboard()
-    data class SaveAccount(val accountName: String) : ActionDashboard()
     data class ParseException(val exception: Exception?) : ActionDashboard()
     data class LoadError(val msg: String) : ActionDashboard()
     data class VideoSelected(val video: Video) : ActionDashboard()

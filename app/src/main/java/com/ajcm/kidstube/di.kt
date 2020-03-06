@@ -2,13 +2,10 @@ package com.ajcm.kidstube
 
 import android.app.Application
 import com.ajcm.data.api.FirebaseApi
-import com.ajcm.data.source.UserRemoteSource
-import com.ajcm.data.source.YoutubeRemoteSource
-import com.ajcm.data.database.LocalDB
+import com.ajcm.data.database.KidstubeDB
 import com.ajcm.data.repository.UserRepository
 import com.ajcm.data.repository.VideoRepository
-import com.ajcm.data.source.FireBaseDataSource
-import com.ajcm.data.source.RemoteDataSource
+import com.ajcm.data.source.*
 import com.ajcm.domain.User
 import com.ajcm.kidstube.common.GoogleCredential
 import com.ajcm.kidstube.ui.dashboard.DashboardFragment
@@ -54,7 +51,8 @@ fun Application.initDI() {
 
 private val appModule = module {
     single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
-    single { LocalDB(get()) }
+    single { KidstubeDB.build(get()) }
+    factory<LocalDataSource> { RoomDataSource(get()) }
     single { GoogleCredential(get()) }
     single<CoroutineDispatcher> { Dispatchers.Main }
 }
@@ -90,8 +88,9 @@ private val scopesModule = module {
         scoped { GetYoutubeVideos(get()) }
     }
     scope(named<PlayVideoFragment>()) {
-        viewModel { PlayVideoViewModel( get(), get(), get()) }
+        viewModel { PlayVideoViewModel( get(), get(), get(), get()) }
         scoped { GetYoutubeVideos(get()) }
+        scoped { UpdateUser(get()) }
     }
     scope(named<ProfileFragment>()) {
         viewModel { ProfileViewModel( get(), get(), get()) }

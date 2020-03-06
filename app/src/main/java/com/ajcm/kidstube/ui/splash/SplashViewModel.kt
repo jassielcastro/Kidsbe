@@ -1,8 +1,7 @@
 package com.ajcm.kidstube.ui.splash
 
 import androidx.lifecycle.LiveData
-import com.ajcm.data.database.LocalDB
-import com.ajcm.domain.Avatar
+import com.ajcm.data.source.LocalDataSource
 import com.ajcm.domain.User
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
@@ -12,7 +11,7 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.resume
 
 class SplashViewModel(
-    private val localDB: LocalDB,
+    private val localDB: LocalDataSource,
     private val saveUser: SaveUser,
     private val getUserProfile: GetUserProfile,
     uiDispatcher: CoroutineDispatcher
@@ -39,7 +38,9 @@ class SplashViewModel(
                 consume(UiSplash.CheckPermissions)
             }
             ActionSplash.ValidateAccount -> {
-                checkAccountName()
+                launch {
+                    checkAccountName()
+                }
             }
             ActionSplash.StartSplash -> {
                 playSplash()
@@ -53,16 +54,16 @@ class SplashViewModel(
         }
     }
 
-    private fun checkAccountName() {
-        if (localDB.accountName.isEmpty()) {
+    private suspend fun checkAccountName() {
+        if (!localDB.existUser()) {
             consume(UiSplash.RequestAccount)
         } else {
-            launch {
-                getUserIfExist()?.let {
-                    localDB.userId = it.userId
-                    localDB.userAvatar = it.userAvatar
-                }
+            val user = getUserIfExist(localDB.getUser().userName)
+            if (user != null) {
+                localDB.saveUser(user)
                 playSplash()
+            } else {
+                consume(UiSplash.RequestAccount)
             }
         }
     }
@@ -74,27 +75,26 @@ class SplashViewModel(
 
     @InternalCoroutinesApi
     private fun saveAccountName(accountName: String) {
-        localDB.accountName = accountName
         launch {
-            val user = getUserIfExist()
+            val user = getUserIfExist(accountName)
             if (user == null) {
-                saveUser.invoke(User("", accountName, Avatar.MIA)).let {
-                    localDB.userId = it
+                saveUser.invoke(User("", accountName)).let {
+                    localDB.saveUser(User(it, accountName))
                 }
             } else {
-                localDB.userId = user.userId
-                localDB.userAvatar = user.userAvatar
+                localDB.saveUser(user)
             }
             checkAccountName()
         }
     }
 
-    private suspend fun getUserIfExist(): User? = suspendCancellableCoroutine { continuation ->
-        val accountName = localDB.accountName
-        if (accountName.isEmpty()) continuation.resume(null)
+    private suspend fun getUserIfExist(accountName: String): User? = suspendCancellableCoroutine { continuation ->
         launch {
-            getUserProfile.invoke("userName", accountName).let { user ->
-                continuation.resume(user)
+            if (accountName.isEmpty()) continuation.resume(null)
+            launch {
+                getUserProfile.invoke("userName", accountName).let { user ->
+                    continuation.resume(user)
+                }
             }
         }
     }

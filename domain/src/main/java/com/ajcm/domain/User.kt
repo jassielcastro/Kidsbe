@@ -5,5 +5,6 @@ import java.io.Serializable
 data class User(
     val userId: String,
     val userName: String,
-    val userAvatar: Avatar
+    val userAvatar: Avatar = Avatar.MIA,
+    val lastVideoWatched: String = "n0X3KG9D0rM"
 ): Serializable

@@ -25,8 +25,8 @@ class SettingsFragment : KidsFragment<UiSettings, SettingsViewModel>(R.layout.se
     override fun updateUi(state: UiState) {
         when (state) {
             is UiSettings.LoadUserInfo -> {
-                imgProfile.loadRes(state.avatar.getDrawable())
-                txtUserName.text = state.userName
+                imgProfile.loadRes(state.user.userAvatar.getDrawable())
+                txtUserName.text = state.user.userName
             }
         }
     }

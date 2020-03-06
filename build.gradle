@@ -60,8 +60,15 @@ allprojects {
                 firestore: 'com.google.firebase:firebase-firestore:21.2.1'
         ]
 
+        roomDB = [
+                roomRuntime: 'androidx.room:room-runtime:2.2.1'
+        ]
+
+        roomKapt = [
+                roomCompiler : 'androidx.room:room-compiler:2.2.1'
+        ]
+
         androidKaptLibs = [
-                roomCompiler : 'androidx.room:room-compiler:2.2.1',
                 glideCompiler: 'com.github.bumptech.glide:compiler:4.9.0'
         ]
 

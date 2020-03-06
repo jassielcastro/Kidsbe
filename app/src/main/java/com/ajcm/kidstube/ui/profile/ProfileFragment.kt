@@ -45,8 +45,8 @@ class ProfileFragment : KidsFragment<UiProfile, ProfileViewModel>(R.layout.profi
     override fun updateUi(state: UiState) {
         when(state) {
             is UiProfile.UpdateUserInfo -> {
-                imgProfile.loadRes(state.avatar.getDrawable())
-                txtUserName.text = state.userName
+                imgProfile.loadRes(state.user.userAvatar.getDrawable())
+                txtUserName.text = state.user.userName
                 viewModel.dispatch(ActionProfile.PrepareAvatarList)
             }
             is UiProfile.AvatarContent -> {

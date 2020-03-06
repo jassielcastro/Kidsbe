@@ -17,6 +17,7 @@ import com.payclip.design.youtubuplayer.player.listeners.AbstractYouTubePlayerLi
 import com.payclip.design.youtubuplayer.player.options.PanelState
 import com.payclip.design.youtubuplayer.player.utils.loadOrCueVideo
 import kotlinx.android.synthetic.main.play_video_fragment.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -30,6 +31,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
 
     private var lastPanelState: PanelState = PanelState.COLLAPSED
 
+    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -38,6 +40,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
         setUpListeners()
     }
 
+    @InternalCoroutinesApi
     private fun setUpListeners() {
         youtube_player_view.setOnPanelListener { panelState ->
             toggleVideoView(panelState)
@@ -50,6 +53,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
         btnBack.setOnClickListener { activity?.onBackPressed() }
     }
 
+    @InternalCoroutinesApi
     private fun setUpViews() {
         relatedRecycler.setUpLayoutManager()
         adapter = RelatedVideosAdapter {
@@ -78,6 +82,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
         super.onStop()
     }
 
+    @InternalCoroutinesApi
     override fun updateUi(state: UiState) {
         when (state) {
             UiPlayVideo.Loading -> {

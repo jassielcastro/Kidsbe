@@ -2,7 +2,7 @@ package com.ajcm.kidstube.ui.dashboard
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.ajcm.data.database.LocalDB
+import com.ajcm.data.source.LocalDataSource
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
-    private val localDB: LocalDB,
+    private val localDB: LocalDataSource,
     uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel<UiDashboard>(uiDispatcher) {
 
@@ -32,10 +32,14 @@ class DashboardViewModel(
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             ActionDashboard.Start -> {
-                consume(UiDashboard.UpdateUserInfo(localDB.userAvatar))
+                launch {
+                    consume(UiDashboard.UpdateUserInfo(localDB.getUser().userAvatar))
+                }
             }
             ActionDashboard.StartYoutube -> {
-                getYoutubeVideos.startYoutubeWith(localDB.accountName)
+                launch {
+                    getYoutubeVideos.startYoutubeWith(localDB.getUser().userName)
+                }
                 consume(UiDashboard.YoutubeStarted)
             }
             ActionDashboard.Refresh -> {
@@ -44,10 +48,6 @@ class DashboardViewModel(
                 } else {
                     consume(UiDashboard.Content(videos.shuffled()))
                 }
-            }
-            is ActionDashboard.SaveAccount -> {
-                localDB.accountName = actionState.accountName
-                refresh()
             }
             is ActionDashboard.ParseException -> {
                 val msg = parseError(actionState.exception)
@@ -77,7 +77,7 @@ class DashboardViewModel(
 
     private fun refresh() = launch {
         consume(UiDashboard.Loading)
-        val result = getYoutubeVideos.invoke(localDB.lastVideoId)
+        val result = getYoutubeVideos.invoke(localDB.getUser().lastVideoWatched)
         if (result.videos.isNotEmpty()) {
             videos = result.videos
             consume(UiDashboard.Content(result.videos))
