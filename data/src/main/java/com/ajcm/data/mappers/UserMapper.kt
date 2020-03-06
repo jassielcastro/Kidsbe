@@ -11,7 +11,9 @@ fun DocumentSnapshot?.toUser(): User? {
         this?.id ?: "",
         if (this?.contains("userName") == true) this["userName"].toString() else "",
         if (this?.contains("userAvatar") == true) Avatar.valueOf(this["userAvatar"].toString()) else Avatar.MIA,
-        if (this?.contains("lastVideoWatched") == true) this["lastVideoWatched"].toString() else Constants.DEFAULT_LAST_VIDEO_ID
+        if (this?.contains("lastVideoWatched") == true) this["lastVideoWatched"].toString() else Constants.DEFAULT_LAST_VIDEO_ID,
+        this?.getBoolean("appEffect") ?: true,
+        this?.getBoolean("soundEffect") ?: true
     )
 }
 
@@ -20,7 +22,9 @@ fun User.toRoomUser(): UserDb =
         userId,
         userName,
         userAvatar.name,
-        lastVideoWatched
+        lastVideoWatched,
+        if (appEffect) 1 else 0,
+        if (soundEffect) 1 else 0
     )
 
 fun UserDb.toUser(): User =
@@ -28,5 +32,7 @@ fun UserDb.toUser(): User =
         id,
         userName,
         Avatar.valueOf(userAvatar),
-        lastVideoWatched
+        lastVideoWatched,
+        appEffect == 1,
+        soundEffect == 1
     )

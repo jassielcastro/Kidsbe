@@ -8,5 +8,7 @@ data class UserDb(
     @PrimaryKey(autoGenerate = false) val id: String,
     val userName: String,
     val userAvatar: String,
-    val lastVideoWatched: String
+    val lastVideoWatched: String,
+    val appEffect: Int = 1,
+    val soundEffect: Int = 1
 )

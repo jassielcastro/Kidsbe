@@ -92,8 +92,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
                 btnBack.show()
             }
             is UiPlayVideo.RenderYoutubePlayer -> {
-                songTrackListener?.enableSong(false)
-                songTrackListener?.onPauseSong()
+                viewModel.stopAppMusic(songTrackListener)
                 youtubePlayer = state.youTubePlayer
                 viewModel.dispatch(ActionPlayVideo.Start)
             }

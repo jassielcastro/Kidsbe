@@ -27,7 +27,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        songTrackListener?.onPlaySong(R.raw.dashboard_ben_smile)
+        viewModel.onPlaySong(songTrackListener)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,8 +43,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
 
     override fun onResume() {
         super.onResume()
-        songTrackListener?.enableSong(true)
-        songTrackListener?.onResumeSong()
+        viewModel.onResume(songTrackListener)
     }
 
     private fun setUpViews() {

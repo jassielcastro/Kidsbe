@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.ajcm.data.source.LocalDataSource
 import com.ajcm.domain.Video
+import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
+import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -84,6 +86,15 @@ class DashboardViewModel(
         } else {
             consume(UiDashboard.RequestPermissions(result.exception))
         }
+    }
+
+    fun onResume(songTrackListener: SongTrackListener?) = launch {
+        songTrackListener?.enableSong(true)
+        songTrackListener?.onResumeSong()
+    }
+
+    fun onPlaySong(songTrackListener: SongTrackListener?) = launch {
+        songTrackListener?.onPlaySong(R.raw.dashboard_ben_smile)
     }
 
 }

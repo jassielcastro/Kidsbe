@@ -6,5 +6,7 @@ data class User(
     val userId: String,
     val userName: String,
     val userAvatar: Avatar = Avatar.MIA,
-    val lastVideoWatched: String = "n0X3KG9D0rM"
+    val lastVideoWatched: String = "n0X3KG9D0rM",
+    val appEffect: Boolean = true,
+    val soundEffect: Boolean = true
 ): Serializable

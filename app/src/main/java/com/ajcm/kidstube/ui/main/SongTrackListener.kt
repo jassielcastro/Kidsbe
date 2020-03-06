@@ -6,8 +6,9 @@ interface SongTrackListener {
     /***
      * Enable when can play in onResume state
      */
-    fun enableSong(enabled: Boolean)
-    fun onPlaySong(@RawRes song: Int)
-    fun onResumeSong()
+    suspend fun enableSong(enabled: Boolean)
+    suspend fun onPlaySong(@RawRes song: Int)
+    suspend fun onResumeSong()
     fun onPauseSong()
+    fun hasSong(): Boolean
 }

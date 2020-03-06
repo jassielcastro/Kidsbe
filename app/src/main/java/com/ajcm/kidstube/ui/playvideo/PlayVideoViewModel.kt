@@ -7,6 +7,7 @@ import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.model.VideoList
+import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
 import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
@@ -106,6 +107,11 @@ class PlayVideoViewModel(
         } else {
             consume(UiPlayVideo.RequestPermissions(result.exception))
         }
+    }
+
+    fun stopAppMusic(songTrackListener: SongTrackListener?) = launch {
+        songTrackListener?.enableSong(false)
+        songTrackListener?.onPauseSong()
     }
 
 }

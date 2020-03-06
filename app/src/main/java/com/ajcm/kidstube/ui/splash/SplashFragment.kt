@@ -28,7 +28,7 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        songTrackListener?.onPlaySong(R.raw.splash_komiku)
+        viewModel.onPlaySong(songTrackListener)
 
         animationWaves.accelerateCanvas()
         animationSplash.accelerateCanvas()
@@ -36,8 +36,7 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
 
     override fun onResume() {
         super.onResume()
-        songTrackListener?.enableSong(true)
-        songTrackListener?.onResumeSong()
+        viewModel.onResume(songTrackListener)
     }
 
     @InternalCoroutinesApi

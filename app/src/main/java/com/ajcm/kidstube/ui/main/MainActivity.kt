@@ -10,10 +10,13 @@ import com.ajcm.kidstube.R
 import com.ajcm.kidstube.common.SongHelper
 import com.payclip.design.extensions.accelerateViews
 import com.payclip.design.extensions.fullScreen
+import org.koin.android.scope.currentScope
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity(), SongTrackListener {
 
     private lateinit var navController: NavController
+    private val viewModel: MainActivityViewModel by currentScope.viewModel(this)
 
     private val songHelper: SongHelper by lazy {
         SongHelper()
@@ -43,19 +46,26 @@ class MainActivity : AppCompatActivity(), SongTrackListener {
         return NavigationUI.navigateUp(navController, null)
     }
 
-    override fun enableSong(enabled: Boolean) {
+    override suspend fun enableSong(enabled: Boolean) {
         songHelper.setOnCanPlaySong(enabled)
     }
 
-    override fun onResumeSong() {
-        songHelper.onResume()
+    override suspend fun onResumeSong() {
+        if (viewModel.isAppSoundsEnabled()) {
+            songHelper.onResume()
+        }
     }
 
     override fun onPauseSong() {
         songHelper.onPause()
     }
 
-    override fun onPlaySong(@RawRes song: Int) {
-        songHelper.onCreate(this, song)
+    override suspend fun onPlaySong(@RawRes song: Int) {
+        if (viewModel.isAppSoundsEnabled()) {
+            songHelper.onCreate(this, song)
+        }
     }
+
+    override fun hasSong(): Boolean = songHelper.hasSong()
+
 }

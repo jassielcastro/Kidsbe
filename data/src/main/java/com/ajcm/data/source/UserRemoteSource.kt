@@ -27,9 +27,11 @@ class UserRemoteSource(private val api: FirebaseApi): FireBaseDataSource<User?> 
         api.db
             .collection(api.url)
             .add(mapOf(
-              "userName" to value!!.userName,
-              "userAvatar" to value.userAvatar.name,
-              "lastVideoWatched" to value.lastVideoWatched
+                "userName" to value!!.userName,
+                "userAvatar" to value.userAvatar.name,
+                "lastVideoWatched" to value.lastVideoWatched,
+                "appEffect" to value.appEffect,
+                "soundEffect" to value.soundEffect
             ))
             .addOnCompleteListener {
                 continuation.resume(it.result?.id ?: "")
@@ -45,7 +47,9 @@ class UserRemoteSource(private val api: FirebaseApi): FireBaseDataSource<User?> 
             .update(mapOf(
                 "userName" to value.userName,
                 "userAvatar" to value.userAvatar.name,
-                "lastVideoWatched" to value.lastVideoWatched
+                "lastVideoWatched" to value.lastVideoWatched,
+                "appEffect" to value.appEffect,
+                "soundEffect" to value.soundEffect
             ))
             .addOnCompleteListener {
                 continuation.resume(it.isSuccessful && it.exception == null)

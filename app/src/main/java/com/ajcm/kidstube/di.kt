@@ -10,6 +10,8 @@ import com.ajcm.domain.User
 import com.ajcm.kidstube.common.GoogleCredential
 import com.ajcm.kidstube.ui.dashboard.DashboardFragment
 import com.ajcm.kidstube.ui.dashboard.DashboardViewModel
+import com.ajcm.kidstube.ui.main.MainActivity
+import com.ajcm.kidstube.ui.main.MainActivityViewModel
 import com.ajcm.kidstube.ui.playvideo.PlayVideoFragment
 import com.ajcm.kidstube.ui.playvideo.PlayVideoViewModel
 import com.ajcm.kidstube.ui.profile.ProfileFragment
@@ -78,6 +80,9 @@ val dataModule = module {
 }
 
 private val scopesModule = module {
+    scope(named<MainActivity>()) {
+        viewModel { MainActivityViewModel( get(), get()) }
+    }
     scope(named<SplashFragment>()) {
         viewModel { SplashViewModel( get(), get(), get(), get()) }
         scoped { SaveUser(get()) }
@@ -100,6 +105,7 @@ private val scopesModule = module {
         viewModel { SearchViewModel( get()) }
     }
     scope(named<SettingsFragment>()) {
-        viewModel { SettingsViewModel( get(), get()) }
+        viewModel { SettingsViewModel( get(), get(), get()) }
+        scoped { UpdateUser(get()) }
     }
 }

@@ -63,6 +63,8 @@ class SongHelper {
         }
     }
 
+    fun hasSong(): Boolean = isReadyToPlay
+
     private fun setVolume(start: Float, end: Float, completion: () -> Unit = {}) {
         val valueAnimator = ValueAnimator.ofFloat(start, end)
         with(valueAnimator) {

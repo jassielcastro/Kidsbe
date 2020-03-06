@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ajcm.data.models.UserDb
 
-@Database(entities = [UserDb::class], version = 1)
+@Database(entities = [UserDb::class], version = 2)
 abstract class KidstubeDB : RoomDatabase() {
 
     companion object {
@@ -14,7 +14,8 @@ abstract class KidstubeDB : RoomDatabase() {
             context,
             KidstubeDB::class.java,
             "kidstube-db"
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
     abstract fun userDao(): UserDAO

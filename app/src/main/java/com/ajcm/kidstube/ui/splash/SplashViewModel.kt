@@ -3,8 +3,10 @@ package com.ajcm.kidstube.ui.splash
 import androidx.lifecycle.LiveData
 import com.ajcm.data.source.LocalDataSource
 import com.ajcm.domain.User
+import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
+import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetUserProfile
 import com.ajcm.usecases.SaveUser
 import kotlinx.coroutines.*
@@ -101,6 +103,15 @@ class SplashViewModel(
 
     private fun loadError() {
         consume(UiSplash.LoadingError)
+    }
+
+    fun onResume(songTrackListener: SongTrackListener?) = launch {
+        songTrackListener?.enableSong(true)
+        songTrackListener?.onResumeSong()
+    }
+
+    fun onPlaySong(songTrackListener: SongTrackListener?) = launch {
+        songTrackListener?.onPlaySong(R.raw.splash_komiku)
     }
 
 }
