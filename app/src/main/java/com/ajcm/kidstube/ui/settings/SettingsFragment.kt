@@ -5,11 +5,14 @@ import android.view.View
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
+import com.ajcm.kidstube.extensions.getDrawable
+import com.payclip.design.extensions.loadRes
 import kotlinx.android.synthetic.main.settings_fragment.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class SettingsFragment : KidsFragment<UiSettings, SettingsViewModel>(R.layout.settings_fragment), View.OnClickListener {
+class SettingsFragment : KidsFragment<UiSettings, SettingsViewModel>(R.layout.settings_fragment),
+    View.OnClickListener {
 
     override val viewModel: SettingsViewModel by currentScope.viewModel(this)
 
@@ -20,11 +23,16 @@ class SettingsFragment : KidsFragment<UiSettings, SettingsViewModel>(R.layout.se
     }
 
     override fun updateUi(state: UiState) {
-
+        when (state) {
+            is UiSettings.LoadUserInfo -> {
+                imgProfile.loadRes(state.avatar.getDrawable())
+                txtUserName.text = state.userName
+            }
+        }
     }
 
     override fun onClick(p0: View?) {
-        when(p0?.id) {
+        when (p0?.id) {
             R.id.btnBack -> activity?.onBackPressed()
         }
     }

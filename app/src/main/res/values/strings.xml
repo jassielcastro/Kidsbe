@@ -7,4 +7,7 @@
     <string name="search_on">Buscar en Kidstube</string>
     <string name="re_try">Re-intentar</string>
     <string name="oh_nooo">¡Oh nooo!</string>
+    <string name="app_song">Música de la App</string>
+    <string name="sound_effects">Efectos de sonido</string>
+    <string name="black_list">Black list</string>
 </resources>

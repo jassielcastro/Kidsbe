@@ -101,6 +101,6 @@ private val scopesModule = module {
         viewModel { SearchViewModel( get()) }
     }
     scope(named<SettingsFragment>()) {
-        viewModel { SettingsViewModel( get()) }
+        viewModel { SettingsViewModel( get(), get()) }
     }
 }

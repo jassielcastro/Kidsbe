@@ -28,6 +28,13 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="NormalText" parent="TextAppearance.AppCompat.Medium.Inverse">
+        <item name="android:fontFamily">@font/montserrat_regular</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="SearchText" parent="TextAppearance.AppCompat.Medium.Inverse">
         <item name="android:background">@drawable/background_search_text</item>
         <item name="android:fontFamily">@font/montserrat_regular</item>
@@ -47,6 +54,17 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">16sp</item>
         <item name="android:backgroundTint">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="Widget.Switch" parent="AppTheme">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/purple_light</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">@color/gray</item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">@color/gray_light</item>
     </style>
 
 </resources>
