@@ -42,7 +42,6 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
 
     @InternalCoroutinesApi
     override fun updateUi(state: UiState) {
-        stopAnimation()
         when (state) {
             UiSplash.CheckPermissions -> {
                 if (permissionsGranted()) {
@@ -52,12 +51,13 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
                 }
             }
             is UiSplash.Loading -> {
-                startAnimation()
+                viewModel.dispatch(ActionSplash.RequestPermissions)
             }
             is UiSplash.LoadingError -> {
 
             }
             is UiSplash.RequestAccount -> {
+                stopAnimation()
                 startActivityForResult(credential.credential.newChooseAccountIntent(), Constants.REQUEST_ACCOUNT_PICKER)
             }
             is UiSplash.Navigate -> {
@@ -104,6 +104,7 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
                 val accountName = data?.extras?.getString(AccountManager.KEY_ACCOUNT_NAME)
                 if (accountName != null) {
                     credential.credential.selectedAccountName = accountName
+                    startAnimation()
                     viewModel.dispatch(ActionSplash.SaveAccount(accountName))
                 } else {
                     viewModel.dispatch(ActionSplash.LoadError)

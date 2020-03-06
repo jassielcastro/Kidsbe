@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer
 import androidx.transition.TransitionInflater
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.common.GoogleCredential
-import com.ajcm.kidstube.common.ScopedViewModel
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import org.koin.android.ext.android.inject
 

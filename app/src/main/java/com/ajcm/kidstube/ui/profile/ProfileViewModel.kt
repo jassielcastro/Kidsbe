@@ -5,7 +5,7 @@ import com.ajcm.data.database.LocalDB
 import com.ajcm.domain.Avatar
 import com.ajcm.domain.User
 import com.ajcm.kidstube.arch.ActionState
-import com.ajcm.kidstube.common.ScopedViewModel
+import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -17,8 +17,8 @@ class ProfileViewModel(private val localDB: LocalDB, private val updateUser: Upd
     @InternalCoroutinesApi
     override val model: LiveData<UiProfile>
         get() {
-            if (_model.value == null) dispatch(ActionProfile.Start)
-            return _model
+            if (mModel.value == null) dispatch(ActionProfile.Start)
+            return mModel
         }
 
     init {
@@ -29,14 +29,14 @@ class ProfileViewModel(private val localDB: LocalDB, private val updateUser: Upd
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             ActionProfile.Start -> {
-                _model.value = UiProfile.UpdateUserInfo(localDB.userAvatar, localDB.accountName)
+                consume(UiProfile.UpdateUserInfo(localDB.userAvatar, localDB.accountName))
             }
             ActionProfile.PrepareAvatarList -> {
-                _model.value = UiProfile.AvatarContent(
+                consume(UiProfile.AvatarContent(
                     Avatar.values().asList().map {
                         ItemAvatar(it, localDB.userAvatar == it)
                     }
-                )
+                ))
             }
             is ActionProfile.AvatarSelected -> {
                 updateAvatarProfile(actionState.avatar)

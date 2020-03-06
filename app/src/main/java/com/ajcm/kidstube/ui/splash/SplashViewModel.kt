@@ -1,12 +1,11 @@
 package com.ajcm.kidstube.ui.splash
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.ajcm.data.database.LocalDB
 import com.ajcm.domain.Avatar
 import com.ajcm.domain.User
 import com.ajcm.kidstube.arch.ActionState
-import com.ajcm.kidstube.common.ScopedViewModel
+import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.usecases.GetUserProfile
 import com.ajcm.usecases.SaveUser
 import kotlinx.coroutines.*
@@ -22,8 +21,8 @@ class SplashViewModel(
     @InternalCoroutinesApi
     override val model: LiveData<UiSplash>
         get() {
-            if (_model.value == null) _model.value = UiSplash.CheckPermissions
-            return _model
+            if (mModel.value == null) dispatch(ActionSplash.Start)
+            return mModel
         }
 
     init {
@@ -33,6 +32,12 @@ class SplashViewModel(
     @InternalCoroutinesApi
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
+            ActionSplash.Start -> {
+                consume(UiSplash.Loading)
+            }
+            ActionSplash.RequestPermissions -> {
+                consume(UiSplash.CheckPermissions)
+            }
             ActionSplash.ValidateAccount -> {
                 checkAccountName()
             }
@@ -49,27 +54,22 @@ class SplashViewModel(
     }
 
     private fun checkAccountName() {
-        _model.value = UiSplash.Loading
         if (localDB.accountName.isEmpty()) {
-            _model.value = UiSplash.RequestAccount
+            consume(UiSplash.RequestAccount)
         } else {
             launch {
-                Log.i("SplashViewModel", "Getting user account")
                 getUserIfExist()?.let {
                     localDB.userId = it.userId
                     localDB.userAvatar = it.userAvatar
-                    Log.i("SplashViewModel", "User saved")
                 }
-                Log.i("SplashViewModel", "Playing Splash")
                 playSplash()
             }
         }
     }
 
     private fun playSplash() = launch {
-        _model.value = UiSplash.Loading
         delay(3150)
-        _model.value = UiSplash.Navigate
+        consume(UiSplash.Navigate)
     }
 
     @InternalCoroutinesApi
@@ -92,17 +92,15 @@ class SplashViewModel(
     private suspend fun getUserIfExist(): User? = suspendCancellableCoroutine { continuation ->
         val accountName = localDB.accountName
         if (accountName.isEmpty()) continuation.resume(null)
-        Log.i("SplashViewModel", "Account: $accountName")
         launch {
             getUserProfile.invoke("userName", accountName).let { user ->
-                Log.i("SplashViewModel", "GetUserProfile: $user")
                 continuation.resume(user)
             }
         }
     }
 
     private fun loadError() {
-        _model.value = UiSplash.LoadingError
+        consume(UiSplash.LoadingError)
     }
 
 }

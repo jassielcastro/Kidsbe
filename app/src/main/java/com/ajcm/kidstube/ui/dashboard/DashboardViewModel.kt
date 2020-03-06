@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import com.ajcm.data.database.LocalDB
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
-import com.ajcm.kidstube.common.ScopedViewModel
+import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.usecases.GetYoutubeVideos
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -19,8 +19,8 @@ class DashboardViewModel(
 
     override val model: LiveData<UiDashboard>
         get() {
-            if (_model.value == null) _model.value = UiDashboard.UpdateUserInfo(localDB.userAvatar)
-            return _model
+            if (mModel.value == null) dispatch(ActionDashboard.Start)
+            return mModel
         }
 
     var videos: List<Video> = emptyList()
@@ -32,18 +32,17 @@ class DashboardViewModel(
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             ActionDashboard.Start -> {
-                _model.value = UiDashboard.UpdateUserInfo(localDB.userAvatar)
+                consume(UiDashboard.UpdateUserInfo(localDB.userAvatar))
             }
             ActionDashboard.StartYoutube -> {
-                Log.i("DashboardViewModel", localDB.accountName)
                 getYoutubeVideos.startYoutubeWith(localDB.accountName)
-                _model.value = UiDashboard.YoutubeStarted
+                consume(UiDashboard.YoutubeStarted)
             }
             ActionDashboard.Refresh -> {
                 if (videos.isEmpty()) {
                     refresh()
                 } else {
-                    _model.value = UiDashboard.Content(videos.shuffled())
+                    consume(UiDashboard.Content(videos.shuffled()))
                 }
             }
             is ActionDashboard.SaveAccount -> {
@@ -52,16 +51,16 @@ class DashboardViewModel(
             }
             is ActionDashboard.ParseException -> {
                 val msg = parseError(actionState.exception)
-                _model.value = UiDashboard.LoadingError(msg)
+                consume(UiDashboard.LoadingError(msg))
             }
             is ActionDashboard.LoadError -> {
-                _model.value = UiDashboard.LoadingError(actionState.msg)
+                consume(UiDashboard.LoadingError(actionState.msg))
             }
             is ActionDashboard.VideoSelected -> {
-                _model.value = UiDashboard.NavigateTo(DashNav.VIDEO, actionState.video)
+                consume(UiDashboard.NavigateTo(DashNav.VIDEO, actionState.video))
             }
             is ActionDashboard.ChangeRoot -> {
-                _model.value = UiDashboard.NavigateTo(actionState.root, null)
+                consume(UiDashboard.NavigateTo(actionState.root, null))
             }
         }
     }
@@ -77,13 +76,13 @@ class DashboardViewModel(
     }
 
     private fun refresh() = launch {
-        _model.value = UiDashboard.Loading
+        consume(UiDashboard.Loading)
         val result = getYoutubeVideos.invoke(localDB.lastVideoId)
         if (result.videos.isNotEmpty()) {
             videos = result.videos
-            _model.value = UiDashboard.Content(result.videos)
+            consume(UiDashboard.Content(result.videos))
         } else {
-            _model.value = UiDashboard.RequestPermissions(result.exception)
+            consume(UiDashboard.RequestPermissions(result.exception))
         }
     }
 

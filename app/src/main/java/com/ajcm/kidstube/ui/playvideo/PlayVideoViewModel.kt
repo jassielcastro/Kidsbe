@@ -5,7 +5,7 @@ import com.ajcm.data.database.LocalDB
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.common.Constants
-import com.ajcm.kidstube.common.ScopedViewModel
+import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.kidstube.model.VideoList
 import com.ajcm.usecases.GetYoutubeVideos
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,8 +20,8 @@ class PlayVideoViewModel(
 
     override val model: LiveData<UiPlayVideo>
         get() {
-            if (_model.value == null) dispatch(ActionPlayVideo.StartYoutube)
-            return _model
+            if (mModel.value == null) dispatch(ActionPlayVideo.StartYoutube)
+            return mModel
         }
 
     private var videoList: List<Video> = arrayListOf()
@@ -35,7 +35,7 @@ class PlayVideoViewModel(
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             is ActionPlayVideo.ObtainVideo -> {
-                _model.value = UiPlayVideo.Loading
+                consume(UiPlayVideo.Loading)
                 actionState.bundle?.getString(Constants.KEY_VIDEO_ID)?.let {
                     sharedVideoId = it
                 }
@@ -53,17 +53,17 @@ class PlayVideoViewModel(
             }
             is ActionPlayVideo.Start -> {
                 if (sharedVideoId != null && videoThumbnail != null) {
-                    _model.value = UiPlayVideo.PlayVideo(sharedVideoId!!, videoThumbnail!!)
+                    consume(UiPlayVideo.PlayVideo(sharedVideoId!!, videoThumbnail!!))
                 }
             }
             is ActionPlayVideo.PlayerViewReady -> {
-                _model.value = UiPlayVideo.RenderYoutubePlayer(actionState.youTubePlayer)
+                consume(UiPlayVideo.RenderYoutubePlayer(actionState.youTubePlayer))
             }
             ActionPlayVideo.Refresh -> {
                 if (videoList.isEmpty()) {
                     refresh()
                 } else {
-                    _model.value = UiPlayVideo.Content(videoList.shuffled())
+                    consume(UiPlayVideo.Content(videoList.shuffled()))
                 }
             }
             is ActionPlayVideo.SaveLastVideoId -> {
@@ -74,26 +74,26 @@ class PlayVideoViewModel(
             }
             is ActionPlayVideo.VideoSelected -> {
                 videoThumbnail = actionState.video.thumbnail
-                _model.value = UiPlayVideo.PlayVideo(actionState.video.videoId, actionState.video.thumbnail)
+                consume(UiPlayVideo.PlayVideo(actionState.video.videoId, actionState.video.thumbnail))
             }
             ActionPlayVideo.PlayNextVideo -> {
                 if (videoList.isNotEmpty()) {
                     val video = videoList[0]
                     videoThumbnail = video.thumbnail
-                    _model.value = UiPlayVideo.PlayVideo(video.videoId, video.thumbnail)
+                    consume(UiPlayVideo.PlayVideo(video.videoId, video.thumbnail))
                 }
             }
         }
     }
 
     private fun refresh() = launch {
-        _model.value = UiPlayVideo.Loading
+        consume(UiPlayVideo.Loading)
         val result = getYoutubeVideos.invoke(localDB.lastVideoId)
         if (result.videos.isNotEmpty()) {
             videoList = result.videos
-            _model.value = UiPlayVideo.Content(result.videos)
+            consume(UiPlayVideo.Content(result.videos))
         } else {
-            _model.value = UiPlayVideo.RequestPermissions(result.exception)
+            consume(UiPlayVideo.RequestPermissions(result.exception))
         }
     }
 

@@ -12,6 +12,8 @@ sealed class UiSplash : UiState {
 }
 
 sealed class ActionSplash : ActionState {
+    object Start : ActionSplash()
+    object RequestPermissions : ActionSplash()
     object ValidateAccount : ActionSplash()
     object StartSplash : ActionSplash()
     data class SaveAccount(val account: String) : ActionSplash()
