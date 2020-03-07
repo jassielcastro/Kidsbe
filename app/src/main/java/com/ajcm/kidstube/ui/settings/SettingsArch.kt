@@ -13,4 +13,5 @@ sealed class ActionSettings : ActionState {
     object Start : ActionSettings()
     data class UpdateAppSoundsEnabled(val enabled: Boolean): ActionSettings()
     data class UpdateAppEffectEnabled(val enabled: Boolean): ActionSettings()
+    data class UpdateMobileDataEnabled(val enabled: Boolean): ActionSettings()
 }

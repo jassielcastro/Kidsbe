@@ -15,7 +15,12 @@ class UserRemoteSource(private val api: FirebaseApi): FireBaseDataSource<User?> 
             .limit(1)
             .get()
             .addOnSuccessListener {
-                continuation.resume(it.documents.firstOrNull()?.toUser())
+                val user = it.documents.firstOrNull()
+                if (user ==null) {
+                    continuation.resume(null)
+                } else {
+                    continuation.resume(user.toUser())
+                }
             }.addOnFailureListener {
                 continuation.resume(null)
             }
@@ -30,7 +35,8 @@ class UserRemoteSource(private val api: FirebaseApi): FireBaseDataSource<User?> 
                 "userAvatar" to value.userAvatar.name,
                 "lastVideoWatched" to value.lastVideoWatched,
                 "appEffect" to value.appEffect,
-                "soundEffect" to value.soundEffect
+                "soundEffect" to value.soundEffect,
+                "allowMobileData" to value.allowMobileData
             ))
             .addOnCompleteListener {
                 continuation.resume(it.result?.id ?: "")
@@ -47,7 +53,8 @@ class UserRemoteSource(private val api: FirebaseApi): FireBaseDataSource<User?> 
                 "userAvatar" to value.userAvatar.name,
                 "lastVideoWatched" to value.lastVideoWatched,
                 "appEffect" to value.appEffect,
-                "soundEffect" to value.soundEffect
+                "soundEffect" to value.soundEffect,
+                "allowMobileData" to value.allowMobileData
             ))
             .addOnCompleteListener {
                 continuation.resume(it.isSuccessful && it.exception == null)

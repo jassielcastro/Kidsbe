@@ -40,15 +40,15 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
 
     override fun updateUi(state: UiState) {
         when (state) {
+            is UiSplash.Loading -> {
+                viewModel.dispatch(ActionSplash.RequestPermissions)
+            }
             UiSplash.CheckPermissions -> {
                 if (permissionsGranted()) {
                     viewModel.dispatch(ActionSplash.ValidateAccount)
                 } else {
                     requestPermissions(arrayOf(Manifest.permission.GET_ACCOUNTS), Constants.AUTH_CODE_REQUEST_CODE)
                 }
-            }
-            is UiSplash.Loading -> {
-                viewModel.dispatch(ActionSplash.RequestPermissions)
             }
             is UiSplash.LoadingError -> {
 

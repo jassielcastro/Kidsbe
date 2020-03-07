@@ -9,6 +9,7 @@ data class UserDb(
     val userName: String,
     val userAvatar: String,
     val lastVideoWatched: String,
-    val appEffect: Int = 1,
-    val soundEffect: Int = 1
+    val appEffect: Boolean = true,
+    val soundEffect: Boolean = true,
+    val allowMobileData: Boolean = false
 )

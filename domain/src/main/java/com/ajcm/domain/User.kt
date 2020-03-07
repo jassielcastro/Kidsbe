@@ -8,5 +8,6 @@ data class User(
     val userAvatar: Avatar = Avatar.MIA,
     val lastVideoWatched: String = "n0X3KG9D0rM",
     val appEffect: Boolean = true,
-    val soundEffect: Boolean = true
+    val soundEffect: Boolean = true,
+    val allowMobileData: Boolean = false
 ): Serializable

@@ -10,4 +10,5 @@
     <string name="app_song">Música de la App</string>
     <string name="sound_effects">Efectos de sonido</string>
     <string name="black_list">Black list</string>
+    <string name="allow_mobile_data">Utilizar Datos móbiles</string>
 </resources>

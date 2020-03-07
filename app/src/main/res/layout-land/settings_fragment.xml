@@ -139,6 +139,35 @@
 
                         </RelativeLayout>
 
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:id="@+id/imgMobileData"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_cell_signal"
+                                tools:ignore="ContentDescription" />
+
+                            <Switch
+                                android:id="@+id/switchMobileData"
+                                style="@style/TitleText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="16dp"
+                                android:theme="@style/Widget.Switch"
+                                android:layout_toEndOf="@id/imgMobileData"
+                                android:text="@string/allow_mobile_data" />
+
+                        </RelativeLayout>
+
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>

@@ -27,11 +27,11 @@ class MainActivityViewModel(
     }
 
     suspend fun isAppSoundsEnabled(): Boolean {
-        return localDB.getUser().appEffect
+        return if (localDB.existUser()) localDB.getUser().appEffect else true
     }
 
     suspend fun isAppEffectsEnabled(): Boolean {
-        return localDB.getUser().soundEffect
+        return if (localDB.existUser()) localDB.getUser().soundEffect else true
     }
 
 }

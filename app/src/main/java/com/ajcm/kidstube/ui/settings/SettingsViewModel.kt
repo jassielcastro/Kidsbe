@@ -27,7 +27,6 @@ class SettingsViewModel(
         initScope()
     }
 
-
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             ActionSettings.Start -> {
@@ -38,19 +37,28 @@ class SettingsViewModel(
             is ActionSettings.UpdateAppSoundsEnabled -> {
                 launch {
                     val newUser = localDB.getUser().copy(appEffect = actionState.enabled)
-                    localDB.updateUser(newUser)
-                    updateUser.invoke(newUser)
-                    dispatch(ActionSettings.Start)
+                    updateUser(newUser)
+                    consume(UiSettings.UpdateAppSongStatus(newUser))
                 }
             }
             is ActionSettings.UpdateAppEffectEnabled -> {
                 launch {
                     val newUser = localDB.getUser().copy(soundEffect = actionState.enabled)
-                    localDB.updateUser(newUser)
-                    updateUser.invoke(newUser)
+                    updateUser(newUser)
+                }
+            }
+            is ActionSettings.UpdateMobileDataEnabled -> {
+                launch {
+                    val newUser = localDB.getUser().copy(allowMobileData = actionState.enabled)
+                    updateUser(newUser)
                 }
             }
         }
+    }
+
+    private suspend fun updateUser(user: User) {
+        localDB.updateUser(user)
+        updateUser.invoke(user)
     }
 
     fun onHandleMusicApp(user: User, listener: SongTrackListener?) {
