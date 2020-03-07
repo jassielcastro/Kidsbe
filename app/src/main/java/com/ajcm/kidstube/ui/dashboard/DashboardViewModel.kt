@@ -41,8 +41,8 @@ class DashboardViewModel(
             ActionDashboard.StartYoutube -> {
                 launch {
                     getYoutubeVideos.startYoutubeWith(localDB.getUser().userName)
+                    consume(UiDashboard.YoutubeStarted)
                 }
-                consume(UiDashboard.YoutubeStarted)
             }
             ActionDashboard.Refresh -> {
                 if (videos.isEmpty()) {
