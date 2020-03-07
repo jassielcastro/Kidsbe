@@ -11,7 +11,6 @@ import com.payclip.design.extensions.loadRes
 import com.payclip.design.extensions.setUpLayoutManager
 import com.payclip.design.extensions.waitForTransition
 import kotlinx.android.synthetic.main.profile_fragment.*
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -21,7 +20,6 @@ class ProfileFragment : KidsFragment<UiProfile, ProfileViewModel>(R.layout.profi
 
     private lateinit var adapter: AvatarAdapter
 
-    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -29,7 +27,6 @@ class ProfileFragment : KidsFragment<UiProfile, ProfileViewModel>(R.layout.profi
         btnBack.setOnClickListener(this)
     }
 
-    @InternalCoroutinesApi
     private fun setUpViews() {
         waitForTransition(imgProfile)
         recyclerAvatars.setUpLayoutManager()
@@ -41,7 +38,6 @@ class ProfileFragment : KidsFragment<UiProfile, ProfileViewModel>(R.layout.profi
         recyclerAvatars.adapter = adapter
     }
 
-    @InternalCoroutinesApi
     override fun updateUi(state: UiState) {
         when(state) {
             is UiProfile.UpdateUserInfo -> {

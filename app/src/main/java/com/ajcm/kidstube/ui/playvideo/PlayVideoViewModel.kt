@@ -11,7 +11,6 @@ import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
 import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 class PlayVideoViewModel(
@@ -22,7 +21,6 @@ class PlayVideoViewModel(
 ) :
     ScopedViewModel<UiPlayVideo>(uiDispatcher) {
 
-    @InternalCoroutinesApi
     override val model: LiveData<UiPlayVideo>
         get() {
             if (mModel.value == null) dispatch(ActionPlayVideo.StartYoutube)
@@ -37,7 +35,6 @@ class PlayVideoViewModel(
         initScope()
     }
 
-    @InternalCoroutinesApi
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             is ActionPlayVideo.ObtainVideo -> {

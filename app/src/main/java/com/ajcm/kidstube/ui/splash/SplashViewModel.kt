@@ -19,7 +19,6 @@ class SplashViewModel(
     uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel<UiSplash>(uiDispatcher) {
 
-    @InternalCoroutinesApi
     override val model: LiveData<UiSplash>
         get() {
             if (mModel.value == null) dispatch(ActionSplash.Start)
@@ -30,7 +29,6 @@ class SplashViewModel(
         initScope()
     }
 
-    @InternalCoroutinesApi
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             ActionSplash.Start -> {
@@ -75,7 +73,6 @@ class SplashViewModel(
         consume(UiSplash.Navigate)
     }
 
-    @InternalCoroutinesApi
     private fun saveAccountName(accountName: String) {
         launch {
             val user = getUserIfExist(accountName)

@@ -21,8 +21,7 @@ class UserRemoteSource(private val api: FirebaseApi): FireBaseDataSource<User?> 
             }
     }
 
-    @InternalCoroutinesApi
-    override suspend fun save(value: User?): String = suspendAtomicCancellableCoroutine { continuation ->
+    override suspend fun save(value: User?): String = suspendCancellableCoroutine { continuation ->
         if (value == null) continuation.resume("")
         api.db
             .collection(api.url)
@@ -38,8 +37,7 @@ class UserRemoteSource(private val api: FirebaseApi): FireBaseDataSource<User?> 
             }
     }
 
-    @InternalCoroutinesApi
-    override suspend fun update(value: User?): Boolean = suspendAtomicCancellableCoroutine { continuation ->
+    override suspend fun update(value: User?): Boolean = suspendCancellableCoroutine { continuation ->
         if (value == null) continuation.resume(false)
         api.db
             .collection(api.url)

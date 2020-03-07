@@ -12,7 +12,6 @@ import com.ajcm.kidstube.common.Constants
 import com.payclip.design.extensions.accelerateCanvas
 import com.payclip.design.extensions.navigateTo
 import kotlinx.android.synthetic.main.splash_fragment.*
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -39,7 +38,6 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
         viewModel.onResume(songTrackListener)
     }
 
-    @InternalCoroutinesApi
     override fun updateUi(state: UiState) {
         when (state) {
             UiSplash.CheckPermissions -> {
@@ -81,7 +79,6 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
         animationSplash.cancelAnimation()
     }
 
-    @InternalCoroutinesApi
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -95,7 +92,6 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
         }
     }
 
-    @InternalCoroutinesApi
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {

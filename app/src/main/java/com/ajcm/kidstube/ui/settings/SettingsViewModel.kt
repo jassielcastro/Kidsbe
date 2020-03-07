@@ -9,7 +9,6 @@ import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
@@ -18,7 +17,6 @@ class SettingsViewModel(
     uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel<UiSettings>(uiDispatcher) {
 
-    @InternalCoroutinesApi
     override val model: LiveData<UiSettings>
         get() {
             if (mModel.value == null) dispatch(ActionSettings.Start)
@@ -29,7 +27,7 @@ class SettingsViewModel(
         initScope()
     }
 
-    @InternalCoroutinesApi
+
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             ActionSettings.Start -> {

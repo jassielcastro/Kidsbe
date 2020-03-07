@@ -8,7 +8,6 @@ import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -16,7 +15,6 @@ import kotlin.coroutines.resume
 class ProfileViewModel(private val localDB: LocalDataSource, private val updateUser: UpdateUser, uiDispatcher: CoroutineDispatcher) :
     ScopedViewModel<UiProfile>(uiDispatcher) {
 
-    @InternalCoroutinesApi
     override val model: LiveData<UiProfile>
         get() {
             if (mModel.value == null) dispatch(ActionProfile.Start)
@@ -27,7 +25,6 @@ class ProfileViewModel(private val localDB: LocalDataSource, private val updateU
         initScope()
     }
 
-    @InternalCoroutinesApi
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             ActionProfile.Start -> {
@@ -51,7 +48,6 @@ class ProfileViewModel(private val localDB: LocalDataSource, private val updateU
         }
     }
 
-    @InternalCoroutinesApi
     private fun updateAvatarProfile(avatar: Avatar) {
         launch {
             val newUser = getUser().copy(userAvatar = avatar)
