@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val localDB: LocalDataSource,
+    private val localDB: LocalDataSource<User>,
     private val updateUser: UpdateUser,
     uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel<UiSettings>(uiDispatcher) {
@@ -31,25 +31,25 @@ class SettingsViewModel(
         when (actionState) {
             ActionSettings.Start -> {
                 launch {
-                    consume(UiSettings.LoadUserInfo(localDB.getUser()))
+                    consume(UiSettings.LoadUserInfo(localDB.getObject()))
                 }
             }
             is ActionSettings.UpdateAppSoundsEnabled -> {
                 launch {
-                    val newUser = localDB.getUser().copy(appEffect = actionState.enabled)
+                    val newUser = localDB.getObject().copy(appEffect = actionState.enabled)
                     updateUser(newUser)
                     consume(UiSettings.UpdateAppSongStatus(newUser))
                 }
             }
             is ActionSettings.UpdateAppEffectEnabled -> {
                 launch {
-                    val newUser = localDB.getUser().copy(soundEffect = actionState.enabled)
+                    val newUser = localDB.getObject().copy(soundEffect = actionState.enabled)
                     updateUser(newUser)
                 }
             }
             is ActionSettings.UpdateMobileDataEnabled -> {
                 launch {
-                    val newUser = localDB.getUser().copy(allowMobileData = actionState.enabled)
+                    val newUser = localDB.getObject().copy(allowMobileData = actionState.enabled)
                     updateUser(newUser)
                 }
             }
@@ -57,7 +57,7 @@ class SettingsViewModel(
     }
 
     private suspend fun updateUser(user: User) {
-        localDB.updateUser(user)
+        localDB.update(user)
         updateUser.invoke(user)
     }
 

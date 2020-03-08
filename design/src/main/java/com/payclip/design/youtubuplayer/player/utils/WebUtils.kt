@@ -7,6 +7,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 
 object WebUtils {
+
     fun isOnline(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo

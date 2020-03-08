@@ -34,7 +34,6 @@ dependencies {
     implementation youtube.values()
     implementation firestore.values()
     implementation kotlinLibs.values()
-    implementation network.values()
 
     implementation roomDB.values()
     kapt roomKapt.values()

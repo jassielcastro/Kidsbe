@@ -54,7 +54,7 @@ fun Application.initDI() {
 private val appModule = module {
     single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
     single { KidstubeDB.build(get()) }
-    factory<LocalDataSource> { RoomDataSource(get()) }
+    factory<LocalDataSource<User>> { RoomDataSource(get()) }
     single { GoogleCredential(get()) }
     single<CoroutineDispatcher> { Dispatchers.Main }
 }

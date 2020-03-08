@@ -1,13 +1,11 @@
 package com.ajcm.data.source
 
-import com.ajcm.domain.User
+interface LocalDataSource<T> {
 
-interface LocalDataSource {
-
-    suspend fun existUser(): Boolean
-    suspend fun saveUser(user: User)
-    suspend fun getUser(): User
-    suspend fun updateUser(user: User)
-    suspend fun deleteUser(user: User)
+    suspend fun exist(): Boolean
+    suspend fun save(obj: T)
+    suspend fun getObject(): T
+    suspend fun update(obj: T)
+    suspend fun delete(obj: T)
 
 }

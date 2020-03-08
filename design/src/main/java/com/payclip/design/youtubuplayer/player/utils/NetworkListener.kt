@@ -10,7 +10,7 @@ class NetworkListener : BroadcastReceiver() {
     var onNetworkAvailable = { }
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (Utils.isOnline(context))
+        if (WebUtils.isOnline(context))
             onNetworkAvailable()
         else
             onNetworkUnavailable()

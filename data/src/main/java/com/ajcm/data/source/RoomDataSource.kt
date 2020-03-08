@@ -7,27 +7,27 @@ import com.ajcm.domain.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RoomDataSource(db: KidstubeDB) : LocalDataSource {
+class RoomDataSource(db: KidstubeDB) : LocalDataSource<User> {
 
     private val userDao = db.userDao()
 
-    override suspend fun existUser(): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun exist(): Boolean = withContext(Dispatchers.IO) {
         userDao.getAll().isNotEmpty()
     }
 
-    override suspend fun saveUser(user: User) = withContext(Dispatchers.IO) {
-        userDao.insert(user.toRoomUser())
+    override suspend fun save(obj: User) = withContext(Dispatchers.IO) {
+        userDao.insert(obj.toRoomUser())
     }
 
-    override suspend fun getUser(): User = withContext(Dispatchers.IO) {
+    override suspend fun getObject(): User = withContext(Dispatchers.IO) {
         userDao.findLast().toUser()
     }
 
-    override suspend fun updateUser(user: User) = withContext(Dispatchers.IO) {
-        userDao.update(user.toRoomUser())
+    override suspend fun update(obj: User) = withContext(Dispatchers.IO) {
+        userDao.update(obj.toRoomUser())
     }
 
-    override suspend fun deleteUser(user: User) = withContext(Dispatchers.IO) {
-        userDao.delete(user.toRoomUser())
+    override suspend fun delete(obj: User) = withContext(Dispatchers.IO) {
+        userDao.delete(obj.toRoomUser())
     }
 }

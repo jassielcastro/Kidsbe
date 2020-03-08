@@ -3,7 +3,7 @@ package com.ajcm.data.source
 import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
-import com.ajcm.data.auth.Session
+import com.ajcm.data.api.GoogleSession
 import com.ajcm.data.common.Constants
 import com.ajcm.data.mappers.mapToList
 import com.ajcm.data.models.Result
@@ -21,7 +21,7 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
 
     fun startYoutubeSession(accountName: String) {
         Log.i("YoutubeRemoteSource", "startYoutubeSession: $accountName")
-        youtube = Session(application, accountName)
+        youtube = GoogleSession(application, accountName)
             .getYoutubeSession()
             .Search()
             .list("id,snippet")

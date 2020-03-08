@@ -13,7 +13,7 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.resume
 
 class SplashViewModel(
-    private val localDB: LocalDataSource,
+    private val localDB: LocalDataSource<User>,
     private val saveUser: SaveUser,
     private val getUserProfile: GetUserProfile,
     uiDispatcher: CoroutineDispatcher
@@ -55,12 +55,12 @@ class SplashViewModel(
     }
 
     private suspend fun checkAccountName() {
-        if (!localDB.existUser()) {
+        if (!localDB.exist()) {
             consume(UiSplash.RequestAccount)
         } else {
-            val user = getUserIfExist(localDB.getUser().userName)
+            val user = getUserIfExist(localDB.getObject().userName)
             if (user != null) {
-                localDB.saveUser(user)
+                localDB.save(user)
                 playSplash()
             } else {
                 consume(UiSplash.RequestAccount)
@@ -78,10 +78,10 @@ class SplashViewModel(
             val user = getUserIfExist(accountName)
             if (user == null) {
                 saveUser.invoke(User("", accountName)).let {
-                    localDB.saveUser(User(it, accountName))
+                    localDB.save(User(it, accountName))
                 }
             } else {
-                localDB.saveUser(user)
+                localDB.save(user)
             }
             checkAccountName()
         }

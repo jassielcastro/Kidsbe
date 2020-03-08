@@ -3,6 +3,7 @@ package com.ajcm.kidstube.ui.dashboard
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.ajcm.data.source.LocalDataSource
+import com.ajcm.domain.User
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.ActionState
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
-    private val localDB: LocalDataSource,
+    private val localDB: LocalDataSource<User>,
     uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel<UiDashboard>(uiDispatcher) {
 
@@ -35,12 +36,12 @@ class DashboardViewModel(
         when (actionState) {
             ActionDashboard.Start -> {
                 launch {
-                    consume(UiDashboard.UpdateUserInfo(localDB.getUser().userAvatar))
+                    consume(UiDashboard.UpdateUserInfo(localDB.getObject().userAvatar))
                 }
             }
             ActionDashboard.StartYoutube -> {
                 launch {
-                    getYoutubeVideos.startYoutubeWith(localDB.getUser().userName)
+                    getYoutubeVideos.startYoutubeWith(localDB.getObject().userName)
                     consume(UiDashboard.YoutubeStarted)
                 }
             }
@@ -79,7 +80,7 @@ class DashboardViewModel(
 
     private fun refresh() = launch {
         consume(UiDashboard.Loading)
-        val result = getYoutubeVideos.invoke(localDB.getUser().lastVideoWatched)
+        val result = getYoutubeVideos.invoke(localDB.getObject().lastVideoWatched)
         if (result.videos.isNotEmpty()) {
             videos = result.videos
             consume(UiDashboard.Content(result.videos))

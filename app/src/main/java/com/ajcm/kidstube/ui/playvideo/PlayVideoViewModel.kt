@@ -2,6 +2,7 @@ package com.ajcm.kidstube.ui.playvideo
 
 import androidx.lifecycle.LiveData
 import com.ajcm.data.source.LocalDataSource
+import com.ajcm.domain.User
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class PlayVideoViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
-    private val localDB: LocalDataSource,
+    private val localDB: LocalDataSource<User>,
     private val updateUser: UpdateUser,
     uiDispatcher: CoroutineDispatcher
 ) :
@@ -53,7 +54,7 @@ class PlayVideoViewModel(
             }
             ActionPlayVideo.StartYoutube -> {
                 launch {
-                    getYoutubeVideos.startYoutubeWith(localDB.getUser().userName)
+                    getYoutubeVideos.startYoutubeWith(localDB.getObject().userName)
                 }
             }
             is ActionPlayVideo.Start -> {
@@ -73,8 +74,8 @@ class PlayVideoViewModel(
             }
             is ActionPlayVideo.SaveLastVideoId -> {
                 launch {
-                    val newUser = localDB.getUser().copy(lastVideoWatched = actionState.lastVideoId)
-                    localDB.saveUser(newUser)
+                    val newUser = localDB.getObject().copy(lastVideoWatched = actionState.lastVideoId)
+                    localDB.save(newUser)
                     updateUser.invoke(newUser)
                 }
             }
@@ -97,7 +98,7 @@ class PlayVideoViewModel(
 
     private fun refresh() = launch {
         consume(UiPlayVideo.Loading)
-        val result = getYoutubeVideos.invoke(localDB.getUser().lastVideoWatched)
+        val result = getYoutubeVideos.invoke(localDB.getObject().lastVideoWatched)
         if (result.videos.isNotEmpty()) {
             videoList = result.videos
             consume(UiPlayVideo.Content(result.videos))

@@ -81,13 +81,6 @@ allprojects {
                 koin: "org.koin:koin-android-viewmodel:2.0.1"
         ]
 
-        network = [
-                okhttpLoginInterceptor   : 'com.squareup.okhttp3:logging-interceptor:4.0.1',
-                retrofit                 : 'com.squareup.retrofit2:retrofit:2.6.0',
-                retrofitGsonConverter    : 'com.squareup.retrofit2:converter-gson:2.6.0',
-                retrofitCoroutinesAdapter: 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2',
-        ]
-
         testLibs = [
                 junit        : 'junit:junit:4.12',
                 mockitoKotlin: "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0",

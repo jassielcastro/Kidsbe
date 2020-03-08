@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-class ProfileViewModel(private val localDB: LocalDataSource, private val updateUser: UpdateUser, uiDispatcher: CoroutineDispatcher) :
+class ProfileViewModel(private val localDB: LocalDataSource<User>, private val updateUser: UpdateUser, uiDispatcher: CoroutineDispatcher) :
     ScopedViewModel<UiProfile>(uiDispatcher) {
 
     override val model: LiveData<UiProfile>
@@ -29,7 +29,7 @@ class ProfileViewModel(private val localDB: LocalDataSource, private val updateU
         when (actionState) {
             ActionProfile.Start -> {
                 launch {
-                    consume(UiProfile.UpdateUserInfo(localDB.getUser()))
+                    consume(UiProfile.UpdateUserInfo(localDB.getObject()))
                 }
             }
             ActionProfile.PrepareAvatarList -> {
@@ -53,7 +53,7 @@ class ProfileViewModel(private val localDB: LocalDataSource, private val updateU
             val newUser = getUser().copy(userAvatar = avatar)
             updateUser.invoke(newUser).let {
                 if (it) {
-                    localDB.updateUser(newUser)
+                    localDB.update(newUser)
                     dispatch(ActionProfile.Start)
                 }
             }
@@ -62,7 +62,7 @@ class ProfileViewModel(private val localDB: LocalDataSource, private val updateU
 
     private suspend fun getUser(): User = suspendCancellableCoroutine { continuation ->
         launch {
-            continuation.resume(localDB.getUser())
+            continuation.resume(localDB.getObject())
         }
     }
 

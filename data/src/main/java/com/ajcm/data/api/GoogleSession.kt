@@ -1,4 +1,4 @@
-package com.ajcm.data.auth
+package com.ajcm.data.api
 
 import android.app.Application
 import com.ajcm.data.common.Constants
@@ -9,7 +9,7 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTube
 
-class Session(application: Application, accountName: String) {
+class GoogleSession(application: Application, accountName: String) {
 
     private val transport = NetHttpTransport()
     private val jsonFactory: JsonFactory = GsonFactory()
