@@ -74,9 +74,11 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
                             !it.snippet.title.toLowerCase().contains("susto") &&
                             !it.snippet.title.toLowerCase().contains("scare") &&
                             !it.snippet.title.toLowerCase().contains("mounstro") &&
+                            !it.snippet.title.toLowerCase().contains("mounstruo") &&
                             !it.snippet.title.toLowerCase().contains("monster") &&
                             !it.snippet.title.toLowerCase().contains("zombie") &&
                             !it.snippet.title.toLowerCase().contains("apocalypse") &&
+                            !it.snippet.title.toLowerCase().contains("terror") &&
                             !it.snippet.title.toLowerCase().contains("miedo")
                 }
 

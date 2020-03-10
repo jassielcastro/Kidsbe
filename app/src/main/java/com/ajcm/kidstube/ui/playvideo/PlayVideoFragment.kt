@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
+import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.ui.adapters.RelatedVideosAdapter
 import com.payclip.design.extensions.hide
 import com.payclip.design.extensions.setUpLayoutManager
@@ -19,10 +20,13 @@ import com.payclip.design.youtubuplayer.player.utils.loadOrCueVideo
 import kotlinx.android.synthetic.main.play_video_fragment.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout.play_video_fragment) {
 
-    override val viewModel: PlayVideoViewModel by currentScope.viewModel(this)
+    override val viewModel: PlayVideoViewModel by currentScope.viewModel(this) {
+        parametersOf(arguments?.getString(Constants.KEY_USER_ID, "unknown"))
+    }
 
     private lateinit var youtubePlayer: YouTubePlayer
 

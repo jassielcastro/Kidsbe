@@ -10,12 +10,14 @@ import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
+import com.ajcm.usecases.SaveVideoWatched
 import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 class PlayVideoViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
+    private val saveVideoWatched: SaveVideoWatched,
     private val localDB: LocalDataSource<User>,
     private val updateUser: UpdateUser,
     uiDispatcher: CoroutineDispatcher
@@ -24,7 +26,7 @@ class PlayVideoViewModel(
 
     override val model: LiveData<UiPlayVideo>
         get() {
-            if (mModel.value == null) dispatch(ActionPlayVideo.StartYoutube)
+            if (mModel.value == null) consume(UiPlayVideo.Loading)
             return mModel
         }
 
@@ -38,7 +40,6 @@ class PlayVideoViewModel(
     override fun dispatch(actionState: ActionState) {
         when (actionState) {
             is ActionPlayVideo.ObtainVideo -> {
-                consume(UiPlayVideo.Loading)
                 actionState.bundle?.getSerializable(Constants.KEY_VIDEO_ID)?.let {
                     sharedVideo = it as Video
                 }
@@ -46,11 +47,6 @@ class PlayVideoViewModel(
                     (it as? VideoList)?.let {  vl ->
                         videoList = vl.list
                     }
-                }
-            }
-            ActionPlayVideo.StartYoutube -> {
-                launch {
-                    getYoutubeVideos.startYoutubeWith(localDB.getObject().userName)
                 }
             }
             is ActionPlayVideo.Start -> {
@@ -73,6 +69,7 @@ class PlayVideoViewModel(
                     val newUser = localDB.getObject().copy(lastVideoWatched = actionState.lastVideo.videoId)
                     localDB.save(newUser)
                     updateUser.invoke(newUser)
+                    saveVideoWatched.invoke(actionState.lastVideo)
                 }
             }
             ActionPlayVideo.LoadError -> {

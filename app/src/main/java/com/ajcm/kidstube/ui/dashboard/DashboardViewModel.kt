@@ -60,10 +60,12 @@ class DashboardViewModel(
                 consume(UiDashboard.LoadingError(actionState.msg))
             }
             is ActionDashboard.VideoSelected -> {
-                consume(UiDashboard.NavigateTo(DashNav.VIDEO, actionState.video))
+                launch {
+                    consume(UiDashboard.NavigateTo(DashNav.VIDEO, actionState.video, localDB.getObject().userId))
+                }
             }
             is ActionDashboard.ChangeRoot -> {
-                consume(UiDashboard.NavigateTo(actionState.root, null))
+                consume(UiDashboard.NavigateTo(actionState.root, null, ""))
             }
         }
     }

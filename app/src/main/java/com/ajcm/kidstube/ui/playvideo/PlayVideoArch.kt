@@ -17,7 +17,6 @@ sealed class UiPlayVideo : UiState {
 
 sealed class ActionPlayVideo : ActionState {
     data class ObtainVideo(val bundle: Bundle?) : ActionPlayVideo()
-    object StartYoutube : ActionPlayVideo()
     object Start : ActionPlayVideo()
     data class PlayerViewReady(val youTubePlayer: YouTubePlayer) : ActionPlayVideo()
     object Refresh : ActionPlayVideo()
