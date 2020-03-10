@@ -29,8 +29,7 @@ class PlayVideoViewModel(
         }
 
     private var videoList: List<Video> = arrayListOf()
-    private var sharedVideoId: String? = null
-    private var videoThumbnail: String? = null
+    private var sharedVideo: Video? = null
 
     init {
         initScope()
@@ -40,11 +39,8 @@ class PlayVideoViewModel(
         when (actionState) {
             is ActionPlayVideo.ObtainVideo -> {
                 consume(UiPlayVideo.Loading)
-                actionState.bundle?.getString(Constants.KEY_VIDEO_ID)?.let {
-                    sharedVideoId = it
-                }
-                actionState.bundle?.getString(Constants.KEY_VIDEO_THUMBNAIL)?.let {
-                    videoThumbnail = it
+                actionState.bundle?.getSerializable(Constants.KEY_VIDEO_ID)?.let {
+                    sharedVideo = it as Video
                 }
                 actionState.bundle?.getSerializable(Constants.KEY_VIDEO_LIST)?.let {
                     (it as? VideoList)?.let {  vl ->
@@ -58,8 +54,8 @@ class PlayVideoViewModel(
                 }
             }
             is ActionPlayVideo.Start -> {
-                if (sharedVideoId != null && videoThumbnail != null) {
-                    consume(UiPlayVideo.PlayVideo(sharedVideoId!!, videoThumbnail!!))
+                if (sharedVideo != null) {
+                    consume(UiPlayVideo.PlayVideo(sharedVideo!!))
                 }
             }
             is ActionPlayVideo.PlayerViewReady -> {
@@ -69,12 +65,12 @@ class PlayVideoViewModel(
                 if (videoList.isEmpty()) {
                     refresh()
                 } else {
-                    consume(UiPlayVideo.Content(videoList.shuffled()))
+                    consume(UiPlayVideo.Content(videoList.filter { it.videoId != sharedVideo?.videoId }.shuffled()))
                 }
             }
-            is ActionPlayVideo.SaveLastVideoId -> {
+            is ActionPlayVideo.SaveLastVideo -> {
                 launch {
-                    val newUser = localDB.getObject().copy(lastVideoWatched = actionState.lastVideoId)
+                    val newUser = localDB.getObject().copy(lastVideoWatched = actionState.lastVideo.videoId)
                     localDB.save(newUser)
                     updateUser.invoke(newUser)
                 }
@@ -83,14 +79,13 @@ class PlayVideoViewModel(
 
             }
             is ActionPlayVideo.VideoSelected -> {
-                videoThumbnail = actionState.video.thumbnail
-                consume(UiPlayVideo.PlayVideo(actionState.video.videoId, actionState.video.thumbnail))
+                sharedVideo = actionState.video
+                consume(UiPlayVideo.PlayVideo(actionState.video))
             }
             ActionPlayVideo.PlayNextVideo -> {
                 if (videoList.isNotEmpty()) {
                     val video = videoList[0]
-                    videoThumbnail = video.thumbnail
-                    consume(UiPlayVideo.PlayVideo(video.videoId, video.thumbnail))
+                    consume(UiPlayVideo.PlayVideo(video))
                 }
             }
         }

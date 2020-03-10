@@ -66,11 +66,7 @@ private val youtubeModule = module {
 private val userModule = module {
     single (named("user_info")) { FirebaseApi.User.Info }
     factory<FireBaseDataSource<User?>>(named("user_data_source")) {
-        UserRemoteSource(
-            get(
-                named("user_info")
-            )
-        )
+        UserRemoteSource(get(named("user_info")))
     }
 }
 

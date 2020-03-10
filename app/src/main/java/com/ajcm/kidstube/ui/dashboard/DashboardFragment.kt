@@ -124,8 +124,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
                     }
                     DashNav.VIDEO -> {
                         navigateTo(state.root.id, Bundle().apply {
-                            putString(Constants.KEY_VIDEO_ID, state.video!!.videoId)
-                            putString(Constants.KEY_VIDEO_THUMBNAIL, state.video.thumbnail)
+                            putSerializable(Constants.KEY_VIDEO_ID, state.video!!)
                             putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
                         })
                     }

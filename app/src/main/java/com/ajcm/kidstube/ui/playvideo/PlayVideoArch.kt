@@ -11,7 +11,7 @@ sealed class UiPlayVideo : UiState {
     object LoadingError : UiPlayVideo()
     data class RenderYoutubePlayer(val youTubePlayer: YouTubePlayer) : UiPlayVideo()
     data class Content(val videos: List<Video>) : UiPlayVideo()
-    data class PlayVideo(val videoId: String, val thumbnail: String) : UiPlayVideo()
+    data class PlayVideo(val video: Video) : UiPlayVideo()
     data class RequestPermissions(val exception: Exception?) : UiPlayVideo()
 }
 
@@ -21,7 +21,7 @@ sealed class ActionPlayVideo : ActionState {
     object Start : ActionPlayVideo()
     data class PlayerViewReady(val youTubePlayer: YouTubePlayer) : ActionPlayVideo()
     object Refresh : ActionPlayVideo()
-    data class SaveLastVideoId(val lastVideoId: String) : ActionPlayVideo()
+    data class SaveLastVideo(val lastVideo: Video) : ActionPlayVideo()
     object LoadError : ActionPlayVideo()
     data class VideoSelected(val video: Video) : ActionPlayVideo()
     object PlayNextVideo : ActionPlayVideo()

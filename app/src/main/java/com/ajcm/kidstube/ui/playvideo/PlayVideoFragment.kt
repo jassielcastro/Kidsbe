@@ -17,7 +17,6 @@ import com.payclip.design.youtubuplayer.player.listeners.AbstractYouTubePlayerLi
 import com.payclip.design.youtubuplayer.player.options.PanelState
 import com.payclip.design.youtubuplayer.player.utils.loadOrCueVideo
 import kotlinx.android.synthetic.main.play_video_fragment.*
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -99,9 +98,9 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
                 btnBack.show()
                 viewPanelLoader.hide()
                 progressLoader.hide()
-                viewModel.dispatch(ActionPlayVideo.SaveLastVideoId(state.videoId))
-                youtube_player_view.loadThumbnailImage(state.thumbnail)
-                youtubePlayer.loadOrCueVideo(lifecycle, state.videoId, 0f)
+                viewModel.dispatch(ActionPlayVideo.SaveLastVideo(state.video))
+                youtube_player_view.loadThumbnailImage(state.video.thumbnail)
+                youtubePlayer.loadOrCueVideo(lifecycle, state.video.videoId, 0f)
                 viewModel.dispatch(ActionPlayVideo.Refresh)
             }
         }
