@@ -10,6 +10,7 @@ import com.ajcm.data.models.Result
 import com.ajcm.domain.Video
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.SearchListResponse
+import com.google.api.services.youtube.model.SearchResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -18,6 +19,33 @@ import java.io.IOException
 class YoutubeRemoteSource(private val application: Application): RemoteDataSource {
 
     private lateinit var youtube: YouTube.Search.List
+
+    private val tempBlackListVideos: List<String> by lazy {
+        listOf(
+            "halloween",
+            "death",
+            "muerte",
+            "muerto",
+            "peppa",
+            "carcel",
+            "bruja",
+            "witch",
+            "calavera",
+            "muerto",
+            "fantasma",
+            "ghost",
+            "susto",
+            "scare",
+            "mounstro",
+            "mounstruo",
+            "monster",
+            "zombie",
+            "apocalypse",
+            "terror",
+            "terrible",
+            "miedo"
+        )
+    }
 
     fun startYoutubeSession(accountName: String) {
         Log.i("YoutubeRemoteSource", "startYoutubeSession: $accountName")
@@ -50,42 +78,33 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
         }
     }
 
-    @SuppressLint("DefaultLocale")
     override suspend fun getPopularVideos(apiKey: String, relatedToVideoId: String): Result {
         return try {
            val list = youtube
                 .setKey(apiKey)
 
             val resultList1 = getListOfVideosRelatedTo(relatedToVideoId, list).items
-            val resultList2 = getListOfVideosRelatedTo(resultList1[0].id.videoId, list).items
+            val list1Filtered = filterVideoList(resultList1, tempBlackListVideos)
 
-            val completeList = (resultList1 + resultList2)
+            val resultList2 = getListOfVideosRelatedTo(list1Filtered[0].id.videoId, list).items
+            val list2Filtered = filterVideoList(resultList2, tempBlackListVideos)
+
+            val completeList = (list1Filtered + list2Filtered)
                 .distinctBy { it.id.videoId }
-                .filter {
-                    !it.snippet.title.toLowerCase().contains("halloween") &&
-                            !it.snippet.title.toLowerCase().contains("peppa") &&
-                            !it.snippet.title.toLowerCase().contains("carcel") &&
-                            !it.snippet.title.toLowerCase().contains("bruja") &&
-                            !it.snippet.title.toLowerCase().contains("witch") &&
-                            !it.snippet.title.toLowerCase().contains("calavera") &&
-                            !it.snippet.title.toLowerCase().contains("muerto") &&
-                            !it.snippet.title.toLowerCase().contains("fantasma") &&
-                            !it.snippet.title.toLowerCase().contains("ghost") &&
-                            !it.snippet.title.toLowerCase().contains("susto") &&
-                            !it.snippet.title.toLowerCase().contains("scare") &&
-                            !it.snippet.title.toLowerCase().contains("mounstro") &&
-                            !it.snippet.title.toLowerCase().contains("mounstruo") &&
-                            !it.snippet.title.toLowerCase().contains("monster") &&
-                            !it.snippet.title.toLowerCase().contains("zombie") &&
-                            !it.snippet.title.toLowerCase().contains("apocalypse") &&
-                            !it.snippet.title.toLowerCase().contains("terror") &&
-                            !it.snippet.title.toLowerCase().contains("miedo")
-                }
 
             Result(completeList.mapToList(), null)
             //getFakeVideoList()
         } catch (e: IOException) {
             Result(arrayListOf(), e)
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
+    private fun filterVideoList(list: List<SearchResult>, blackList: List<String>): List<SearchResult> {
+        return list.filter { video ->
+            blackList.none {
+                video.snippet.title.toLowerCase().contains(it)
+            }
         }
     }
 
