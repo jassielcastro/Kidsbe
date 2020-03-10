@@ -123,6 +123,10 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
         this.onVideoEnded = finishListener
     }
 
+    fun canHideContent(hideContent: Boolean) {
+        fadeControlsContainer.canHideContent(hideContent)
+    }
+
     override fun showVideoTitle(show: Boolean): PlayerUiController {
         videoTitle.visibility = if (show) View.VISIBLE else View.GONE
         return this

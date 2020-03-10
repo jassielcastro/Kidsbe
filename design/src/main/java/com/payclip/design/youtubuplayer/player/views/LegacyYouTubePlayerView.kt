@@ -229,4 +229,8 @@ class LegacyYouTubePlayerView(context: Context, attrs: AttributeSet? = null, def
     fun setOnVideoFinishListener(finishListener: () -> Unit) {
         defaultPlayerUiController.setOnVideoFinishListener(finishListener)
     }
+
+    fun canHideContent(hideContent: Boolean) {
+        defaultPlayerUiController.canHideContent(hideContent)
+    }
 }

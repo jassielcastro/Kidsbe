@@ -146,4 +146,8 @@ class YouTubePlayerView(context: Context, attrs: AttributeSet? = null, defStyleA
     fun setOnVideoFinishListener(finishListener: () -> Unit) {
         legacyTubePlayerView.setOnVideoFinishListener(finishListener)
     }
+
+    fun canHideContent(hideContent: Boolean) {
+        legacyTubePlayerView.canHideContent(hideContent)
+    }
 }

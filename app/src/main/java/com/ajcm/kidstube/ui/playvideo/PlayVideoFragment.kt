@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
@@ -52,6 +54,20 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
         }
 
         btnBack.setOnClickListener { activity?.onBackPressed() }
+
+        relatedRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                when (newState) {
+                    SCROLL_STATE_IDLE -> {
+                        youtube_player_view.canHideContent(true)
+                    }
+                    else -> {
+                        youtube_player_view.canHideContent(false)
+                    }
+                }
+            }
+        })
     }
 
     private fun setUpViews() {

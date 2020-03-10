@@ -18,6 +18,8 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
     private var canFade = false
     private var isVisible = true
 
+    private var canHideContent = true
+
     private var fadeOut: Runnable = Runnable{ fade(0f) }
 
     var isDisabled = false
@@ -45,8 +47,15 @@ class FadeViewHelper(val targetView: View): YouTubePlayerListener {
         isPlaying = false
     }
 
+    fun canHideContent(hideContent: Boolean) {
+        canHideContent = hideContent
+        if (!canHideContent) {
+            targetView.handler?.removeCallbacks(fadeOut)
+        }
+    }
+
     private fun fade(finalAlpha: Float) {
-        if (!canFade || isDisabled)
+        if (!canFade || isDisabled || !canHideContent)
             return
 
         isVisible = finalAlpha != 0f
