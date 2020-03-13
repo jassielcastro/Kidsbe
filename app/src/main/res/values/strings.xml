@@ -11,4 +11,6 @@
     <string name="sound_effects">Efectos de sonido</string>
     <string name="black_list">Black list</string>
     <string name="allow_mobile_data">Utilizar Datos móbiles</string>
+    <string name="txt_block">Bloquear</string>
+    <string name="search_related_videos">Videos relacionados</string>
 </resources>

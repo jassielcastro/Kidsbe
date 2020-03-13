@@ -13,13 +13,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imgVideo"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.75"
-            android:scaleType="centerCrop"
-            tools:ignore="ContentDescription" />
+            android:layout_weight="0.75">
+
+            <ImageView
+                android:id="@+id/imgVideo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription" />
+
+            <include android:id="@+id/videoOptions"
+                layout="@layout/item_video_options"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -36,15 +47,21 @@
                 android:gravity="center_vertical"
                 android:theme="@style/TitleText" />
 
-            <ImageView
+            <FrameLayout
                 android:id="@+id/imgOption"
                 android:layout_width="24dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="8dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_menu"
-                tools:ignore="ContentDescription" />
+                android:foreground="?android:selectableItemBackgroundBorderless">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_menu"
+                    tools:ignore="ContentDescription" />
+
+            </FrameLayout>
 
         </RelativeLayout>
 

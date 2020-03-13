@@ -8,6 +8,7 @@ import com.ajcm.domain.Video
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
+import com.ajcm.kidstube.common.VideoAction
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
@@ -46,10 +47,12 @@ class DashboardViewModel(
                 }
             }
             ActionDashboard.Refresh -> {
-                if (videos.isEmpty()) {
-                    refresh()
-                } else {
-                    consume(UiDashboard.Content(videos.shuffled()))
+                launch {
+                    if (videos.isEmpty()) {
+                        refresh(localDB.getObject().lastVideoWatched)
+                    } else {
+                        consume(UiDashboard.Content(videos.shuffled()))
+                    }
                 }
             }
             is ActionDashboard.ParseException -> {
@@ -61,7 +64,18 @@ class DashboardViewModel(
             }
             is ActionDashboard.VideoSelected -> {
                 launch {
-                    consume(UiDashboard.NavigateTo(DashNav.VIDEO, actionState.video, localDB.getObject().userId))
+                    when (val act = actionState.videoAction) {
+                        is VideoAction.Play -> {
+                            consume(UiDashboard.NavigateTo(DashNav.VIDEO, act.video, localDB.getObject().userId))
+                        }
+                        is VideoAction.Block -> {
+                            videos = videos.filter { it.videoId != act.video.videoId }
+                            consume(UiDashboard.Content(videos))
+                        }
+                        is VideoAction.RelatedTo -> {
+                            refresh(act.video.videoId)
+                        }
+                    }
                 }
             }
             is ActionDashboard.ChangeRoot -> {
@@ -80,9 +94,9 @@ class DashboardViewModel(
         }
     }
 
-    private fun refresh() = launch {
+    private fun refresh(videoId: String) = launch {
         consume(UiDashboard.Loading)
-        val result = getYoutubeVideos.invoke(localDB.getObject().lastVideoWatched)
+        val result = getYoutubeVideos.invoke(videoId)
         if (result.videos.isNotEmpty()) {
             videos = result.videos
             consume(UiDashboard.Content(result.videos))

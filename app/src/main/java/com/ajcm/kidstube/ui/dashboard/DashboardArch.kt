@@ -6,6 +6,7 @@ import com.ajcm.domain.Video
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.UiState
+import com.ajcm.kidstube.common.VideoAction
 
 enum class DashNav(@IdRes val id: Int) {
     PROFILE(R.id.action_dashboardFragment_to_profileFragment),
@@ -30,6 +31,6 @@ sealed class ActionDashboard : ActionState {
     object Refresh : ActionDashboard()
     data class ParseException(val exception: Exception?) : ActionDashboard()
     data class LoadError(val msg: String) : ActionDashboard()
-    data class VideoSelected(val video: Video) : ActionDashboard()
+    data class VideoSelected(val videoAction: VideoAction) : ActionDashboard()
     data class ChangeRoot(val root: DashNav) : ActionDashboard()
 }

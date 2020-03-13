@@ -135,12 +135,14 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
     }
 
     private fun hideActionViews() {
+        results.hide()
         imgProfile.hide()
         imgSettings.hide()
         contentSearch.hide()
     }
 
     private fun showActionViews() {
+        results.show()
         imgProfile.show()
         imgSettings.show()
         contentSearch.show()

@@ -19,4 +19,5 @@
 
     <color name="gray_alpha">#755E5E5E</color>
     <color name="gray_light">#A5A5A5</color>
+    <color name="gray_semi_transparent">#8D000000</color>
 </resources>
