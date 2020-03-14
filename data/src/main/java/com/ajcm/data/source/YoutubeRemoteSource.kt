@@ -3,6 +3,7 @@ package com.ajcm.data.source
 import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
+import com.ajcm.data.api.FirebaseApi
 import com.ajcm.data.api.GoogleSession
 import com.ajcm.data.common.Constants
 import com.ajcm.data.mappers.mapToList
@@ -13,10 +14,12 @@ import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.SearchResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import kotlin.coroutines.resume
 
-class YoutubeRemoteSource(private val application: Application): RemoteDataSource {
+class YoutubeRemoteSource(private val application: Application, private val api: FirebaseApi): RemoteDataSource {
 
     private lateinit var youtube: YouTube.Search.List
 
@@ -72,9 +75,11 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
                 }
             }
             val r = request.await()
-            Result(r.items.mapToList(), null)
+            val mappedVideos = r.items.mapToList()
+            saveVideos(mappedVideos)
+            Result(mappedVideos, null)
         } catch (e: IOException) {
-            Result(arrayListOf(), e)
+            Result(getVideosSaved(), e)
         }
     }
 
@@ -92,10 +97,12 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
             val completeList = (list1Filtered + list2Filtered)
                 .distinctBy { it.id.videoId }
 
-            Result(completeList.mapToList(), null)
+            val mappedVideos = completeList.mapToList()
+            saveVideos(mappedVideos)
+            Result(mappedVideos, null)
             //getFakeVideoList()
         } catch (e: IOException) {
-            Result(arrayListOf(), e)
+            Result(getVideosSaved(), e)
         }
     }
 
@@ -117,6 +124,32 @@ class YoutubeRemoteSource(private val application: Application): RemoteDataSourc
             }
         }
         return request.await()
+    }
+
+    private suspend fun getVideosSaved(): List<Video> = suspendCancellableCoroutine { continuation ->
+        api.db
+            .collection(api.url)
+            .limit(100)
+            .get()
+            .addOnCompleteListener {
+                continuation.resume(it.result?.toObjects(Video::class.java)?.toList() ?: emptyList())
+            }
+    }
+
+    private suspend fun saveVideos(videos: List<Video>) {
+        withContext(Dispatchers.IO) {
+            videos.map { value ->
+                api.db
+                    .collection(api.url)
+                    .document(value.videoId)
+                    .set(mapOf(
+                        "title" to value.title,
+                        "thumbnail" to value.thumbnail,
+                        "channelId" to value.channelId,
+                        "channelTitle" to value.channelTitle
+                    ))
+            }
+        }
     }
 
     private fun getFakeVideoList() : Result {

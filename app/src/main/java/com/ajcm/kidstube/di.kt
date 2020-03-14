@@ -36,6 +36,16 @@ import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+const val API_KEY = "api_Key"
+
+const val FIREBASE_VIDEOS = "firebase_videos"
+const val FIREBASE_USER = "firebase_user"
+const val FIREBASE_USER_VIDEOS = "firebase_user_videos_watched"
+
+const val SOURCE_YOUTUBE = "source_youtube"
+const val SOURCE_USER = "source_user"
+const val SOURCE_USER_VIDEOS = "source_user_videos"
+
 fun Application.initDI() {
     startKoin {
         androidLogger()
@@ -43,43 +53,48 @@ fun Application.initDI() {
         modules(
             listOf(
                 appModule,
+                firebaseModule,
                 youtubeModule,
                 userModule,
-                dataModule,
+                repositoryModule,
                 scopesModule)
         )
     }
 }
 
 private val appModule = module {
-    single(named("apiKey")) { androidApplication().getString(R.string.api_key) }
+    single(named(API_KEY)) { androidApplication().getString(R.string.api_key) }
     single { KidstubeDB.build(get()) }
     factory<LocalDataSource<User>> { RoomDataSource(get()) }
     single { GoogleCredential(get()) }
     single<CoroutineDispatcher> { Dispatchers.Main }
 }
 
+private val firebaseModule = module {
+    single (named(FIREBASE_USER)) { FirebaseApi.User.Info }
+    single (named(FIREBASE_VIDEOS)) { FirebaseApi.Videos.Watched }
+    single (named(FIREBASE_USER_VIDEOS)) { (userId: String) -> FirebaseApi.User.VideoWatched(userId) }
+}
+
 private val youtubeModule = module {
-    factory<RemoteDataSource>(named("youtube")) { YoutubeRemoteSource(get()) }
+    factory<RemoteDataSource>(named(SOURCE_YOUTUBE)) { YoutubeRemoteSource(get(), get(named(FIREBASE_VIDEOS))) }
 }
 
 private val userModule = module {
-    single (named("user_info")) { FirebaseApi.User.Info }
-    factory<FireBaseDataSource<User?>>(named("user_data_source")) {
-        UserRemoteSource(get(named("user_info")))
+    factory<FireBaseDataSource<User?>>(named(SOURCE_USER)) {
+        UserRemoteSource(get(named(FIREBASE_USER)))
     }
 
-    single (named("videos_watched")) { (userId: String) -> FirebaseApi.User.VideoWatched(userId) }
-    factory<FireBaseDataSource<Video?>>(named("watched_data_source")) { (userId: String) ->
-        VideoWatchedDataSource(get(named("videos_watched")) { parametersOf(userId) })
+    factory<FireBaseDataSource<Video?>>(named(SOURCE_USER_VIDEOS)) { (userId: String) ->
+        VideoWatchedDataSource(get(named(FIREBASE_USER_VIDEOS)) { parametersOf(userId) })
     }
 }
 
-val dataModule = module {
-    factory { VideoRepository(get(named("youtube")), get(named("apiKey"))) }
-    factory { UserRepository(get(named("user_data_source"))) }
+val repositoryModule = module {
+    factory { VideoRepository(get(named(SOURCE_YOUTUBE)), get(named(API_KEY))) }
+    factory { UserRepository(get(named(SOURCE_USER))) }
     factory { (userId: String) ->
-        VideoWatchedRepository(get(named("watched_data_source")) {
+        VideoWatchedRepository(get(named(SOURCE_USER_VIDEOS)) {
             parametersOf(userId)
         })
     }

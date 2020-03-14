@@ -6,6 +6,7 @@ sealed class FirebaseApi {
 
     companion object Collections {
         const val USER_INFO = "user"
+        const val VIDEOS = "videos"
         const val VIDEO_WATCHED = "videos_watched"
     }
 
@@ -18,9 +19,14 @@ sealed class FirebaseApi {
         get() {
             return when (this) {
                 User.Info -> USER_INFO
+                Videos.Watched -> VIDEOS
                 is User.VideoWatched -> "$USER_INFO/${this.userId}/$VIDEO_WATCHED"
             }
         }
+
+    sealed class Videos: FirebaseApi() {
+        object Watched : Videos()
+    }
 
     sealed class User: FirebaseApi() {
         object Info : User()

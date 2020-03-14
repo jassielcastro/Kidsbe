@@ -98,7 +98,7 @@ class DashboardViewModel(
         consume(UiDashboard.Loading)
         val result = getYoutubeVideos.invoke(videoId)
         if (result.videos.isNotEmpty()) {
-            videos = result.videos
+            videos = (videos + result.videos).distinctBy { it.videoId }
             consume(UiDashboard.Content(result.videos))
         } else {
             consume(UiDashboard.RequestPermissions(result.exception))
