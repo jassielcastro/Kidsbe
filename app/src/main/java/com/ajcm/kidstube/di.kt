@@ -124,7 +124,8 @@ private val scopesModule = module {
         scoped { UpdateUser(get()) }
     }
     scope(named<SearchFragment>()) {
-        viewModel { SearchViewModel( get()) }
+        viewModel { SearchViewModel( get(), get(), get()) }
+        scoped { SearchYoutubeVideos(get()) }
     }
     scope(named<SettingsFragment>()) {
         viewModel { SettingsViewModel( get(), get(), get()) }

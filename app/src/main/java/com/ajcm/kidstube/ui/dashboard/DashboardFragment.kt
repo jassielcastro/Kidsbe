@@ -8,6 +8,7 @@ import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
+import com.ajcm.kidstube.common.DashNav
 import com.ajcm.kidstube.extensions.getDrawable
 import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.adapters.VideoAdapter

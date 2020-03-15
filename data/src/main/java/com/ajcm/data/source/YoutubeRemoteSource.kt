@@ -46,6 +46,8 @@ class YoutubeRemoteSource(private val application: Application, private val api:
             "apocalypse",
             "terror",
             "terrible",
+            "scary",
+            "spooky",
             "miedo"
         )
     }
@@ -67,15 +69,16 @@ class YoutubeRemoteSource(private val application: Application, private val api:
         return try {
             val list = youtube
                 .setKey(apiKey)
-                .setQ(title)
+                .setQ("$title|videos para niños")
 
             val request = withContext(Dispatchers.IO) {
                 async {
                     list.execute()
                 }
             }
-            val r = request.await()
-            val mappedVideos = r.items.mapToList()
+            val resultList1 = request.await().items
+            val list1Filtered = filterVideoList(resultList1, tempBlackListVideos)
+            val mappedVideos = list1Filtered.mapToList()
             saveVideos(mappedVideos)
             Result(mappedVideos, null)
         } catch (e: IOException) {
@@ -100,7 +103,6 @@ class YoutubeRemoteSource(private val application: Application, private val api:
             val mappedVideos = completeList.mapToList()
             saveVideos(mappedVideos)
             Result(mappedVideos, null)
-            //getFakeVideoList()
         } catch (e: IOException) {
             Result(getVideosSaved(), e)
         }
@@ -150,16 +152,6 @@ class YoutubeRemoteSource(private val application: Application, private val api:
                     ))
             }
         }
-    }
-
-    private fun getFakeVideoList() : Result {
-        return Result(arrayListOf(
-            Video("92WXff7v_ZI", "", "Paw Patrol | Tareas Educacionales - parte 1 \uD83D\uDC36 | Nick Jr.", "https://i.ytimg.com/vi/6y1PA2BEr9o/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLDqEcYL52qHxRKrGo8Hi7OMKNSupg", ""),
-            Video("sjbqijw7FXE", "", "¿Dónde está Chicky? | Dibujos Animados Para Niños | Compilación De Dibujos Animados #224", "https://i.ytimg.com/vi/sjbqijw7FXE/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBxXkfknqeQ5Z6ZbZTDKxm3RjvPXg", ""),
-            Video("C-Pav2Y3UTQ", "", "Leo el Pequeño Camión - Los mejores capítulos en español", "https://i.ytimg.com/vi/C-Pav2Y3UTQ/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBAtnYf8WzO7UpMzbH5-MRk_QFSUA", ""),
-            Video("AKbDeMISmWM", "", "POCOYÓ en ESPAÑOL - Pocoyo en el País de las Maravillas [131 min] | CARICATURAS y DIBUJOS ANIMADOS", "https://i.ytimg.com/vi/AKbDeMISmWM/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBv3zHS3Ahz4s2qZWvyG7Vs9_enaQ", ""),
-            Video("De1od9ggPPE", "", "\uD83E\uDD29 TODOS LOS EPISODIOS DE \uD83D\uDE32 BEBÉS LLORONES \uD83D\uDCA7 LÁGRIMAS MÁGICAS \uD83D\uDC95", "https://i.ytimg.com/vi/De1od9ggPPE/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLA81xRWHc8K1IoyEMxTQaNMR27Ycg", "")
-        ), null)
     }
 
 }

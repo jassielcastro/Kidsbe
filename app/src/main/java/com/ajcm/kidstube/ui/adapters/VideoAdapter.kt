@@ -10,7 +10,7 @@ import com.payclip.design.extensions.*
 import kotlinx.android.synthetic.main.item_video.view.*
 import kotlinx.android.synthetic.main.item_video_options.view.*
 
-class VideoAdapter(private val listener: (VideoAction) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
+class VideoAdapter(private val showOptions: Boolean = true, private val listener: (VideoAction) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
 
     var videos: List<Video> by basicDiffUtil(
         emptyList(),
@@ -33,22 +33,30 @@ class VideoAdapter(private val listener: (VideoAction) -> Unit) : RecyclerView.A
     private fun bind(video: Video, holder: ViewHolder) {
         holder.itemView.imgVideo.loadUrl(video.thumbnail)
         holder.itemView.txtTitle.text = video.title
-        holder.itemView.imgOption.setOnClickListener {
-            if (holder.itemView.videoOptions.isVisible) {
-                holder.itemView.videoOptions.hide()
-            } else {
-                holder.itemView.videoOptions.show()
-            }
-        }
 
         holder.itemView.videoOptions.hide()
 
-        holder.itemView.videoOptions.btnVideoBlock.setOnClickListener {
-            listener(VideoAction.Block(video))
+        if (showOptions) {
+            holder.itemView.imgOption.setOnClickListener {
+                if (holder.itemView.videoOptions.isVisible) {
+                    holder.itemView.videoOptions.hide()
+                } else {
+                    holder.itemView.videoOptions.show()
+                }
+            }
+
+            holder.itemView.imgOption.show()
+
+            holder.itemView.videoOptions.btnVideoBlock.setOnClickListener {
+                listener(VideoAction.Block(video))
+            }
+            holder.itemView.videoOptions.btnVideoRelated.setOnClickListener {
+                listener(VideoAction.RelatedTo(video))
+            }
+        } else {
+            holder.itemView.imgOption.hide()
         }
-        holder.itemView.videoOptions.btnVideoRelated.setOnClickListener {
-            listener(VideoAction.RelatedTo(video))
-        }
+
     }
 
 }

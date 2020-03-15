@@ -20,7 +20,9 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".ui.main.MainActivity"
             android:screenOrientation="sensorLandscape"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize|keyboard"
+            android:windowSoftInputMode="adjustNothing"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

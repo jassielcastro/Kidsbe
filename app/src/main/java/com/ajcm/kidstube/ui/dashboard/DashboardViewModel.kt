@@ -8,6 +8,7 @@ import com.ajcm.domain.Video
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
+import com.ajcm.kidstube.common.DashNav
 import com.ajcm.kidstube.common.VideoAction
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos

@@ -13,4 +13,5 @@
     <string name="allow_mobile_data">Utilizar Datos móbiles</string>
     <string name="txt_block">Bloquear</string>
     <string name="search_related_videos">Videos relacionados</string>
+    <string name="try_searching_other">Intenta buscando otro video</string>
 </resources>

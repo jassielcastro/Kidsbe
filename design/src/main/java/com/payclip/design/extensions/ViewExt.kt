@@ -1,13 +1,15 @@
 package com.payclip.design.extensions
 
+import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
@@ -17,14 +19,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
 import kotlin.properties.Delegates
 
-fun AppCompatActivity.fullScreen() {
+fun Activity.fullScreen() {
     window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     val decorView = window.decorView
     val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     decorView.systemUiVisibility = uiOptions
 }
 
-fun AppCompatActivity.accelerateViews() {
+fun Activity.accelerateViews() {
     window.setFlags(
         WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
         WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
@@ -105,4 +107,9 @@ fun RecyclerView.setUpLayoutManager(orientation: Int = RecyclerView.HORIZONTAL, 
 fun Fragment.waitForTransition(targetView: View) {
     postponeEnterTransition()
     targetView.doOnPreDraw { startPostponedEnterTransition() }
+}
+
+fun View.hideKeyboard() {
+    val inputMethodManager: InputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
 }

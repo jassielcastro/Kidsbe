@@ -1,6 +1,8 @@
 package com.ajcm.kidstube.ui.main
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -42,6 +44,14 @@ class MainActivity : AppCompatActivity(), SongTrackListener {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        when (newConfig.hardKeyboardHidden) {
+            Configuration.HARDKEYBOARDHIDDEN_YES -> {
+                fullScreen()
+            }
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, null)
     }
@@ -68,4 +78,8 @@ class MainActivity : AppCompatActivity(), SongTrackListener {
 
     override fun hasSong(): Boolean = songHelper.hasSong()
 
+    override fun onBackPressed() {
+        fullScreen()
+        super.onBackPressed()
+    }
 }
