@@ -59,6 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         app:endIconMode="clear_text"
+        android:hint="@string/search_on"
         app:boxBackgroundColor="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/topGuideline"
         app:layout_constraintEnd_toEndOf="@id/endGuideline"
