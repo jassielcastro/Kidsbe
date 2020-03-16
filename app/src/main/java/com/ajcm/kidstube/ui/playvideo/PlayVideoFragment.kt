@@ -12,9 +12,7 @@ import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.ui.adapters.RelatedVideosAdapter
-import com.payclip.design.extensions.hide
-import com.payclip.design.extensions.setUpLayoutManager
-import com.payclip.design.extensions.show
+import com.payclip.design.extensions.*
 import com.payclip.design.youtubuplayer.player.YouTubePlayer
 import com.payclip.design.youtubuplayer.player.listeners.AbstractYouTubePlayerListener
 import com.payclip.design.youtubuplayer.player.options.PanelState
@@ -113,15 +111,20 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
             }
             is UiPlayVideo.Content -> {
                 adapter.videos = state.videos
+                viewModel.dispatch(ActionPlayVideo.ComputeScroll)
             }
             is UiPlayVideo.PlayVideo -> {
                 btnBack.show()
                 viewPanelLoader.hide()
                 progressLoader.hide()
-                viewModel.dispatch(ActionPlayVideo.SaveLastVideo(state.video))
                 youtube_player_view.loadThumbnailImage(state.video.thumbnail)
                 youtubePlayer.loadOrCueVideo(lifecycle, state.video.videoId, 0f)
                 viewModel.dispatch(ActionPlayVideo.Refresh)
+            }
+            is UiPlayVideo.ScrollToVideo -> {
+                relatedRecycler?.post {
+                    relatedRecycler.setSmoothScroll(state.position)
+                }
             }
         }
     }

@@ -44,6 +44,18 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="ContentDescription" />
 
+    <ImageView
+        android:id="@+id/btnOptions"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_menu"
+        android:tint="@color/white"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/centerGuideline"
+        app:layout_constraintTop_toTopOf="@id/centerGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="ContentDescription" />
+
     <View
         android:id="@+id/viewPanelLoader"
         android:layout_width="match_parent"

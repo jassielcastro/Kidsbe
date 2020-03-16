@@ -10,6 +10,7 @@ import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.kidstube.common.DashNav
 import com.ajcm.kidstube.common.VideoAction
+import com.ajcm.kidstube.extensions.getPositionOf
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
@@ -99,7 +100,7 @@ class DashboardViewModel(
         consume(UiDashboard.Loading)
         val result = getYoutubeVideos.invoke(videoId)
         if (result.videos.isNotEmpty()) {
-            val videoIndex = getPositionByVideoId(videoId)
+            val videoIndex = videos.getPositionOf(videoId)
 
             videos = if (videoIndex != -1 && (videoIndex - 1) < videos.size) {
                 val tempVideos = videos.toMutableList()
@@ -113,10 +114,6 @@ class DashboardViewModel(
         } else {
             consume(UiDashboard.RequestPermissions(result.exception))
         }
-    }
-
-    private fun getPositionByVideoId(videoId: String): Int {
-        return videos.map { it.videoId }.indexOf(videoId)
     }
 
     fun onResume(songTrackListener: SongTrackListener?) = launch {

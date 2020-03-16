@@ -14,6 +14,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
@@ -102,6 +103,18 @@ inline fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffU
 
 fun RecyclerView.setUpLayoutManager(orientation: Int = RecyclerView.HORIZONTAL, reversed: Boolean = false) {
     this.layoutManager = LinearLayoutManager(this.context, orientation, reversed)
+}
+
+fun RecyclerView.setSmoothScroll(position: Int) {
+    val smoothScroller = object : LinearSmoothScroller(this.context) {
+        override fun getHorizontalSnapPreference(): Int {
+            return SNAP_TO_START
+        }
+    }
+
+    smoothScroller.targetPosition = position
+
+    this.layoutManager?.startSmoothScroll(smoothScroller)
 }
 
 fun Fragment.waitForTransition(targetView: View) {

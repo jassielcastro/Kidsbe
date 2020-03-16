@@ -36,6 +36,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
 
     private val progressBar: LottieAnimationView
     private val playPauseButton: ImageView
+    private val nextButton: ImageView
 
     private val youtubePlayerSeekBar: SeekBar
 
@@ -70,6 +71,8 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
 
         progressBar = controlsView.findViewById(R.id.progressbar)
         playPauseButton = controlsView.findViewById(R.id.play_pause_button)
+        nextButton = controlsView.findViewById(R.id.btnNext)
+
         youtubePlayerSeekBar = controlsView.findViewById(R.id.seekBarTime)
 
         fadeControlsContainer = FadeViewHelper(controlsContainer)
@@ -85,6 +88,14 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
             fadeControlsContainer.toggleVisibility()
         }
         playPauseButton.setOnClickListener { onPlayButtonPressed() }
+
+        nextButton.setOnClickListener {
+            if (isPlaying) {
+                youTubePlayer.pause()
+            }
+            //called as Video ended
+            onVideoEnded()
+        }
 
         youtubePlayerSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekcBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -215,6 +226,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
             if (isPlayPauseButtonEnabled) {
                 playPauseButton.visibility = View.VISIBLE
                 youtubePlayerSeekBar.visibility = View.VISIBLE
+                nextButton.visibility = View.VISIBLE
                 drop_shadow_bottom.visibility = View.VISIBLE
             }
 
@@ -228,6 +240,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
                 //panel.setBackgroundColor(ContextCompat.getColor(panel.context, android.R.color.transparent))
                 if (isPlayPauseButtonEnabled) {
                     playPauseButton.visibility = View.INVISIBLE
+                    nextButton.visibility = View.INVISIBLE
                     youtubePlayerSeekBar.visibility = View.INVISIBLE
                     drop_shadow_bottom.visibility = View.INVISIBLE
                 }
@@ -237,6 +250,7 @@ class DefaultPlayerUiController(youTubePlayerView: LegacyYouTubePlayerView, priv
                 progressBar.visibility = View.VISIBLE
                 if (isPlayPauseButtonEnabled) {
                     playPauseButton.visibility = View.INVISIBLE
+                    nextButton.visibility = View.INVISIBLE
                     youtubePlayerSeekBar.visibility = View.INVISIBLE
                     drop_shadow_bottom.visibility = View.INVISIBLE
                 }

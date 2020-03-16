@@ -7,11 +7,14 @@ import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.kidstube.common.Constants
+import com.ajcm.kidstube.extensions.getNextVideo
+import com.ajcm.kidstube.extensions.getPositionOf
 import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
 import com.ajcm.usecases.SaveVideoWatched
 import com.ajcm.usecases.UpdateUser
+import com.payclip.design.extensions.delay
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
@@ -61,31 +64,45 @@ class PlayVideoViewModel(
                 if (videoList.isEmpty()) {
                     refresh()
                 } else {
-                    consume(UiPlayVideo.Content(videoList.filter { it.videoId != sharedVideo?.videoId }.shuffled()))
-                }
-            }
-            is ActionPlayVideo.SaveLastVideo -> {
-                launch {
-                    val newUser = localDB.getObject().copy(lastVideoWatched = actionState.lastVideo.videoId)
-                    localDB.save(newUser)
-                    updateUser.invoke(newUser)
-                    saveVideoWatched.invoke(actionState.lastVideo)
+                    showListOfVideos()
                 }
             }
             ActionPlayVideo.LoadError -> {
 
             }
             is ActionPlayVideo.VideoSelected -> {
-                sharedVideo = actionState.video
-                consume(UiPlayVideo.PlayVideo(actionState.video))
+                playNextVideo(actionState.video)
             }
             ActionPlayVideo.PlayNextVideo -> {
                 if (videoList.isNotEmpty()) {
-                    val video = videoList[0]
-                    consume(UiPlayVideo.PlayVideo(video))
+                    val video = videoList.getNextVideo(sharedVideo?.videoId ?: "")
+                    playNextVideo(video)
+                }
+            }
+            ActionPlayVideo.ComputeScroll -> {
+                val videoPosition = videoList.getPositionOf(sharedVideo?.videoId ?: "") + 1
+                if (videoPosition >= videoList.size) {
+                    consume(UiPlayVideo.ScrollToVideo(0))
+                } else {
+                    consume(UiPlayVideo.ScrollToVideo(videoPosition))
                 }
             }
         }
+    }
+
+    private fun playNextVideo(video: Video) {
+        launch {
+            val newUser = localDB.getObject().copy(lastVideoWatched = video.videoId)
+            localDB.save(newUser)
+            updateUser.invoke(newUser)
+            saveVideoWatched.invoke(video)
+        }
+        sharedVideo = video
+        consume(UiPlayVideo.PlayVideo(video))
+    }
+
+    private fun showListOfVideos() {
+        consume(UiPlayVideo.Content(videoList))
     }
 
     private fun refresh() = launch {
@@ -93,7 +110,7 @@ class PlayVideoViewModel(
         val result = getYoutubeVideos.invoke(localDB.getObject().lastVideoWatched)
         if (result.videos.isNotEmpty()) {
             videoList = result.videos
-            consume(UiPlayVideo.Content(result.videos))
+            showListOfVideos()
         } else {
             consume(UiPlayVideo.RequestPermissions(result.exception))
         }
