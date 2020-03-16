@@ -26,12 +26,22 @@
 
     <com.payclip.design.youtubuplayer.player.views.YouTubePlayerView
         android:id="@+id/youtube_player_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/videoBottomGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include android:id="@+id/videoOptions"
+        layout="@layout/item_video_options"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/videoBottomGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/btnBack"
@@ -46,7 +56,7 @@
 
     <ImageView
         android:id="@+id/btnOptions"
-        android:layout_width="60dp"
+        android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/ic_menu"
         android:tint="@color/white"

@@ -25,4 +25,6 @@ sealed class ActionPlayVideo : ActionState {
     data class VideoSelected(val video: Video) : ActionPlayVideo()
     object PlayNextVideo : ActionPlayVideo()
     object ComputeScroll : ActionPlayVideo()
+    object BlockCurrentVideo : ActionPlayVideo()
+    object LoadVideosByCurrent : ActionPlayVideo()
 }

@@ -12,3 +12,12 @@ fun List<Video>.getNextVideo(videoId: String) : Video {
         this[position + 1]
     }
 }
+
+fun List<Video>.delete(video: Video) : List<Video> {
+    val position = getPositionOf(video.videoId)
+    return if (position >= 0) {
+        this.drop(position)
+    } else {
+        this
+    }
+}

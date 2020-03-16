@@ -7,6 +7,7 @@ import com.ajcm.domain.Video
 import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.kidstube.common.Constants
+import com.ajcm.kidstube.extensions.delete
 import com.ajcm.kidstube.extensions.getNextVideo
 import com.ajcm.kidstube.extensions.getPositionOf
 import com.ajcm.kidstube.model.VideoList
@@ -38,6 +39,9 @@ class PlayVideoViewModel(
 
     init {
         initScope()
+        launch {
+            getYoutubeVideos.startYoutubeWith(localDB.getObject().userName)
+        }
     }
 
     override fun dispatch(actionState: ActionState) {
@@ -53,8 +57,8 @@ class PlayVideoViewModel(
                 }
             }
             is ActionPlayVideo.Start -> {
-                if (sharedVideo != null) {
-                    consume(UiPlayVideo.PlayVideo(sharedVideo!!))
+                sharedVideo?.let {
+                    playNextVideo(it)
                 }
             }
             is ActionPlayVideo.PlayerViewReady -> {
@@ -62,7 +66,9 @@ class PlayVideoViewModel(
             }
             ActionPlayVideo.Refresh -> {
                 if (videoList.isEmpty()) {
-                    refresh()
+                    launch {
+                        refresh(localDB.getObject().lastVideoWatched)
+                    }
                 } else {
                     showListOfVideos()
                 }
@@ -87,6 +93,18 @@ class PlayVideoViewModel(
                     consume(UiPlayVideo.ScrollToVideo(videoPosition))
                 }
             }
+            ActionPlayVideo.BlockCurrentVideo -> {
+                sharedVideo?.let {
+                    val video = videoList.getNextVideo(it.videoId)
+                    videoList = videoList.delete(it)
+                    playNextVideo(video)
+                }
+            }
+            ActionPlayVideo.LoadVideosByCurrent -> {
+                sharedVideo?.let {
+                    refresh(it.videoId)
+                }
+            }
         }
     }
 
@@ -105,11 +123,20 @@ class PlayVideoViewModel(
         consume(UiPlayVideo.Content(videoList))
     }
 
-    private fun refresh() = launch {
+    private fun refresh(videoId: String) = launch {
         consume(UiPlayVideo.Loading)
-        val result = getYoutubeVideos.invoke(localDB.getObject().lastVideoWatched)
+        val result = getYoutubeVideos.invoke(videoId)
         if (result.videos.isNotEmpty()) {
-            videoList = result.videos
+            val videoIndex = videoList.getPositionOf(videoId)
+
+            videoList = if (videoIndex != -1 && (videoIndex - 1) < videoList.size) {
+                val tempVideos = videoList.toMutableList()
+                tempVideos.addAll(videoIndex, result.videos)
+                tempVideos.toList()
+            } else {
+                (videoList + result.videos).distinctBy { it.videoId }
+            }
+
             showListOfVideos()
         } else {
             consume(UiPlayVideo.RequestPermissions(result.exception))
