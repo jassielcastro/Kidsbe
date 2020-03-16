@@ -52,7 +52,7 @@ class DashboardViewModel(
                     if (videos.isEmpty()) {
                         refresh(localDB.getObject().lastVideoWatched)
                     } else {
-                        consume(UiDashboard.Content(videos.shuffled()))
+                        consume(UiDashboard.Content(videos))
                     }
                 }
             }
@@ -99,11 +99,24 @@ class DashboardViewModel(
         consume(UiDashboard.Loading)
         val result = getYoutubeVideos.invoke(videoId)
         if (result.videos.isNotEmpty()) {
-            videos = (videos + result.videos).distinctBy { it.videoId }
-            consume(UiDashboard.Content(result.videos))
+            val videoIndex = getPositionByVideoId(videoId)
+
+            videos = if (videoIndex != -1 && (videoIndex - 1) < videos.size) {
+                val tempVideos = videos.toMutableList()
+                tempVideos.addAll(videoIndex, result.videos)
+                tempVideos.toList()
+            } else {
+                (videos + result.videos).distinctBy { it.videoId }
+            }
+
+            consume(UiDashboard.Content(videos))
         } else {
             consume(UiDashboard.RequestPermissions(result.exception))
         }
+    }
+
+    private fun getPositionByVideoId(videoId: String): Int {
+        return videos.map { it.videoId }.indexOf(videoId)
     }
 
     fun onResume(songTrackListener: SongTrackListener?) = launch {

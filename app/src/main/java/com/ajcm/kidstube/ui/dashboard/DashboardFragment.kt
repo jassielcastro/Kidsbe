@@ -108,7 +108,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
             is UiDashboard.Content -> {
                 stopLoadingAnim()
                 showActionViews()
-                adapter.videos = state.videos.shuffled()
+                adapter.videos = state.videos
             }
             is UiDashboard.NavigateTo -> {
                 when (state.root) {
@@ -130,6 +130,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
                             putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
                         })
                     }
+                    else -> {}
                 }
             }
         }
