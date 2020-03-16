@@ -52,7 +52,7 @@ class YoutubeRemoteSource(private val application: Application, private val api:
         )
     }
 
-    fun startYoutubeSession(accountName: String) {
+    suspend fun startYoutubeSession(accountName: String) = withContext(Dispatchers.IO) {
         Log.i("YoutubeRemoteSource", "startYoutubeSession: $accountName")
         youtube = GoogleSession(application, accountName)
             .getYoutubeSession()
@@ -143,13 +143,8 @@ class YoutubeRemoteSource(private val application: Application, private val api:
             videos.map { value ->
                 api.db
                     .collection(api.url)
-                    .document(value.videoId)
-                    .set(mapOf(
-                        "title" to value.title,
-                        "thumbnail" to value.thumbnail,
-                        "channelId" to value.channelId,
-                        "channelTitle" to value.channelTitle
-                    ))
+                    .document()
+                    .set(value)
             }
         }
     }

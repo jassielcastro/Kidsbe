@@ -6,7 +6,7 @@ import com.ajcm.data.repository.VideoRepository
 
 class GetYoutubeVideos(private val videoRepository: VideoRepository) {
 
-    fun startYoutubeWith(accountName: String) = (videoRepository.remoteDataSource as? YoutubeRemoteSource)?.startYoutubeSession(accountName)
+    suspend fun startYoutubeWith(accountName: String) = (videoRepository.remoteDataSource as? YoutubeRemoteSource)?.startYoutubeSession(accountName)
 
     suspend fun invoke(relatedTo: String): Result = videoRepository.getList(relatedTo)
 }
