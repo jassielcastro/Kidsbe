@@ -143,8 +143,13 @@ class YoutubeRemoteSource(private val application: Application, private val api:
             videos.map { value ->
                 api.db
                     .collection(api.url)
-                    .document()
-                    .set(value)
+                    .document(value.videoId)
+                    .set(mapOf(
+                        "title" to value.title,
+                        "thumbnail" to value.thumbnail,
+                        "channelId" to value.channelId,
+                        "channelTitle" to value.channelTitle
+                    ))
             }
         }
     }
