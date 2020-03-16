@@ -79,7 +79,9 @@ class YoutubeRemoteSource(private val application: Application, private val api:
             val resultList1 = request.await().items
             val list1Filtered = filterVideoList(resultList1, tempBlackListVideos)
             val mappedVideos = list1Filtered.mapToList()
-            saveVideos(mappedVideos)
+            withContext(Dispatchers.IO) {
+                saveVideos(mappedVideos)
+            }
             Result(mappedVideos, null)
         } catch (e: IOException) {
             Result(getVideosSaved(), e)
@@ -101,7 +103,9 @@ class YoutubeRemoteSource(private val application: Application, private val api:
                 .distinctBy { it.id.videoId }
 
             val mappedVideos = completeList.mapToList()
-            saveVideos(mappedVideos)
+            withContext(Dispatchers.IO) {
+                saveVideos(mappedVideos)
+            }
             Result(mappedVideos, null)
         } catch (e: IOException) {
             Result(getVideosSaved(), e)
@@ -138,19 +142,19 @@ class YoutubeRemoteSource(private val application: Application, private val api:
             }
     }
 
-    private suspend fun saveVideos(videos: List<Video>) {
-        withContext(Dispatchers.IO) {
-            videos.map { value ->
-                api.db
-                    .collection(api.url)
-                    .document(value.videoId)
-                    .set(mapOf(
+    private fun saveVideos(videos: List<Video>) {
+        videos.map { value ->
+            api.db
+                .collection(api.url)
+                .document(value.videoId)
+                .set(
+                    mapOf(
                         "title" to value.title,
                         "thumbnail" to value.thumbnail,
                         "channelId" to value.channelId,
                         "channelTitle" to value.channelTitle
-                    ))
-            }
+                    )
+                )
         }
     }
 
