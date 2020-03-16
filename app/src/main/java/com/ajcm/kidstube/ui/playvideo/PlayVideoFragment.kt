@@ -125,10 +125,12 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
             UiPlayVideo.Loading -> {
                 btnBack.hide()
                 btnOptions.hide()
+                videoOptions.hide()
             }
             UiPlayVideo.LoadingError -> {
                 btnBack.show()
                 btnOptions.hide()
+                videoOptions.hide()
             }
             is UiPlayVideo.RenderYoutubePlayer -> {
                 viewModel.stopAppMusic(songTrackListener)
