@@ -107,10 +107,10 @@ class DashboardViewModel(
                 tempVideos.addAll(videoIndex, result.videos)
                 tempVideos.toList()
             } else {
-                (videos + result.videos).distinctBy { it.videoId }
+                (videos + result.videos)
             }
 
-            consume(UiDashboard.Content(videos))
+            consume(UiDashboard.Content(videos.shuffled()))
         } else {
             consume(UiDashboard.RequestPermissions(result.exception))
         }

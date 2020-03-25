@@ -122,7 +122,7 @@ class PlayVideoViewModel(
     }
 
     private fun showListOfVideos() {
-        consume(UiPlayVideo.Content(videoList))
+        consume(UiPlayVideo.Content(videoList.shuffled()))
     }
 
     private fun refresh(videoId: String) = launch {
@@ -136,7 +136,7 @@ class PlayVideoViewModel(
                 tempVideos.addAll(videoIndex, result.videos)
                 tempVideos.toList()
             } else {
-                (videoList + result.videos).distinctBy { it.videoId }
+                (videoList + result.videos)
             }
 
             showListOfVideos()
