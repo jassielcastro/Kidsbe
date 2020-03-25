@@ -17,11 +17,14 @@ import kotlinx.android.synthetic.main.dashboard_fragment.*
 import kotlinx.android.synthetic.main.generic_error.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout.dashboard_fragment),
     View.OnClickListener {
 
-    override val viewModel: DashboardViewModel by currentScope.viewModel(this)
+    override val viewModel: DashboardViewModel by currentScope.viewModel(this) {
+        parametersOf(arguments?.getString(Constants.KEY_USER_ID, "unknown"))
+    }
 
     private lateinit var adapter: VideoAdapter
 
@@ -125,7 +128,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
                     }
                     DashNav.VIDEO -> {
                         navigateTo(state.root.id, Bundle().apply {
-                            putSerializable(Constants.KEY_USER_ID, state.userId)
+                            putString(Constants.KEY_USER_ID, state.userId)
                             putSerializable(Constants.KEY_VIDEO_ID, state.video!!)
                             putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
                         })

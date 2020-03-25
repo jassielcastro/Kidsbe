@@ -57,7 +57,10 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
                 startActivityForResult(credential.credential.newChooseAccountIntent(), Constants.REQUEST_ACCOUNT_PICKER)
             }
             is UiSplash.Navigate -> {
-                navigateTo(R.id.action_splashFragment_to_dashboardFragment)
+                val userBundle = Bundle().apply {
+                    putString(Constants.KEY_USER_ID, state.userId)
+                }
+                navigateTo(R.id.action_splashFragment_to_dashboardFragment, bundle = userBundle)
             }
         }
     }

@@ -110,13 +110,14 @@ private val scopesModule = module {
         scoped { GetUserProfile(get()) }
     }
     scope(named<DashboardFragment>()) {
-        viewModel { DashboardViewModel(get(), get(), get()) }
+        viewModel { (userId: String) -> DashboardViewModel(get(), get { parametersOf(userId) }, get(), get()) }
         scoped { GetYoutubeVideos(get()) }
+        scoped { (userId: String) -> VideoWatched(get { parametersOf(userId) }) }
     }
     scope(named<PlayVideoFragment>()) {
         viewModel { (userId: String) -> PlayVideoViewModel( get(), get { parametersOf(userId) }, get(), get(), get()) }
         scoped { GetYoutubeVideos(get()) }
-        scoped { (userId: String) -> SaveVideoWatched(get { parametersOf(userId) }) }
+        scoped { (userId: String) -> VideoWatched(get { parametersOf(userId) }) }
         scoped { UpdateUser(get()) }
     }
     scope(named<ProfileFragment>()) {

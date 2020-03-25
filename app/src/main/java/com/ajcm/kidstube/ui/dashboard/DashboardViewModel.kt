@@ -10,15 +10,18 @@ import com.ajcm.kidstube.arch.ActionState
 import com.ajcm.kidstube.arch.ScopedViewModel
 import com.ajcm.kidstube.common.DashNav
 import com.ajcm.kidstube.common.VideoAction
+import com.ajcm.kidstube.extensions.delete
 import com.ajcm.kidstube.extensions.getPositionOf
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
+import com.ajcm.usecases.VideoWatched
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
+    private val videoWatched: VideoWatched,
     private val localDB: LocalDataSource<User>,
     uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel<UiDashboard>(uiDispatcher) {
@@ -71,7 +74,10 @@ class DashboardViewModel(
                             consume(UiDashboard.NavigateTo(DashNav.VIDEO, act.video, localDB.getObject().userId))
                         }
                         is VideoAction.Block -> {
-                            videos = videos.filter { it.videoId != act.video.videoId }
+                            launch {
+                                videoWatched.addToBlackList(act.video.title)
+                            }
+                            videos = videos.delete(act.video)
                             consume(UiDashboard.Content(videos))
                         }
                         is VideoAction.RelatedTo -> {

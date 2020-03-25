@@ -13,14 +13,14 @@ import com.ajcm.kidstube.extensions.getPositionOf
 import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
-import com.ajcm.usecases.SaveVideoWatched
+import com.ajcm.usecases.VideoWatched
 import com.ajcm.usecases.UpdateUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 class PlayVideoViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
-    private val saveVideoWatched: SaveVideoWatched,
+    private val videoWatched: VideoWatched,
     private val localDB: LocalDataSource<User>,
     private val updateUser: UpdateUser,
     uiDispatcher: CoroutineDispatcher
@@ -95,7 +95,7 @@ class PlayVideoViewModel(
             ActionPlayVideo.BlockCurrentVideo -> {
                 sharedVideo?.let {
                     launch {
-                        saveVideoWatched.addToBlackList(it.title)
+                        videoWatched.addToBlackList(it.title)
                     }
                     val video = videoList.getNextVideo(it.videoId)
                     videoList = videoList.delete(it)
@@ -115,7 +115,7 @@ class PlayVideoViewModel(
             val newUser = localDB.getObject().copy(lastVideoWatched = video.videoId)
             localDB.save(newUser)
             updateUser.invoke(newUser)
-            saveVideoWatched.invoke(video)
+            videoWatched.save(video)
         }
         sharedVideo = video
         consume(UiPlayVideo.PlayVideo(video))
