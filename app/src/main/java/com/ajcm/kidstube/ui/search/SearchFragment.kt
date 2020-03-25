@@ -50,7 +50,7 @@ class SearchFragment : KidsFragment<UiSearch, SearchViewModel>(R.layout.search_f
             is UiSearch.NavigateTo -> {
                 if (state.root == DashNav.SEARCH_TO_VIDEO) {
                     navigateTo(state.root.id, Bundle().apply {
-                        putSerializable(Constants.KEY_USER_ID, state.userId)
+                        putString(Constants.KEY_USER_ID, state.userId)
                         putSerializable(Constants.KEY_VIDEO_ID, state.video!!)
                         putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
                     })

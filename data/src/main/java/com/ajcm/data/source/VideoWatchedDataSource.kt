@@ -2,7 +2,9 @@ package com.ajcm.data.source
 
 import com.ajcm.data.api.FirebaseApi
 import com.ajcm.domain.Video
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 
 class VideoWatchedDataSource(private val api: FirebaseApi): FireBaseDataSource<Video?> {
@@ -34,6 +36,21 @@ class VideoWatchedDataSource(private val api: FirebaseApi): FireBaseDataSource<V
 
     override suspend fun getList(): List<Video?> {
         return listOf()
+    }
+
+    suspend fun addToBlackList(byText: String) {
+        withContext(Dispatchers.IO) {
+            val urlCollection = api.url.split("/")
+            api.db
+                .collection(urlCollection[0])
+                .document(urlCollection[1])
+                .collection("black_list")
+                .add(mapOf(
+                    "title" to byText
+                )).addOnCompleteListener {
+                    println("VideoWatchedDataSource.addToBlackList --> ${it.isSuccessful}")
+                }
+        }
     }
 
 }

@@ -13,15 +13,14 @@ import com.ajcm.kidstube.extensions.getPositionOf
 import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
-import com.ajcm.usecases.SaveVideoWatched
+import com.ajcm.usecases.VideoWatched
 import com.ajcm.usecases.UpdateUser
-import com.payclip.design.extensions.delay
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
 class PlayVideoViewModel(
     private val getYoutubeVideos: GetYoutubeVideos,
-    private val saveVideoWatched: SaveVideoWatched,
+    private val videoWatched: VideoWatched,
     private val localDB: LocalDataSource<User>,
     private val updateUser: UpdateUser,
     uiDispatcher: CoroutineDispatcher
@@ -95,6 +94,9 @@ class PlayVideoViewModel(
             }
             ActionPlayVideo.BlockCurrentVideo -> {
                 sharedVideo?.let {
+                    launch {
+                        videoWatched.addToBlackList(it.title)
+                    }
                     val video = videoList.getNextVideo(it.videoId)
                     videoList = videoList.delete(it)
                     playNextVideo(video)
@@ -113,14 +115,14 @@ class PlayVideoViewModel(
             val newUser = localDB.getObject().copy(lastVideoWatched = video.videoId)
             localDB.save(newUser)
             updateUser.invoke(newUser)
-            saveVideoWatched.invoke(video)
+            videoWatched.save(video)
         }
         sharedVideo = video
         consume(UiPlayVideo.PlayVideo(video))
     }
 
     private fun showListOfVideos() {
-        consume(UiPlayVideo.Content(videoList))
+        consume(UiPlayVideo.Content(videoList.shuffled()))
     }
 
     private fun refresh(videoId: String) = launch {
@@ -134,7 +136,7 @@ class PlayVideoViewModel(
                 tempVideos.addAll(videoIndex, result.videos)
                 tempVideos.toList()
             } else {
-                (videoList + result.videos).distinctBy { it.videoId }
+                (videoList + result.videos)
             }
 
             showListOfVideos()

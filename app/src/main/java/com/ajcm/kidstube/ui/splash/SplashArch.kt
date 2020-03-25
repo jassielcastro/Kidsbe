@@ -8,7 +8,7 @@ sealed class UiSplash : UiState {
     object LoadingError : UiSplash()
     object RequestAccount : UiSplash()
     object CheckPermissions : UiSplash()
-    object Navigate : UiSplash()
+    data class Navigate(val userId: String) : UiSplash()
 }
 
 sealed class ActionSplash : ActionState {

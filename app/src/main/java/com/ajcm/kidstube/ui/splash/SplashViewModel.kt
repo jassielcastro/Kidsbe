@@ -70,7 +70,7 @@ class SplashViewModel(
 
     private fun playSplash() = launch {
         delay(3150)
-        consume(UiSplash.Navigate)
+        consume(UiSplash.Navigate(localDB.getObject().userId))
     }
 
     private fun saveAccountName(accountName: String) {
