@@ -17,9 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.payclip.design.R
 import kotlin.properties.Delegates
 
 fun Activity.fullScreen() {
@@ -65,7 +67,8 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
 fun ImageView.loadUrl(url: String, round: Int = 0) {
     Glide.with(context)
         .load(url)
-        .apply(RequestOptions.bitmapTransform(RoundedCorners(round)))
+        .placeholder(R.drawable.place_holder_image)
+        .transform(CenterCrop(), RoundedCorners(round))
         .into(this)
 }
 

@@ -34,6 +34,7 @@ class PlayVideoViewModel(
 
     private var videoList: List<Video> = arrayListOf()
     private var sharedVideo: Video? = null
+    private var isFirstLoad = true
 
     init {
         initScope()
@@ -79,12 +80,15 @@ class PlayVideoViewModel(
                 }
             }
             ActionPlayVideo.ComputeScroll -> {
-                val videoPosition = videoList.getPositionOf(sharedVideo?.videoId ?: "") + 1
-                if (videoPosition >= videoList.size) {
-                    consume(UiPlayVideo.ScrollToVideo(0))
-                } else {
-                    consume(UiPlayVideo.ScrollToVideo(videoPosition))
+                if (!isFirstLoad) {
+                    val videoPosition = videoList.getPositionOf(sharedVideo?.videoId ?: "") + 1
+                    if (videoPosition >= videoList.size) {
+                        consume(UiPlayVideo.ScrollToVideo(0))
+                    } else {
+                        consume(UiPlayVideo.ScrollToVideo(videoPosition))
+                    }
                 }
+                isFirstLoad = false
             }
             ActionPlayVideo.BlockCurrentVideo -> {
                 sharedVideo?.let {
