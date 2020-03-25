@@ -13,4 +13,8 @@ class VideoWatchedRepository(private val remoteDataSource: VideoWatchedDataSourc
         return remoteDataSource.update(video)
     }
 
+    suspend fun addToBlackList(byText: String) {
+        remoteDataSource.addToBlackList(byText)
+    }
+
 }

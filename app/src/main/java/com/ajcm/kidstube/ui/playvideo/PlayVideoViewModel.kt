@@ -15,7 +15,6 @@ import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
 import com.ajcm.usecases.SaveVideoWatched
 import com.ajcm.usecases.UpdateUser
-import com.payclip.design.extensions.delay
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
@@ -95,6 +94,9 @@ class PlayVideoViewModel(
             }
             ActionPlayVideo.BlockCurrentVideo -> {
                 sharedVideo?.let {
+                    launch {
+                        saveVideoWatched.addToBlackList(it.title)
+                    }
                     val video = videoList.getNextVideo(it.videoId)
                     videoList = videoList.delete(it)
                     playNextVideo(video)

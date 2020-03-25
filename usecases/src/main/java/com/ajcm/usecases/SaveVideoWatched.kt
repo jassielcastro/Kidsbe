@@ -7,4 +7,6 @@ class SaveVideoWatched(private val vwRepository: VideoWatchedRepository) {
 
     suspend fun invoke(video: Video): String = vwRepository.save(video)
 
+    suspend fun addToBlackList(byText: String) = vwRepository.addToBlackList(byText)
+
 }
