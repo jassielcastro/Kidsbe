@@ -29,7 +29,6 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
 
         viewModel.onPlaySong(songTrackListener)
 
-        animationWaves.accelerateCanvas()
         animationSplash.accelerateCanvas()
     }
 
@@ -70,12 +69,10 @@ class SplashFragment : KidsFragment<UiSplash, SplashViewModel>(R.layout.splash_f
     }
 
     private fun startAnimation() {
-        animationWaves.playAnimation()
         animationSplash.playAnimation()
     }
 
     private fun stopAnimation() {
-        animationWaves.cancelAnimation()
         animationSplash.cancelAnimation()
     }
 

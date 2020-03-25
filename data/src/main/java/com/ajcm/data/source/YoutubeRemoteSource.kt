@@ -69,7 +69,7 @@ class YoutubeRemoteSource(private val application: Application, private val api:
         return try {
             val list = youtube
                 .setKey(apiKey)
-                .setQ("$title|videos para niños")
+                .setQ("videos para niños|$title")
 
             val request = withContext(Dispatchers.IO) {
                 async {
@@ -78,7 +78,9 @@ class YoutubeRemoteSource(private val application: Application, private val api:
             }
             val resultList1 = request.await().items
             val list1Filtered = filterVideoList(resultList1, tempBlackListVideos)
-            val mappedVideos = list1Filtered.mapToList()
+            val mappedVideos = list1Filtered.mapToList().sortedBy {
+                it.title.contains(title, ignoreCase = true)
+            }
             withContext(Dispatchers.IO) {
                 saveVideos(mappedVideos)
             }

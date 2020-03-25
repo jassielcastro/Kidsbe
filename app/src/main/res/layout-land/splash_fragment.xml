@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:animateLayoutChanges="true"
+    android:background="@drawable/background_gradient"
     tools:ignore="MissingDefaultResource">
 
     <androidx.constraintlayout.widget.Guideline
@@ -35,28 +36,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.8" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/blue_dark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/centerGuideline" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animationWaves"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/topGuideline"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_scale="4"
-        app:lottie_rawRes="@raw/waves" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationSplash"
