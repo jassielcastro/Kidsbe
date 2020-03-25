@@ -32,7 +32,7 @@ class VideoAdapter(private val showOptions: Boolean = true, private val listener
     }
 
     private fun bind(video: Video, holder: ViewHolder) {
-        holder.itemView.imgVideo.loadUrlWithAspectRatio(video.thumbnail)
+        holder.itemView.imgVideo.loadUrl(video.thumbnail, 16)
         holder.itemView.txtTitle.text = video.title
 
         holder.itemView.videoOptions.hide()

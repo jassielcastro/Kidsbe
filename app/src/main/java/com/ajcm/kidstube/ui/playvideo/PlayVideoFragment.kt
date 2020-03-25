@@ -200,7 +200,7 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
     }
 
     private fun canResizeContent(resize: Boolean) {
-        youtube_player_view.canHideContent(resize)
+        youtube_player_view?.canHideContent(resize)
     }
 
 }

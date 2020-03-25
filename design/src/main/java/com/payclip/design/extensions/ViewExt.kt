@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import kotlin.properties.Delegates
 
@@ -60,8 +62,11 @@ fun View.hide() {
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 
-fun ImageView.loadUrl(url: String) {
-    Glide.with(context).load(url).into(this)
+fun ImageView.loadUrl(url: String, round: Int = 0) {
+    Glide.with(context)
+        .load(url)
+        .apply(RequestOptions.bitmapTransform(RoundedCorners(round)))
+        .into(this)
 }
 
 fun ImageView.loadUrlWithAspectRatio(url: String) {

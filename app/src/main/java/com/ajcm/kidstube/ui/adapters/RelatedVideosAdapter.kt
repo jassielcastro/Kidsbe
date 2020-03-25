@@ -25,7 +25,7 @@ class RelatedVideosAdapter(private val listener: (Video) -> Unit) : RecyclerView
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val video = videos[position]
-        holder.itemView.imgVideo.loadUrl(video.thumbnail)
+        holder.itemView.imgVideo.loadUrl(video.thumbnail, 8)
         holder.itemView.setOnClickListener { listener(video) }
     }
 
