@@ -15,8 +15,9 @@
     <style name="CardViewContent" parent="CardView">
         <item name="cardCornerRadius">8dp</item>
         <item name="cardBackgroundColor">@color/white</item>
-        <item name="cardElevation">4dp</item>
+        <item name="cardElevation">0dp</item>
         <item name="cardUseCompatPadding">true</item>
+        <item name="cardPreventCornerOverlap">true</item>
     </style>
 
     <style name="TitleText" parent="TextAppearance.AppCompat.Medium.Inverse">

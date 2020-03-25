@@ -10,11 +10,10 @@ import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.extensions.delete
 import com.ajcm.kidstube.extensions.getNextVideo
 import com.ajcm.kidstube.extensions.getPositionOf
-import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.main.SongTrackListener
 import com.ajcm.usecases.GetYoutubeVideos
-import com.ajcm.usecases.VideoWatched
 import com.ajcm.usecases.UpdateUser
+import com.ajcm.usecases.VideoWatched
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 
@@ -49,11 +48,6 @@ class PlayVideoViewModel(
                 actionState.bundle?.getSerializable(Constants.KEY_VIDEO_ID)?.let {
                     sharedVideo = it as Video
                 }
-                actionState.bundle?.getSerializable(Constants.KEY_VIDEO_LIST)?.let {
-                    (it as? VideoList)?.let {  vl ->
-                        videoList = vl.list
-                    }
-                }
             }
             is ActionPlayVideo.Start -> {
                 sharedVideo?.let {
@@ -66,7 +60,7 @@ class PlayVideoViewModel(
             ActionPlayVideo.Refresh -> {
                 if (videoList.isEmpty()) {
                     launch {
-                        refresh(localDB.getObject().lastVideoWatched)
+                        refresh(sharedVideo?.videoId ?: localDB.getObject().lastVideoWatched)
                     }
                 } else {
                     showListOfVideos()
@@ -122,22 +116,22 @@ class PlayVideoViewModel(
     }
 
     private fun showListOfVideos() {
-        consume(UiPlayVideo.Content(videoList.shuffled()))
+        consume(UiPlayVideo.Content(videoList))
     }
 
     private fun refresh(videoId: String) = launch {
         consume(UiPlayVideo.Loading)
-        val result = getYoutubeVideos.invoke(videoId)
+        val result = getYoutubeVideos.invoke(videoId, attempts = 2)
         if (result.videos.isNotEmpty()) {
             val videoIndex = videoList.getPositionOf(videoId)
 
-            videoList = if (videoIndex != -1 && (videoIndex - 1) < videoList.size) {
+            videoList = (if (videoIndex != -1 && (videoIndex - 1) < videoList.size) {
                 val tempVideos = videoList.toMutableList()
                 tempVideos.addAll(videoIndex, result.videos)
                 tempVideos.toList()
             } else {
                 (videoList + result.videos)
-            }
+            }).shuffled()
 
             showListOfVideos()
         } else {

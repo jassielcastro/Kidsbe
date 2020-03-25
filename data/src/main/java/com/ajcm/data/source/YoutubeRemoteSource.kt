@@ -62,7 +62,7 @@ class YoutubeRemoteSource(private val application: Application, private val api:
             .setMaxResults(Constants.DEFAULT_VIDEO_COUNT)
             .setSafeSearch("strict")
             .setVideoDuration("medium")
-            .setFields("items(id/kind,id/videoId,snippet/channelId,snippet/title,snippet/thumbnails/high/url,snippet/channelTitle)")
+            .setFields("items(id/kind,id/videoId,snippet/channelId,snippet/title,snippet/thumbnails/medium/url,snippet/channelTitle)")
     }
 
     override suspend fun searchVideos(apiKey: String, title: String): Result {
@@ -90,24 +90,27 @@ class YoutubeRemoteSource(private val application: Application, private val api:
         }
     }
 
-    override suspend fun getPopularVideos(apiKey: String, relatedToVideoId: String): Result {
+    override suspend fun getPopularVideos(apiKey: String, relatedToVideoId: String, attempts: Int): Result {
         return try {
            val list = youtube
                 .setKey(apiKey)
 
-            val resultList1 = getListOfVideosRelatedTo(relatedToVideoId, list).items
-            val list1Filtered = filterVideoList(resultList1, tempBlackListVideos)
+            val results : ArrayList<SearchResult> = arrayListOf()
 
-            val resultList2 = getListOfVideosRelatedTo(list1Filtered[0].id.videoId, list).items
-            val list2Filtered = filterVideoList(resultList2, tempBlackListVideos)
+            for (atm in 0 until attempts) {
+                val relatedId = if (results.isEmpty()) relatedToVideoId else results.random().id.videoId
+                results.addAll(getListOfVideosRelatedTo(relatedId, list).items)
+            }
 
-            val completeList = (list1Filtered + list2Filtered)
-                .distinctBy { it.id.videoId }
+            val list1Filtered = filterVideoList(results.toList(), tempBlackListVideos)
+
+            val completeList = list1Filtered.distinctBy { it.id.videoId }
 
             val mappedVideos = completeList.mapToList()
             withContext(Dispatchers.IO) {
                 saveVideos(mappedVideos)
             }
+
             Result(mappedVideos, null)
         } catch (e: IOException) {
             Result(getVideosSaved(), e)

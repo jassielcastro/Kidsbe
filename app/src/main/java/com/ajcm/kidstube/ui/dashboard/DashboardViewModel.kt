@@ -104,7 +104,7 @@ class DashboardViewModel(
 
     private fun refresh(videoId: String) = launch {
         consume(UiDashboard.Loading)
-        val result = getYoutubeVideos.invoke(videoId)
+        val result = getYoutubeVideos.invoke(videoId, attempts = 1)
         if (result.videos.isNotEmpty()) {
             val videoIndex = videos.getPositionOf(videoId)
 

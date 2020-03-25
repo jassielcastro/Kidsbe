@@ -8,5 +8,5 @@ class GetYoutubeVideos(private val videoRepository: VideoRepository) {
 
     suspend fun startYoutubeWith(accountName: String) = (videoRepository.remoteDataSource as? YoutubeRemoteSource)?.startYoutubeSession(accountName)
 
-    suspend fun invoke(relatedTo: String): Result = videoRepository.getList(relatedTo)
+    suspend fun invoke(relatedTo: String, attempts: Int): Result = videoRepository.getList(relatedTo, attempts)
 }

@@ -2,8 +2,6 @@ package com.ajcm.kidstube.ui.dashboard
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
@@ -115,23 +113,15 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
             }
             is UiDashboard.NavigateTo -> {
                 when (state.root) {
-                    DashNav.PROFILE -> {
-                        navigateTo(state.root.id)
-                    }
-                    DashNav.SETTINGS -> {
-                        val extras = FragmentNavigatorExtras(
-                            imgProfile to ViewCompat.getTransitionName(imgProfile)!!)
-                        navigateTo(state.root.id, extras = extras)
-                    }
-                    DashNav.SEARCH -> {
+                    DashNav.PROFILE, DashNav.SETTINGS, DashNav.SEARCH -> {
                         navigateTo(state.root.id)
                     }
                     DashNav.VIDEO -> {
-                        navigateTo(state.root.id, Bundle().apply {
+                        val userBundle = Bundle().apply {
                             putString(Constants.KEY_USER_ID, state.userId)
                             putSerializable(Constants.KEY_VIDEO_ID, state.video!!)
-                            putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
-                        })
+                        }
+                        navigateTo(state.root.id, bundle = userBundle)
                     }
                     else -> {}
                 }

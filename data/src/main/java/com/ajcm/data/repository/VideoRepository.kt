@@ -12,7 +12,7 @@ class VideoRepository(
         return remoteDataSource.searchVideos(apiKey, byText)
     }
 
-    suspend fun getList(relatedTo: String): Result {
-        return remoteDataSource.getPopularVideos(apiKey, relatedTo)
+    suspend fun getList(relatedTo: String, attempts: Int): Result {
+        return remoteDataSource.getPopularVideos(apiKey, relatedTo, attempts)
     }
 }

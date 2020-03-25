@@ -25,13 +25,14 @@ class VideoAdapter(private val showOptions: Boolean = true, private val listener
     override fun getItemCount(): Int = videos.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.itemView.accelerateCanvas()
         val video = videos[position]
         bind(video, holder)
         holder.itemView.setOnClickListener { listener(VideoAction.Play(video)) }
     }
 
     private fun bind(video: Video, holder: ViewHolder) {
-        holder.itemView.imgVideo.loadUrl(video.thumbnail)
+        holder.itemView.imgVideo.loadUrlWithAspectRatio(video.thumbnail)
         holder.itemView.txtTitle.text = video.title
 
         holder.itemView.videoOptions.hide()

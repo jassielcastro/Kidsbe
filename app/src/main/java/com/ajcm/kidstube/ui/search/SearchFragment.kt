@@ -7,7 +7,6 @@ import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.common.DashNav
-import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.adapters.VideoAdapter
 import com.payclip.design.extensions.*
 import kotlinx.android.synthetic.main.generic_error.*
@@ -52,7 +51,6 @@ class SearchFragment : KidsFragment<UiSearch, SearchViewModel>(R.layout.search_f
                     navigateTo(state.root.id, Bundle().apply {
                         putString(Constants.KEY_USER_ID, state.userId)
                         putSerializable(Constants.KEY_VIDEO_ID, state.video!!)
-                        putSerializable(Constants.KEY_VIDEO_LIST, VideoList(viewModel.videos))
                     })
                 }
             }

@@ -10,7 +10,7 @@ fun List<SearchResult>.mapToList(): List<Video> {
             item.id.videoId,
             item.snippet.channelId ?: "",
             item.snippet.title ?: "",
-            item.snippet.thumbnails?.high?.url ?: "",
+            item.snippet.thumbnails?.medium?.url ?: "",
             item.snippet.channelTitle ?: ""
         )
     }
