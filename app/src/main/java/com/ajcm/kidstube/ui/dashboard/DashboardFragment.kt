@@ -84,6 +84,7 @@ class DashboardFragment : KidsFragment<UiDashboard, DashboardViewModel>(R.layout
     }
 
     override fun updateUi(state: UiState) {
+        println("DashboardFragment.updateUi --> $state")
         contentError.hide()
         when (state) {
             is UiDashboard.Loading -> {

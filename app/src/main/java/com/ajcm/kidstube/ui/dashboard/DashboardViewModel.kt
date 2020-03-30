@@ -39,6 +39,7 @@ class DashboardViewModel(
     }
 
     override fun dispatch(actionState: ActionState) {
+        println("DashboardViewModel.dispatch --> $actionState")
         when (actionState) {
             ActionDashboard.Start -> {
                 launch {

@@ -10,12 +10,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -111,6 +109,13 @@ inline fun <VH : RecyclerView.ViewHolder, T> RecyclerView.Adapter<VH>.basicDiffU
 
 fun RecyclerView.setUpLayoutManager(orientation: Int = RecyclerView.HORIZONTAL, reversed: Boolean = false) {
     this.layoutManager = LinearLayoutManager(this.context, orientation, reversed)
+    this.overScrollMode = View.OVER_SCROLL_NEVER
+
+    ContextCompat.getDrawable(this.context, R.drawable.horizontal_divider)?.let { drawable ->
+        val divider = DividerItemDecoration(this.context, orientation)
+        divider.setDrawable(drawable)
+        this.addItemDecoration(divider)
+    }
 }
 
 fun RecyclerView.setSmoothScroll(position: Int) {

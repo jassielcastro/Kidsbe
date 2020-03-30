@@ -38,12 +38,10 @@ class PlayVideoViewModel(
 
     init {
         initScope()
-        launch {
-            getYoutubeVideos.startYoutubeWith(localDB.getObject().userName)
-        }
     }
 
     override fun dispatch(actionState: ActionState) {
+        println("PlayVideoViewModel.dispatch --> $actionState")
         when (actionState) {
             is ActionPlayVideo.ObtainVideo -> {
                 actionState.bundle?.getSerializable(Constants.KEY_VIDEO_ID)?.let {
@@ -56,7 +54,10 @@ class PlayVideoViewModel(
                 }
             }
             is ActionPlayVideo.PlayerViewReady -> {
-                consume(UiPlayVideo.RenderYoutubePlayer(actionState.youTubePlayer))
+                launch {
+                    getYoutubeVideos.startYoutubeWith(localDB.getObject().userName)
+                    consume(UiPlayVideo.RenderYoutubePlayer(actionState.youTubePlayer))
+                }
             }
             ActionPlayVideo.Refresh -> {
                 if (videoList.isEmpty()) {

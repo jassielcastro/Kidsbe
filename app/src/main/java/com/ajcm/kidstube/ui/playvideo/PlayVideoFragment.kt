@@ -39,7 +39,6 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.dispatch(ActionPlayVideo.ObtainVideo(arguments))
         setUpViews()
         setUpListeners()
     }
@@ -121,11 +120,13 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
     }
 
     override fun updateUi(state: UiState) {
+        println("PlayVideoFragment.updateUi --> $state")
         when (state) {
             UiPlayVideo.Loading -> {
                 btnBack.hide()
                 btnOptions.hide()
                 videoOptions.hide()
+                viewModel.dispatch(ActionPlayVideo.ObtainVideo(arguments))
             }
             UiPlayVideo.LoadingError -> {
                 btnBack.show()
@@ -171,17 +172,6 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
         videoBottomGuideline?.let { guideLine ->
             val params = guideLine.layoutParams as ConstraintLayout.LayoutParams
 
-            when (state) {
-                PanelState.EXPAND -> {
-                    btnBack.hide()
-                    btnOptions.hide()
-                }
-                PanelState.COLLAPSED -> {
-                    btnBack.show()
-                    btnOptions.show()
-                }
-            }
-
             val start = if (state != PanelState.COLLAPSED) 0.7f else 1f
             val end = if (state == PanelState.COLLAPSED) 0.7f else 1f
 
@@ -196,6 +186,23 @@ class PlayVideoFragment : KidsFragment<UiPlayVideo, PlayVideoViewModel>(R.layout
             valueAnimator.duration = 220
 
             valueAnimator.start()
+
+            hideOrShowViews(state)
+        }
+    }
+
+    private fun hideOrShowViews(state: PanelState) {
+        when (state) {
+            PanelState.EXPAND -> {
+                btnBack.hide()
+                btnOptions.hide()
+                relatedRecycler.hide()
+            }
+            PanelState.COLLAPSED -> {
+                btnBack.show()
+                btnOptions.show()
+                relatedRecycler.show()
+            }
         }
     }
 
