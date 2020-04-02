@@ -8,9 +8,8 @@ import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.common.DashNav
 import com.ajcm.kidstube.extensions.getDrawable
-import com.ajcm.kidstube.model.VideoList
 import com.ajcm.kidstube.ui.adapters.VideoAdapter
-import com.payclip.design.extensions.*
+import com.ajcm.design.extensions.*
 import kotlinx.android.synthetic.main.dashboard_fragment.*
 import kotlinx.android.synthetic.main.generic_error.*
 import org.koin.android.scope.currentScope

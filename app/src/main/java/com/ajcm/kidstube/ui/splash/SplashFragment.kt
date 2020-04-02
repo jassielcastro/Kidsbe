@@ -9,8 +9,8 @@ import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
-import com.payclip.design.extensions.accelerateCanvas
-import com.payclip.design.extensions.navigateTo
+import com.ajcm.design.extensions.accelerateCanvas
+import com.ajcm.design.extensions.navigateTo
 import kotlinx.android.synthetic.main.splash_fragment.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel

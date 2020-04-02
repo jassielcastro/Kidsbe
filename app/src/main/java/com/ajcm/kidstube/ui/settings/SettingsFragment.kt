@@ -7,7 +7,7 @@ import com.ajcm.kidstube.R
 import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.extensions.getDrawable
-import com.payclip.design.extensions.loadRes
+import com.ajcm.design.extensions.loadRes
 import kotlinx.android.synthetic.main.settings_fragment.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel

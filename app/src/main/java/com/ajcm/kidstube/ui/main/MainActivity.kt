@@ -2,7 +2,6 @@ package com.ajcm.kidstube.ui.main
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.KeyEvent
 import androidx.annotation.RawRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -10,8 +9,8 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.common.SongHelper
-import com.payclip.design.extensions.accelerateViews
-import com.payclip.design.extensions.fullScreen
+import com.ajcm.design.extensions.accelerateViews
+import com.ajcm.design.extensions.fullScreen
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 

@@ -7,9 +7,9 @@ import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.extensions.getDrawable
 import com.ajcm.kidstube.ui.adapters.AvatarAdapter
-import com.payclip.design.extensions.loadRes
-import com.payclip.design.extensions.setUpLayoutManager
-import com.payclip.design.extensions.waitForTransition
+import com.ajcm.design.extensions.loadRes
+import com.ajcm.design.extensions.setUpLayoutManager
+import com.ajcm.design.extensions.waitForTransition
 import kotlinx.android.synthetic.main.profile_fragment.*
 import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel

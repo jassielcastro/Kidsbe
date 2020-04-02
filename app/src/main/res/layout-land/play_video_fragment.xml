@@ -31,7 +31,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.3" />
 
-    <com.payclip.design.youtubuplayer.player.views.YouTubePlayerView
+    <com.ajcm.design.youtubuplayer.player.views.YouTubePlayerView
         android:id="@+id/youtube_player_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"

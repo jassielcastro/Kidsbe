@@ -8,7 +8,7 @@ import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.common.DashNav
 import com.ajcm.kidstube.ui.adapters.VideoAdapter
-import com.payclip.design.extensions.*
+import com.ajcm.design.extensions.*
 import kotlinx.android.synthetic.main.generic_error.*
 import kotlinx.android.synthetic.main.search_fragment.*
 import org.koin.android.scope.currentScope

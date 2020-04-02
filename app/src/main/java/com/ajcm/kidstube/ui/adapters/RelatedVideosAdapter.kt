@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.R
-import com.payclip.design.extensions.basicDiffUtil
-import com.payclip.design.extensions.inflate
-import com.payclip.design.extensions.loadUrl
+import com.ajcm.design.extensions.basicDiffUtil
+import com.ajcm.design.extensions.inflate
+import com.ajcm.design.extensions.loadUrl
 import kotlinx.android.synthetic.main.item_related_video.view.*
 
 class RelatedVideosAdapter(private val listener: (Video) -> Unit) : RecyclerView.Adapter<ViewHolder>() {

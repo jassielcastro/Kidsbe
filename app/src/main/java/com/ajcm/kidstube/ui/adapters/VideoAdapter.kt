@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ajcm.domain.Video
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.common.VideoAction
-import com.payclip.design.extensions.*
+import com.ajcm.design.extensions.*
 import kotlinx.android.synthetic.main.item_video.view.*
 import kotlinx.android.synthetic.main.item_video_options.view.*
 

@@ -4,7 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.annotation.RawRes
-import com.payclip.design.extensions.delay
+import com.ajcm.design.extensions.delay
 
 class SongHelper {
 

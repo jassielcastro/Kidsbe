@@ -13,11 +13,11 @@ import com.ajcm.kidstube.arch.KidsFragment
 import com.ajcm.kidstube.arch.UiState
 import com.ajcm.kidstube.common.Constants
 import com.ajcm.kidstube.ui.adapters.RelatedVideosAdapter
-import com.payclip.design.extensions.*
-import com.payclip.design.youtubuplayer.player.YouTubePlayer
-import com.payclip.design.youtubuplayer.player.listeners.AbstractYouTubePlayerListener
-import com.payclip.design.youtubuplayer.player.options.PanelState
-import com.payclip.design.youtubuplayer.player.utils.loadOrCueVideo
+import com.ajcm.design.extensions.*
+import com.ajcm.design.youtubuplayer.player.YouTubePlayer
+import com.ajcm.design.youtubuplayer.player.listeners.AbstractYouTubePlayerListener
+import com.ajcm.design.youtubuplayer.player.options.PanelState
+import com.ajcm.design.youtubuplayer.player.utils.loadOrCueVideo
 import kotlinx.android.synthetic.main.item_video_options.*
 import kotlinx.android.synthetic.main.play_video_fragment.*
 import org.koin.android.scope.currentScope

@@ -6,7 +6,7 @@ import com.ajcm.domain.Avatar
 import com.ajcm.kidstube.R
 import com.ajcm.kidstube.extensions.getDrawable
 import com.ajcm.kidstube.ui.profile.ItemAvatar
-import com.payclip.design.extensions.*
+import com.ajcm.design.extensions.*
 import kotlinx.android.synthetic.main.item_avatar.view.*
 
 class AvatarAdapter(private val listener: (Avatar) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
