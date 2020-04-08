@@ -2,12 +2,10 @@ package com.ajcm.design.youtubuplayer.player.views
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
-import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import com.ajcm.design.R
@@ -102,15 +100,6 @@ class WebViewYouTubePlayer constructor(context: Context, attrs: AttributeSet? = 
             .replace("<<injectedPlayerVars>>", playerOptions.toString())
 
         loadDataWithBaseURL(playerOptions.getOrigin(), htmlPage, "text/html", "utf-8", null)
-
-        // if the video's thumbnail is not in memory, show a black screen
-        webChromeClient = object : WebChromeClient() {
-            override fun getDefaultVideoPoster(): Bitmap? {
-                val result = super.getDefaultVideoPoster()
-
-                return result ?: Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565)
-            }
-        }
 
         this.isClickable = false
         this.isFocusable = false
